@@ -1,21 +1,27 @@
 import { useState } from "react";
-import cardData from "../card-dummy.json";
+import cardData from "../../../card-dummy.json";
 import { BsHeart, BsHeartFill, BsImage, BsMessenger } from "react-icons/bs";
-import { Box, Button, Flex, FormControl, Heading, IconButton, Image, Text, Textarea } from '@chakra-ui/react';
-import { BiSolidMessage } from "react-icons/bi";
-import f from './function';
+import { Box, Button, Flex, FormControl, Heading, IconButton, Image, Link, LinkBox, LinkOverlay, Text, Textarea, useDisclosure } from '@chakra-ui/react';
+import { BiMessage, BiSolidMessage } from "react-icons/bi";
+import f from '../../function';
 
 export default function Threads(){
     const [state, setState] = useState(cardData);
+    
+    const [isHover, setHover] = useState(false);
 
-    const data = state.data.threads.map(item => {
-        let likeIcon
-        if(item.isLiked) {
-            likeIcon = <BsHeartFill/>;
-        } else {
-            likeIcon = <BsHeart/>;
-        }
+    const mouseEnter = () => {
+        setHover(true);
+    };
 
+    const mouseLeave = () => {
+        setHover(false);
+    };
+
+    const data = state.data.threads.map((item, index) => {
+        const [isLiked, setLiked] = useState(item.isLiked);
+
+        const likeIcon = <Link onClick={() => {setLiked(!isLiked)}}> {isLiked ? <BsHeartFill/> : <BsHeart/>} </Link>
         return (
         <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} >
             <Box className="picture">
@@ -47,7 +53,9 @@ export default function Threads(){
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {likeIcon}
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes}</Text>
-                <BiSolidMessage/>
+                <LinkBox>
+                <LinkOverlay href={`/threads`}><Box onMouseOver={mouseEnter} onMouseLeave={mouseLeave}>{isHover ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                </LinkBox>
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.reply} Replies</Text>
                 </Flex>
             </Flex>
@@ -55,33 +63,15 @@ export default function Threads(){
         )
     })
 
-    const threadsForm = <Flex justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'1rem 0 0.5rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
-        {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px')}
-        <FormControl display={'flex'} alignItems={'start'} marginBottom={'1rem'}>
-            <Textarea placeholder="What is Happening..." width={'320px'} minHeight={'40px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'}></Textarea>
-            <IconButton
-            colorScheme='green'
-            aria-label='Add Picture'
-            size='sm'
-            variant={'ghost'}
-            fontSize={'1.33rem'}
-            icon={<BsImage />}
-            marginEnd={'0.5rem'}
-            />
-            <Button colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>Post</Button>
-        </FormControl></Flex>
-
     return(
         <>
-            <Flex flexDirection={'column'} justifyContent={'start'} width={'40%'} height={'720px'} overflowY="scroll" overflowX="hidden" css={{
+            <Flex flexDirection={'column'} justifyContent={'start'} mt={'1rem'} height={'720px'} overflowY="scroll" overflowX="hidden" css={{
         '::-webkit-scrollbar': {
           display: 'none',
         },
         '-ms-overflow-style': 'none', // IE and Edge
         'scrollbar-width': 'none', // Firefox
       }}>
-                <Heading as={'h2'} size={'xl'} marginY={'1.5rem'} color={'whitesmoke'}>Home</Heading>
-                {threadsForm}
                 {data}
             </Flex>
         </>

@@ -1,22 +1,31 @@
-import React from 'react';
-import Threads from './threads'
-import Sidebar from './sidebar'
-import Profile from './profile';
 
-// 1. import `ChakraProvider` component
-import { ChakraProvider, Flex } from '@chakra-ui/react'
+import Sidebar from './sidebar';
+import ProfileCard from './profileCard';
+import Login from './auth/login';
+import Register from './auth/register';
+import Forgot from './auth/forgot';
+import Search from './sidebarButton/search';
+import Follow from './sidebarButton/follow';
+import Home from './sidebarButton/home';
+import Profile from './sidebarButton/profile';
+import Status from './sidebarButton/status'
+
+import { ChakraProvider, Flex, Heading } from '@chakra-ui/react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import status from './sidebarButton/status';
 
 export default function App() {
-  // 2. Wrap ChakraProvider at the root of your app
 
   const bgColor = '#1D1D1D'
   return (
     <ChakraProvider>
-      <Flex justifyContent={'start'} bg={bgColor} maxHeight={'733px'}>
-            <Sidebar />
-            <Threads />
-            <Profile />
-      </Flex>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/follow" element={<Follow />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/threads" element={<Status/>} />
+        </Routes>
     </ChakraProvider>
   )
 }
