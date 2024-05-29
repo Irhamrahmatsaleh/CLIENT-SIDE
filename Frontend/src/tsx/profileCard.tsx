@@ -2,6 +2,7 @@
     import f from './function'
     import { BsFacebook, BsGithub, BsInstagram, BsLinkedin, BsXCircle } from "react-icons/bs";
     import { useState } from "react";
+import React from "react";
 
     const color = {
         grey: '#909090',

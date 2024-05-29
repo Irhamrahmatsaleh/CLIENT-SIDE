@@ -1,4 +1,5 @@
 import { Box, Button, Flex, FormControl, FormHelperText, FormLabel, HStack, Heading, Input, Link, Text } from "@chakra-ui/react";
+import React from "react";
 
 export default function forgot()
 {

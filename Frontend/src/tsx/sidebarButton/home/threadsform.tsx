@@ -3,6 +3,7 @@ import { BsArrowBarLeft, BsArrowLeft, BsHeartFill, BsImage, BsXCircle } from "re
 import f from '../../function';
 import { BiSolidMessage } from "react-icons/bi";
 import { JSXElementConstructor } from "react";
+import React from "react";
 
 const color = {
     grey: '#909090',

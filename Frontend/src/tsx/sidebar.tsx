@@ -5,6 +5,7 @@ import { IconType } from 'react-icons';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import f from './function'
+import React from 'react';
 
 export enum sideButton {
     home,

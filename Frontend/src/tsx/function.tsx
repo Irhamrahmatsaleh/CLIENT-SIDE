@@ -1,4 +1,5 @@
 import { Box, Button, Divider, Link, Flex, FormControl, FormHelperText, Heading, IconButton, Image, Input, Textarea } from "@chakra-ui/react"
+import React from "react";
 import { BsImage, BsXCircle } from "react-icons/bs";
 
 const color = {

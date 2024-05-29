@@ -4,6 +4,7 @@ import f from '../function';
 import Sidebar from "../sidebar";
 import Profile from "../profileCard";
 import { sideButton } from "../sidebar";
+import React from "react";
 
 export default function search() {
     const color = {

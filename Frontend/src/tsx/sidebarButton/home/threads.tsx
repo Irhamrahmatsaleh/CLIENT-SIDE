@@ -4,6 +4,7 @@ import { BsHeart, BsHeartFill, BsImage, BsMessenger } from "react-icons/bs";
 import { Box, Button, Flex, FormControl, Heading, IconButton, Image, Link, LinkBox, LinkOverlay, Text, Textarea, useDisclosure } from '@chakra-ui/react';
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import f from '../../function';
+import React from "react";
 
 export default function Threads(){
     const [state, setState] = useState(cardData);

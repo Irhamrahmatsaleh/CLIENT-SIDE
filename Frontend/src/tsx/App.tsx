@@ -13,6 +13,7 @@ import Status from './sidebarButton/status'
 import { ChakraProvider, Flex, Heading } from '@chakra-ui/react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import status from './sidebarButton/status';
+import React from 'react';
 
 export default function App() {
 
@@ -20,6 +21,8 @@ export default function App() {
   return (
     <ChakraProvider>
         <Routes>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/follow" element={<Follow />} />

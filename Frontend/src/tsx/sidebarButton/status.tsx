@@ -3,6 +3,7 @@ import Threads from "./home/threads";
 import { forms, otherProfileThreads, threadsForm } from "./home/threadsform";
 import Sidebar, { sideButton } from "../sidebar";
 import Profile from "../profileCard";
+import React from "react";
 
 export default function status ()
 {
