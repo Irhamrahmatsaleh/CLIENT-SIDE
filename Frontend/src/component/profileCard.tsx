@@ -84,11 +84,10 @@ import { following, suggested } from "@/libs/type";
                     },
                 })
                 setSuggested(response.data);
-                console.log(response.data);
             }
 
             fetchSuggested();
-        },[setSuggested])
+        },[])
 
 
         useEffect(() => {
@@ -97,12 +96,12 @@ import { following, suggested } from "@/libs/type";
            })
 
            setFollow(follow);
-        })
+        },[getSuggested])
 
         const followerData =  getSuggested.map((item,index) => {
             const follow = item.follower;
             return (
-                <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'}>
+            <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
                 <Flex>
                 {f.imageCircle(follow && follow.photo_profile, '40px')}
                 <Flex flexDirection={'column'} ms={'1rem'}>

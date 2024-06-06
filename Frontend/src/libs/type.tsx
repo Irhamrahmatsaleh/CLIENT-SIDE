@@ -12,7 +12,7 @@ export type loginForm = {
 
 export type threadsForm = {
     content : string,
-    image : File | undefined
+    image : File | null
 }
 
 export type users = {

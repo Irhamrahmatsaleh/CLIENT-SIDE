@@ -69,7 +69,6 @@ class followServices {
                 
                 return { ...follow, isFollowed: false };
             });
-            console.log(followedArr);
             return followedArr;
         } catch(err) {
             throw new Error(err);

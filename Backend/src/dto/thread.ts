@@ -2,7 +2,7 @@ import Joi from "joi"
 import {users} from '../dto/user'
 
 export type dataContent_thread =  {
-    image             : string,
+    image             : string | null,
     content           : string,
     }
 
@@ -19,6 +19,6 @@ export type thread = {
 }
 
 export const threadValidate = Joi.object<dataContent_thread>({
-    image: Joi.string(),
+    image: Joi.string().allow(null),
     content: Joi.string().min(1).max(320).required()
 })

@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import Threads from "../component/threads";
-import { forms, otherProfileThreads, threadsForm } from "../component/threadsform";
+import { forms, otherProfileThreads } from "../component/threadsform";
 import Sidebar, { sideButton } from "../component/sidebar";
 import Profile from "../component/profileCard";
 import React from "react";

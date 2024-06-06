@@ -16,6 +16,10 @@ class threadServices {
         });
       }
 
+
+  
+
+
     async FindThread(idUser : number){
       try{  
         const fetchedData = await this.prisma.threads.findFirst({where: {id: idUser}})
@@ -26,7 +30,8 @@ class threadServices {
     }
 
     async FindAllThread(){
-      try{  
+      try{
+
         const fetchedData = await this.prisma.threads.findMany({
           include : {
             users: {
@@ -53,22 +58,27 @@ class threadServices {
 
     async PostThread(dto : dataContent_thread, user : users)
     {
+      
         try {
             const validate = threadValidate.validate(dto);
         
             if (validate.error) {
-              throw new Error(JSON.stringify(validate.error));
+              throw new Error('validate error');
             }
-            console.log("DTO ", dto.image);
-            const upload = await cloudinary.uploader.upload(dto.image, {
-              upload_preset: "threads"
-            });
 
+           // Upload image if provided
+          let imageUrl = null;
+          if (dto.image) {
+            const upload = await cloudinary.uploader.upload(dto.image, {
+                upload_preset: "threads"
+            });
+            imageUrl = upload.secure_url;
+        }
             
             const createdData = await this.prisma.threads.create({ 
                 data: {
                     content: dto.content,
-                    image: upload.secure_url,
+                    image: imageUrl,
                     created_by: user.id,
                     updated_by: user.id
                 }

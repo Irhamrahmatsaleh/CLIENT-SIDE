@@ -1,15 +1,35 @@
-import { useEffect, useState } from "react";
-import cardData from "../card-dummy.json";
-import { BsHeart, BsHeartFill, BsImage, BsMessenger } from "react-icons/bs";
-import { Box, Button, Flex, FormControl, Heading, IconButton, Image, Link, LinkBox, LinkOverlay, Text, Textarea, useDisclosure } from '@chakra-ui/react';
-import { BiMessage, BiSolidMessage } from "react-icons/bi";
-import f from './function';
-import Axios from 'axios';
-import React from "react";
 import { thread } from "@/libs/type";
+import { Box, Flex, Link, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
+import Axios from 'axios';
+import { useEffect, useState } from "react";
+import { BiMessage, BiSolidMessage } from "react-icons/bi";
+import { BsHeart, BsHeartFill } from "react-icons/bs";
+import f from './function';
+import { useQuery } from "@tanstack/react-query";
+
+export async function fetchThreads(){
+    try {
+        const token = localStorage.getItem('token');
+        const response = await Axios({
+            method: "get",
+            url: `http://localhost:5000/api/v1/thread`,
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                'Authorization': `Bearer ${token}`
+             },
+        })
+    return response.data;
+    } catch(error){
+        return error;
+    }
+}
 
 export default function Threads(){
-    // const [state, setState] = useState(cardData);
+    
+    const { data: threads } = useQuery<thread[]>({
+        queryKey: ["threads"],
+        queryFn: fetchThreads,
+        });
     const [thread, setThread] = useState<thread[]>([]);
     const [likedStates, setLikedStates] = useState<boolean[]>([]);
     const [isHover, setHover] = useState(false);
@@ -35,6 +55,7 @@ export default function Threads(){
                      },
                 })
                 setThread(response.data);
+                console.log("thread",response.data)
             } catch(error){
                 return error;
             }
@@ -57,16 +78,15 @@ export default function Threads(){
         setLikedStates(newLiked);
     }
 
-    console.log("Thread ", thread)
-    const data = thread.map((item, index) => {
+    const data = threads?.map((item, index) => {
             const likeIcon = <Link onClick={() => {likeHandle(index);}}> {likedStates[index] ? <BsHeartFill/> : <BsHeart/>} </Link>
             if(item.users == null)
                 {
                     return;
                 }
             return (
-            <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} >
-                <Box className="picture">
+            <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
+                <Box className="picture" >
                 {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px')}
                 </Box>
                 <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
@@ -75,7 +95,7 @@ export default function Threads(){
                     color={'rgb(199, 199, 199)'}
                     marginEnd={'0.5rem'}
                     marginBottom={'0.33rem'}
-                    gap={'0.33rem'}>
+                    gap={'0.33rem'} >
                         <Text fontWeight={'bold'} color={'white'}>
                         {item.users.username && item.users.username}
                         </Text>
@@ -90,7 +110,7 @@ export default function Threads(){
                         <Text marginBottom={'0.33rem'}>
                         {item.content}
                         </Text>
-                        {f.imageMessage(item.image)}
+                        {item.image ? (f.imageMessage(item.image)) : <></>}
                     </Box>
                     <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                     {likeIcon}

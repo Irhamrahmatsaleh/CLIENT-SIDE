@@ -3,58 +3,15 @@ import React from "react";
 import { useForm, SubmitHandler, Form } from "react-hook-form"
 import Axios from "axios"
 import { registerForm } from "@/libs/type";
+import { useRegisterForm } from "../features/hooks/authRegister";
 
 export default function register()
 {
-    let loginResponse;
-
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-      } = useForm<registerForm>()
-
-      async function submit(data: Object) {
-            try {
-            const response = await Axios({
-                method: "post",
-                url: "http://localhost:5000/api/v1/login",
-                data: objectToFormData(data),
-                headers: { "Content-Type": "multipart/form-data" },
-              })
-            // handle success
-            loginResponse = response;
-            console.log(response);
-            const token = response.data.user.token;
-            
-            if (token) {
-              localStorage.setItem("token", response.data.user.token);
-              console.log("token ", token)
-            }
-
-            } catch (error) {
-            // handle error
-            console.log(error);
-            }
-        };
-
-        const onSubmit: SubmitHandler<registerForm> = (data) => {
-            console.log(JSON.stringify(data));
-            submit(data);
-        }
-
-        function objectToFormData(obj: Record<string, any>): FormData{
-            const formData = new FormData();
-            for (const key in obj) {
-                formData.append(key, obj[key]);
-            }
-            return formData;
-          }
-
+    const { handleSubmit, onSubmit, register, errors } = useRegisterForm();
+   
     return (
-        <Box width={"100%"} height={"733px"} bgColor="circle.greyBg" position={"absolute"}>
-        <Flex flexDirection={'column'} bgColor="color.greyCard" maxWidth={'720px'} borderRadius={'12px'} px={'2rem'} py={'1.5rem'} mt={'6rem'} mx={"auto"}>
+        <Box width={"100%"} height={"733px"} bg="circle.greyBg" position={"absolute"}>
+        <Flex flexDirection={'column'} bg="circle.greyCard" maxWidth={'720px'} borderRadius={'12px'} px={'2rem'} py={'1.5rem'} mt={'6rem'} mx={"auto"}>
         <Heading as={'h2'} size={'xl'} marginBottom={'0.33rem'} color={'lime'}>Circle</Heading>
         <Text fontWeight={'bold'} fontSize={'1.5rem'} color={'white'}>Create account Circle</Text>
 
@@ -63,21 +20,22 @@ export default function register()
             <Box my={'1rem'} width={'100%'}>
             <FormLabel color={'white'}>Full Name</FormLabel>
             <Input type='text' placeholder="John Doe" isRequired {...register("full_name", {required: true})}/>
+            <Text color={"error.primary"}>{errors.full_name?.message}</Text>
             </Box>
             <Box mb={'1rem'} width={'100%'}>
             <FormLabel color={'white'}>Email address</FormLabel>
             <Input type='email' placeholder="example@example.com" isRequired {...register("email", {required: true})}/>
-            {errors.password && <span>This field is required</span>}
+            <Text color={"error.primary"}>{errors.email?.message}</Text>
             </Box>
             <Box mb={'1rem'} width={'100%'}>
             <FormLabel color={'white'}>Password</FormLabel>
             <Input type='password' isRequired {...register("password", {required: true})}/>
-            {errors.password && <span>This field is required</span>}
+            <Text color={"error.primary"}>{errors.password?.message}</Text>
             </Box>
-            <Button colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">Create Account</Button>
+            <Button isDisabled={!!(errors.email?.message || errors.password?.message)} colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">Create Account</Button>
             <HStack alignSelf={'start'} mt={'0.5rem'}>
             <Text color={'white'} me={'0.33rem'}>Already have account?</Text>
-            <Link color={'teal'}>Login</Link>
+            <Link href="/login" color={'teal'}>Login</Link>
             </HStack>
         </FormControl>
         </form>

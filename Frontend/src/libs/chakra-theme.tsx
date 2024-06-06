@@ -6,6 +6,9 @@ const theme = extendTheme({
             greyCard: '#262626',
             greyBg: '#444444',
             followBg: '#1D1D1D'
+        },
+        error: {
+            primary: '#FF0000'
         }
     },
   })

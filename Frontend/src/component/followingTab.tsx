@@ -85,7 +85,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = (props) => {
 
     const followerData =  followers.map((item,index) => {
             return (
-                <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'}>
+                <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
                 <Flex>
                 {f.imageCircle(item && item.follower.photo_profile, '40px')}
                 <Flex flexDirection={'column'} ms={'1rem'}>
@@ -102,7 +102,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = (props) => {
     
     const followingData =  followeds.map((item,index) => {
             return (
-                <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'}>
+                <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
                 <Flex>
                 {f.imageCircle(item && item.followed.photo_profile, '40px')}
                 <Flex flexDirection={'column'} ms={'1rem'}>

@@ -111,6 +111,8 @@ export default function Sidebar(side : sideButton){
             }
     }
 
+
+
     return(
         <Flex flexDirection={'column'} margin={'1.33rem 2rem'} width={'25%'} borderEnd={'1px solid rgb(110, 110, 110, 0.333)'} justifyContent={'start'}>
             <Flex flexDirection={'column'}>
@@ -149,7 +151,7 @@ export default function Sidebar(side : sideButton){
             </form>
             </Flex>
             <Flex mt={'22rem'}>
-            {buttonSide(BsDoorOpen, 'Log Out', '/logout')}
+            {buttonSide(BsDoorOpen, 'Log Out', '/login')}
             </Flex>
         </Flex>
     )

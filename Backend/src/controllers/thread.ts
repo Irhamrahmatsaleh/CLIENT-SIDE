@@ -26,21 +26,28 @@ class threadController {
     }
 
     async postThread(req : Request, res: Response){
+
         try {
             const body = {
                 ...req.body,
-                image: req.file.path,
+                image: (req.file ? req.file.path : null),
               }
+              
             const user = res.locals.verifyingUser;
+            
             const dataCreated : dataContent_thread = await threadService.PostThread(body, user)
-
+              
             res.status(201).json({
                 stats: "data created",
                 value: dataCreated
             });
             } catch (err)
             { 
-                res.status(400).send(err + ", data has not been saved");
+                res.status(400).json({
+                    message: 'data has not been saved',
+                    err: err
+                }
+                );
             }
     }
 

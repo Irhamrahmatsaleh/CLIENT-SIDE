@@ -1,64 +1,124 @@
-import { Box, Button, Divider, Flex, FormControl, FormHelperText, FormLabel, HStack, Heading, IconButton, Image, Input, InputGroup, InputLeftElement, Link, Text, Textarea, VStack } from "@chakra-ui/react";
-import { BsArrowBarLeft, BsArrowLeft, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
-import f from './function';
-import { BiSolidMessage } from "react-icons/bi";
-import { JSXElementConstructor, useState } from "react";
-import React from "react";
+import { thread, threadsForm } from "../libs/type";
+import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, LinkBox, LinkOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
+import Axios, { AxiosError } from 'axios';
+import React, { createContext, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import Axios from 'axios';
-import { threadsForm } from "@/libs/type";
-
+import { BiMessage, BiSolidMessage } from "react-icons/bi";
+import { BsArrowLeft, BsHeart, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
+import f from './function';
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createThreadSchema } from "../features/validators/threads";
+import { fetchThreads } from "./threads";
 
 
 
 export const ThreadsUpload : React.FC= () => {
+    const textareaRef = useRef<string>() ;
+    const fileInputRef = useRef<File | null>(null) ;
     const [imagePreview, setImagePreview] = useState<string>("");
+    const [textValue, setTextValue] = useState<string>();
+
+    const { data: threads, refetch } = useQuery<thread[]>({
+        queryKey: ["threads"],
+        queryFn: fetchThreads,
+        });
 
     const {
         register,
         handleSubmit,
-        watch,
-        formState: { errors },
-      } = useForm<threadsForm>()
-    
-      async function submit(data: { content: any; image: any; }) {
-            try {
-                const formData =  new FormData();
-                formData.append('content', data.content);
+      } = useForm<threadsForm>({
+        mode: "onSubmit",
+        resolver: zodResolver(createThreadSchema),
+        });
+
+
+    const { mutateAsync } = useMutation<
+    thread,
+    AxiosError,
+    threadsForm
+    >({
+        mutationFn: async(data: { content: any; image: any; }) => {
+            console.log("mutate mutation");
+            const formData =  new FormData();
+            formData.append('content', data.content);
+            if (data.image && data.image[0]) {
                 formData.append('image', data.image[0]);
-                
-                const token = localStorage.getItem('token');
-                const response = await Axios({
-                method: "post",
-                url: "http://localhost:5000/api/v1/thread",
-                data: formData,
-                headers: { 
-                    "Content-Type": "multipart/form-data",
-                    'Authorization': `Bearer ${token}`
-                 },
-                
-              })
-            // handle success
-            console.log(response);
+                } else {
+                formData.append('image', 'none');
+                }
+            
+            const token = localStorage.getItem('token');
+            return await Axios({
+            method: "post",
+            url: "http://localhost:5000/api/v1/threadPost",
+            data: formData,
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                'Authorization': `Bearer ${token}`
+                },
+            })
+        },
+    });
+
+    async function postThreads(data: { content: any; image: any; }){
+            const formData =  new FormData();
+            formData.append('content', data.content);
+            if (data.image && data.image[0]) {
+                formData.append('image', data.image[0]);
+                } else {
+                formData.append('image', 'none');
+                }
+            
+            const token = localStorage.getItem('token');
+            const response = await Axios({
+            method: "post",
+            url: "http://localhost:5000/api/v1/threadPost",
+            data: formData,
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                'Authorization': `Bearer ${token}`
+                },
+            })
+            return response
+    }
+
+    async function submit(data: { content: any; image: any; }) {
+        try {
+            const response = await postThreads(data);
             if(response.status === 201)
-            window.location.href = '/';
-            } catch (error) {
-            // handle error
-            console.log(error);
-            }
-        };
+            location.reload();
+        } catch (error) {
+        // handle error
+        console.log("this is ",error);
+        }
+    };
     
-        const onSubmit: SubmitHandler<threadsForm> = (data : { content: any; image: any; }) => {
-            console.log(JSON.stringify(data));
-            submit(data);
+        const onSubmit: SubmitHandler<threadsForm> = async (data : { content: any; image: any ; }) => {
+            console.log("test");
+            if(!imagePreview || imagePreview === '') data.image = null;
+            textareaRef.current = "";
+            setTextValue('')
+            await mutateAsync(data);
+            refetch();
         }
 
         const changeImage = (event : React.ChangeEvent<HTMLInputElement>) => {
             const file = event.target.files && event.target.files[0];
             if(file){
                 setImagePreview(URL.createObjectURL(file));
+                fileInputRef.current = file;
             }
         }
+
+        const clearFileInput = () => {
+            if (fileInputRef.current) {
+              fileInputRef.current = null;
+              setImagePreview('')
+              console.log('File input cleared');
+            }
+          };
+          
 
     return (
     <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'1rem 0 0.5rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
@@ -68,42 +128,64 @@ export const ThreadsUpload : React.FC= () => {
     <form onSubmit={handleSubmit(onSubmit)}>
     <FormControl display={'flex'} alignItems={'start'} marginBottom={'1rem'}>
         <VStack justifyContent={'start'}>
-        <Textarea placeholder="What is Happening..." width={'320px'} minHeight={'40px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content", {required: true})}></Textarea>
-        {imagePreview && <Image src={imagePreview} height="200px" />}
-        </VStack>
-        <Box position="relative" display="inline-block">
-              <Input
-                type="file"
-                id="file-input"
-                opacity="0"
+                <Textarea placeholder="What is Happening..." width={'320px'} minHeight={'40px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} value={textValue} ></Textarea>
+                {imagePreview && 
+                
+                <Box position="relative" display="inline-block">
+                <Image src={imagePreview} height="200px" />
+                <IconButton
                 position="absolute"
-                left="0"
-                top="0"
-                height="100%"
-                width="100%"
-                aria-hidden="true"
-                {...register('image', { required: true })}
-                onChange={changeImage}
-              />
-              <IconButton
-                as="label"
-                htmlFor="file-input"
-                colorScheme="green"
-                aria-label="Add Picture"
-                size="sm"
-                variant="ghost"
-                fontSize="1.33rem"
-                icon={<BsImage />}
-                marginEnd="0.5rem"
-                cursor="pointer"
-              />
-            </Box>
-        <Button colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>Post</Button>
-    </FormControl>
-    </form>
-    </HStack>
-    </Flex>
-          )
+                top="15%"
+                right="3%"
+                transform="translate(-50%, -50%)"
+                icon={<BsXCircle />}
+                color={'white'}
+                fontSize={'1.33rem'}
+                size={'sm'}
+                isRound={true}
+                colorScheme="red"
+                variant={'solid'}
+                aria-label="close"
+                onClick={clearFileInput}
+                >
+            </IconButton>
+                </Box>}
+                </VStack>
+                <Box position="relative" display="inline-block">
+                    <Input
+                        type="file"
+                        id="file-input"
+                        opacity="0"
+                        position="absolute"
+                        left="0"
+                        top="0"
+                        height="100%"
+                        width="100%"
+                        aria-hidden="true"
+                        {...register('image')}
+                        
+                        onChange={changeImage}
+                        ///useref errorr
+                    />
+                    <IconButton
+                        as="label"
+                        htmlFor="file-input"
+                        colorScheme="green"
+                        aria-label="Add Picture"
+                        size="sm"
+                        variant="ghost"
+                        fontSize="1.33rem"
+                        icon={<BsImage />}
+                        marginEnd="0.5rem"
+                        cursor="pointer"
+                    />
+                    </Box>
+                <Button onClick={() => {console.log("Hit Submit")}} colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>Post</Button>
+            </FormControl>
+            </form>
+            </HStack>
+            </Flex>
+    )
 }
 
 export const status = 

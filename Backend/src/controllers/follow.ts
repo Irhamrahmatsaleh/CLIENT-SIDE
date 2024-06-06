@@ -25,7 +25,7 @@ class followController{
     async fetchRandomUserSuggestion(req: Request, res: Response){
         try {
             const user = res.locals.verifyingUser;
-            const followings = await followServices.followSuggested(user, 5);
+            const followings = await followServices.followSuggested(user, 3);
             res.send(followings);
         } catch(err){
             res.status(500).json({ error: err });;
