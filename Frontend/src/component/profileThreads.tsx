@@ -1,12 +1,11 @@
-import { thread, threadProfile } from "@/libs/type";
+import { thread } from "@/libs/type";
 import { Box, Flex, Link, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import f from './function';
-import { useQuery } from "@tanstack/react-query";
 import { api } from "../libs/api";
+import f from './function';
 
 export async function fetchThreads(){
     try {

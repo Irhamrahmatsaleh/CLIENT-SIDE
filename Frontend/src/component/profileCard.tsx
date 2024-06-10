@@ -1,11 +1,10 @@
-    import { Box, Button, Flex, HStack, Heading, Image, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
-    import f from './function';
-    import { BsFacebook, BsGithub, BsInstagram, BsLinkedin, BsXCircle } from "react-icons/bs";
-    import { useEffect, useState } from "react";
-    import React from "react";
-    import Axios from "axios";
-    import { following, suggested } from "@/libs/type";
-    import { api } from "../libs/api";
+    import { suggested } from "@/libs/type";
+import { Box, Button, Flex, HStack, Heading, Image, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
+import Axios from "axios";
+import { useEffect, useState } from "react";
+import { BsFacebook, BsGithub, BsInstagram, BsLinkedin } from "react-icons/bs";
+import { api } from "../libs/api";
+import f from './function';
 
     const color = {
         grey: '#909090',

@@ -1,22 +1,16 @@
 import { replies, thread } from "@/libs/type";
-import { Box, Button, Divider, Flex, HStack, Heading, Image, Link, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import Axios, { AxiosError } from 'axios';
-import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Box, Flex, HStack, Link, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
+import { useQuery } from "@tanstack/react-query";
+import Axios from 'axios';
+import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsDot, BsHeart, BsHeartFill } from "react-icons/bs";
-import { createThreadSchema } from "../features/validators/threads";
-import { threadsForm } from "../libs/type";
-import f from './function';
-import Threads, { fetchThreads } from "./threads";
 import { useParams } from "react-router-dom";
-import Sidebar, { sideButton } from "./sidebar";
+import { api } from "../libs/api";
+import f from './function';
 import Profile from "./profileCard";
 import { RepliesForm } from "./repliesForm";
-import { number } from "zod";
-import { api } from "../libs/api";
+import Sidebar, { sideButton } from "./sidebar";
 
 export async function fetchReplies(id : string | undefined){
     try {

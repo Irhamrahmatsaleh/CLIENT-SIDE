@@ -9,7 +9,7 @@ interface FollowTabComponentProps {
     // Define any props if necessary
 }
 
-const FollowTabComponent: React.FC<FollowTabComponentProps> = (props) => {
+const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
     const [isFollowed, setFollow] = useState(false);
     const notFollowButton = <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button>
     const isFollowButton =  <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>

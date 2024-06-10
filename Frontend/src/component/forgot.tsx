@@ -1,5 +1,4 @@
-import { Box, Button, Flex, FormControl, FormHelperText, FormLabel, HStack, Heading, Input, Link, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box, Button, Flex, FormControl, FormLabel, HStack, Heading, Input, Link, Text } from "@chakra-ui/react";
 
 export default function forgot()
 {
@@ -47,6 +46,7 @@ export default function forgot()
     return (
         <>
         {forgot}
+        {resetPassword}
         </>
     )
 }

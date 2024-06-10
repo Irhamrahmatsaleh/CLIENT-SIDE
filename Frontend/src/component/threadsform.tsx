@@ -1,16 +1,16 @@
-import { thread, threadsForm } from "../libs/type";
-import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, LinkBox, LinkOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
-import Axios, { AxiosError } from 'axios';
-import React, { createContext, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { BiMessage, BiSolidMessage } from "react-icons/bi";
-import { BsArrowLeft, BsHeart, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
-import f from './function';
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, Text, Textarea, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import Axios, { AxiosError } from 'axios';
+import React, { useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { BiSolidMessage } from "react-icons/bi";
+import { BsArrowLeft, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
 import { createThreadSchema } from "../features/validators/threads";
-import { fetchThreads } from "./threads";
 import { api } from "../libs/api";
+import { thread, threadsForm } from "../libs/type";
+import f from './function';
+import { fetchThreads } from "./threads";
 
 export const ThreadsUpload : React.FC= () => {
     const textareaRef = useRef<string>() ;
@@ -18,7 +18,7 @@ export const ThreadsUpload : React.FC= () => {
     const [imagePreview, setImagePreview] = useState<string>("");
     const [textValue, setTextValue] = useState<string>();
 
-    const { data: threads, refetch } = useQuery<thread[]>({
+    const { refetch } = useQuery<thread[]>({
         queryKey: ["threads"],
         queryFn: fetchThreads,
         });
@@ -59,39 +59,6 @@ export const ThreadsUpload : React.FC= () => {
             })
         },
     });
-
-    async function postThreads(data: { content: any; image: any; }){
-            const formData =  new FormData();
-            formData.append('content', data.content);
-            if (data.image && data.image[0]) {
-                formData.append('image', data.image[0]);
-                } else {
-                formData.append('image', 'none');
-                }
-            
-            const token = localStorage.getItem('token');
-            const response = await Axios({
-            method: "post",
-            url: `${api}/threadPost`,
-            data: formData,
-            headers: { 
-                "Content-Type": "multipart/form-data",
-                'Authorization': `Bearer ${token}`
-                },
-            })
-            return response
-    }
-
-    async function submit(data: { content: any; image: any; }) {
-        try {
-            const response = await postThreads(data);
-            if(response.status === 201)
-            location.reload();
-        } catch (error) {
-        // handle error
-        console.log("this is ",error);
-        }
-    };
     
     const onSubmit: SubmitHandler<threadsForm> = async (data : { content: any; image: any ; }) => {
         console.log("test");

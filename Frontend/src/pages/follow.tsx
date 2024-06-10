@@ -1,9 +1,7 @@
-import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react"
-import Sidebar, { sideButton } from "../component/sidebar"
-import ProfileCard from "../component/profileCard"
-import Profile from "../component/profileCard";
-import React from "react";
+import { Flex } from "@chakra-ui/react";
 import FollowComponent from "../component/followingTab";
+import ProfileCard from "../component/profileCard";
+import Sidebar, { sideButton } from "../component/sidebar";
 
 export default function followTab()
 {

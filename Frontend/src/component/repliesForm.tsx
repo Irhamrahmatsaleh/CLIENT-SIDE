@@ -1,18 +1,16 @@
-import { replies, repliesForm, thread, threadsForm } from "../libs/type";
-import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, LinkBox, LinkOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
-import Axios, { AxiosError } from 'axios';
-import React, { createContext, useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { BiMessage, BiSolidMessage } from "react-icons/bi";
-import { BsArrowLeft, BsHeart, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
-import f from './function';
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { Box, Button, Flex, FormControl, HStack, IconButton, Image, Input, Textarea, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createThreadSchema } from "../features/validators/threads";
-import { fetchThreads } from "./threads";
-import { fetchReplies } from "./replies";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import Axios, { AxiosError } from 'axios';
+import React, { useRef, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { BsImage, BsXCircle } from "react-icons/bs";
 import { useParams } from "react-router-dom";
+import { createThreadSchema } from "../features/validators/threads";
 import { api } from "../libs/api";
+import { replies, repliesForm, thread, threadsForm } from "../libs/type";
+import f from './function';
+import { fetchReplies } from "./replies";
 
 
 export const RepliesForm : React.FC= () => {

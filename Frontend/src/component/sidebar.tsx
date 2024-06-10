@@ -1,14 +1,13 @@
 
-import { Flex, Button, Icon, Heading, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, IconButton, Divider, FormControl, Textarea } from '@chakra-ui/react';
-import { BsDoorOpen, BsHeart, BsHouseDoor, BsImage, BsPerson, BsSearch } from 'react-icons/bs';
-import { IconType } from 'react-icons';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import f from './function'
-import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Button, Divider, Flex, FormControl, Heading, Icon, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalOverlay, Textarea } from '@chakra-ui/react';
 import Axios from 'axios';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { IconType } from 'react-icons';
+import { BsDoorOpen, BsHeart, BsHouseDoor, BsImage, BsPerson, BsSearch } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
 import { api } from '../libs/api';
+import f from './function';
 
 export enum sideButton {
     home,
@@ -60,10 +59,7 @@ const color = {
 
 export default function Sidebar(side : sideButton){
     const {
-      register,
       handleSubmit,
-      watch,
-      formState: { errors },
     } = useForm<threadForm>()
 
     const [isOpen, setIsOpen] = useState(false);

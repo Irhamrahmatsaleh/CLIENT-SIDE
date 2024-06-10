@@ -1,8 +1,4 @@
-import { Box, Button, Flex, FormControl, FormHelperText, FormLabel, HStack, Heading, Input, Link, Text } from "@chakra-ui/react";
-import React from "react";
-import { useForm, SubmitHandler, Form } from "react-hook-form"
-import Axios from "axios"
-import { registerForm } from "@/libs/type";
+import { Box, Button, Flex, FormControl, FormLabel, HStack, Heading, Input, Link, Text } from "@chakra-ui/react";
 import { useRegisterForm } from "../features/hooks/authRegister";
 
 export default function register()

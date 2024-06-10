@@ -1,9 +1,8 @@
 import { Flex } from "@chakra-ui/react";
+import Profile from "../component/profileCard";
+import Sidebar, { sideButton } from "../component/sidebar";
 import Threads from "../component/threads";
 import { forms, otherProfileThreads } from "../component/threadsform";
-import Sidebar, { sideButton } from "../component/sidebar";
-import Profile from "../component/profileCard";
-import React from "react";
 
 export default function status ()
 {

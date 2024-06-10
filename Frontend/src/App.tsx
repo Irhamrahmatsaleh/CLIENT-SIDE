@@ -4,7 +4,9 @@ import Axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import Replies from "./component/replies";
 import { SET_USER } from "./features/auth/authSlice";
+import { api } from "./libs/api";
 import theme from './libs/chakra-theme';
 import Follow from './pages/follow';
 import Home from './pages/home';
@@ -14,9 +16,6 @@ import Register from './pages/register';
 import Search from './pages/search';
 import Status from './pages/status';
 import { RootState } from "./redux/store";
-import { useParams } from 'react-router-dom';
-import Replies from "./component/replies";
-import { api } from "./libs/api";
 
 
 export default function App() {

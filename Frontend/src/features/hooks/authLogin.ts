@@ -1,14 +1,14 @@
 import { loginForm } from "@/libs/type";
+import { useToast } from "@chakra-ui/react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Axios from 'axios';
 import { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SET_USER } from "../auth/authSlice";
-import { useToast } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "../validators/login-form";
 import { api } from "../../libs/api";
+import { SET_USER } from "../auth/authSlice";
+import { loginSchema } from "../validators/login-form";
 
 export const useLoginForm = () => {
     const toast = useToast();
@@ -17,7 +17,6 @@ export const useLoginForm = () => {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
       } = useForm<loginForm>({
         mode: "onChange",

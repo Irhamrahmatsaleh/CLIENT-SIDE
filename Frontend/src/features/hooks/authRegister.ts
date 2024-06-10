@@ -9,7 +9,6 @@ export const useRegisterForm = () => {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
       } = useForm<registerForm>({
         mode: "onChange",
