@@ -6,7 +6,7 @@ import { upload } from './middlewares/image-thread';
 import { authenticateToken } from './middlewares/authentication';
 import followController from './controllers/follow';
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 const app = Express();
 const router = Express.Router();
 
@@ -15,7 +15,6 @@ app.use(Cors())
 app.use("/api/v1", router);
 
 //v1
-router.get("/user:id", userController.findUser)
 router.post("/register", upload.none(), userController.registerUser)
 router.post("/login", upload.none(), userController.loginUser)
 router.post("/check",authenticateToken, upload.none(), userController.check)
