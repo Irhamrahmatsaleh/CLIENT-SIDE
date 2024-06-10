@@ -79,13 +79,13 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/follow" element={<Follow />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/threadsProfile" element={<Status/>} />
+            <Route path="/threads/:id" element={<Replies/>} />
             {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
           </Route>
-          <Route path="/search" element={<Search />} />
-          <Route path="/follow" element={<Follow />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/threadsProfile" element={<Status/>} />
-          <Route path="/threads/:id" element={<Replies/>} />
         </Routes>
     </ChakraProvider>
   )
