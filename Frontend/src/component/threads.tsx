@@ -49,7 +49,7 @@ export default function Threads(){
         queryKey: ["threads"],
         queryFn: fetchThreads,
         });
-    const [thread, setThread] = useState<thread[]>([]);
+    const [, setThread] = useState<thread[]>([]);
     const [likedStates, setLikedStates] = useState<boolean[]>([]);
     const [isHover, setHover] = useState(false);
 
