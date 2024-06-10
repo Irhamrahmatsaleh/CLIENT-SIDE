@@ -81,15 +81,6 @@ export default function Threads(){
         fetchThreads();
     }, [])
 
-    if(!thread || thread.length === 0)
-        {
-           return (
-            <>
-            <h1>Threads Empty</h1>
-            </>
-           ) 
-        }
-
     const likeHandle = (index : number) => {
         const newLiked = [...likedStates];
         newLiked[index] = !newLiked[index];
