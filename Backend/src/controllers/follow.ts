@@ -31,6 +31,17 @@ class followController{
             res.status(500).json({ error: err });;
         }
     }
+
+    async fetchSearchedUser(req: Request, res: Response){
+        try{
+            const user = res.locals.verifyingUser;
+            const {search} = req.body;
+            const users = await followServices.searchedUsers(search, user);
+            res.send(users);
+        }catch (err){
+            res.status(400).json({ error: err });;
+        }
+    }
 }
 
 export default new followController()

@@ -8,6 +8,7 @@ import { SET_USER } from "../auth/authSlice";
 import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../validators/login-form";
+import { api } from "../../libs/api";
 
 export const useLoginForm = () => {
     const toast = useToast();
@@ -31,7 +32,7 @@ export const useLoginForm = () => {
         try {
             const response = await Axios({
                 method: "post",
-                url: "http://localhost:5000/api/v1/login",
+                url: `${api}/login`,
                 data: objectToFormData(data),
                 headers: { "Content-Type": "multipart/form-data" },
                 })

@@ -1,12 +1,46 @@
-import { Button, Flex, FormControl, FormLabel, Heading, Input, InputGroup, InputLeftElement, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import { Button, Flex, FlexProps, FormControl, Heading, Input, InputGroup, InputLeftElement, Link, Text } from "@chakra-ui/react";
 import { BsPerson } from "react-icons/bs";
 import f from '../component/function';
-import Sidebar from "../component/sidebar";
 import Profile from "../component/profileCard";
-import { sideButton } from "../component/sidebar";
-import React from "react";
+import Sidebar, { sideButton } from "../component/sidebar";
+import { useEffect, useState } from "react";
+import { follower, users } from "../libs/type";
+import Axios from "axios";
+import { useDebounce } from 'use-debounce';
+import { api } from "../libs/api";
 
 export default function search() {
+    const [searchedUsers, setSearchedUsers] = useState<users[]>([]);
+    const [prompt, setPrompt] = useState<string>('');
+    const [fetchDebounce] = useDebounce(prompt, 300);
+    const [isFollowed, setFollow] = useState<boolean[]>([]);
+
+    useEffect(() => {
+        fetchUsers(fetchDebounce);
+    }, [fetchDebounce])
+
+    async function fetchUsers(prompt : string){
+        try {
+            if(prompt === '') {
+                return <></>
+            }
+            const formData = new FormData();
+            formData.append('search', prompt);
+            const token = localStorage.getItem('token');
+            const response = await Axios({
+                method: "post",
+                url: `${api}/search`,
+                data: formData,
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                    'Authorization': `Bearer ${token}`
+                 },
+            })
+            setSearchedUsers(response.data);
+        } catch(error) {
+            return error;
+        }
+    }
     const color = {
         grey: '#909090',
         greyCard: '#262626'
@@ -14,13 +48,36 @@ export default function search() {
     
     const bgColor = '#1D1D1D'
 
+        const notFollowButton = <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button>
+        const isFollowButton =  <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>
+
+    const followHandle = (index : number) => {
+        const newFollowed = [...isFollowed];
+        newFollowed[index] = !newFollowed[index];
+        setFollow(newFollowed);
+    }
+
+    const followButton =  (index : number) => {
+        return (
+            <Link onClick={() => {followHandle(index)}}> {isFollowed[index] ? isFollowButton : notFollowButton} </Link>
+        )
+    }
+
+    useEffect(() => {
+        const follow : boolean[] = searchedUsers.map(isFollow => {
+            return isFollow.isFollowed ?? false;   
+       })
+
+       setFollow(follow);
+    },[searchedUsers])
+
     const searchBar =
     <FormControl isRequired mt={'2rem'}>
     <InputGroup>
         <InputLeftElement pointerEvents='none' mx={'0.33rem'}>
             <BsPerson fontSize={'1.25rem'} color={color.grey} />
         </InputLeftElement>
-        <Input color={'white'} placeholder='Search Your Friend' borderRadius={'20px'} />
+        <Input color={'white'} placeholder='Search Your Friend' borderRadius={'20px'} onInput={(e) => {setPrompt((e.target as HTMLInputElement).value);}}/>
     </InputGroup>
     </FormControl>
 
@@ -74,13 +131,36 @@ export default function search() {
         </Flex>
     </Flex>
 
+interface SearchedCardsProps extends FlexProps {
+    user: users;
+    index : number;
+  }
+  
+function SearchedUsers({ user, index }: SearchedCardsProps) {
+    return (
+        <Flex alignItems={'center'} justifyContent={'space-between'} mb={'1rem'}>
+            <Flex>
+                {f.imageCircle(user.photo_profile, '40px')}
+                <Flex flexDirection={'column'} ms={'1rem'}>
+                <Text color={'white'} fontWeight={'bold'}>{user.full_name}</Text>
+                <Text fontSize={'1rem'} color={color.grey} mb={'0.2rem'}>{user.username}</Text>
+                <Text color={'white'} fontSize={'0.95rem'}>{user.bio}</Text>
+                </Flex>
+            </Flex>
+            {followButton(index)}
+        </Flex>
+    );
+  }
+
 
     return (
         <Flex justifyContent={'start'} bg={bgColor} maxHeight={'733px'}>
         {Sidebar(sideButton.search)}
         <Flex flexDirection={'column'} width={'40%'}>
         {searchBar}
-        {searchNotFound("Asnmdidnfl")}
+        <Flex flexDirection={'column'} width={'100%'} pt={'1rem'} borderRadius={'14px'} mx={'auto'} mt={'2rem'}>
+        {searchedUsers?.length  ? searchedUsers.map((user, index) => <SearchedUsers user={user} key={index} index={index}/>) : searchNotFound(prompt)}
+            </Flex>
         </Flex>
         <Profile />
         </Flex>

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import Axios from 'axios'
 import f from './function'
 import { following } from "@/libs/type";
+import { api } from "../libs/api";
 
 interface FollowTabComponentProps {
     // Define any props if necessary
@@ -27,7 +28,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = (props) => {
             const token = localStorage.getItem('token');
             const response = await Axios({
                 method: "get",
-                url: `http://localhost:5000/api/v1/follower`,
+                url: `${api}/follower`,
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     'Authorization': `Bearer ${token}`
@@ -43,7 +44,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = (props) => {
             const token = localStorage.getItem('token');
             const response = await Axios({
                 method: "get",
-                url: `http://localhost:5000/api/v1/following`,
+                url: `${api}/following`,
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     'Authorization': `Bearer ${token}`
@@ -59,7 +60,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = (props) => {
         const token = localStorage.getItem('token');
         const response = await Axios({
             method: "get",
-            url: `http://localhost:5000/api/v1/follower`,
+            url: `${api}/follower`,
             headers: { 
                 "Content-Type": "multipart/form-data",
                 'Authorization': `Bearer ${token}`
@@ -72,7 +73,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = (props) => {
         const token = localStorage.getItem('token');
         const response = await Axios({
             method: "get",
-            url: `http://localhost:5000/api/v1/following`,
+            url: `${api}/following`,
             headers: { 
                 "Content-Type": "multipart/form-data",
                 'Authorization': `Bearer ${token}`

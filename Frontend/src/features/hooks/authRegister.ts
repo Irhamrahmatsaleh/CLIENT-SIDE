@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { registerSchema } from "../validators/register-form";
+import { api } from "../../libs/api";
 
 export const useRegisterForm = () => {
     const {
@@ -19,7 +20,7 @@ export const useRegisterForm = () => {
         try {
             const response = await Axios({
                 method: "post",
-                url: "http://localhost:5000/api/v1/register",
+                url: `${api}/register`,
                 data: objectToFormData(data),
                 headers: { "Content-Type": "multipart/form-data" },
                 })

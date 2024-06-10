@@ -29,7 +29,8 @@
       "openai": "^4.48.2",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
-      "typescript": "^5.4.5"
+      "typescript": "^5.4.5",
+      "use-debounce": "^10.0.1"
    },
    "devDependencies": {
       "@types/node": "^16.11.10",

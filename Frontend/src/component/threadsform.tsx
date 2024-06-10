@@ -10,8 +10,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createThreadSchema } from "../features/validators/threads";
 import { fetchThreads } from "./threads";
-
-
+import { api } from "../libs/api";
 
 export const ThreadsUpload : React.FC= () => {
     const textareaRef = useRef<string>() ;
@@ -51,7 +50,7 @@ export const ThreadsUpload : React.FC= () => {
             const token = localStorage.getItem('token');
             return await Axios({
             method: "post",
-            url: "http://localhost:5000/api/v1/threadPost",
+            url: `${api}/threadPost`,
             data: formData,
             headers: { 
                 "Content-Type": "multipart/form-data",
@@ -73,7 +72,7 @@ export const ThreadsUpload : React.FC= () => {
             const token = localStorage.getItem('token');
             const response = await Axios({
             method: "post",
-            url: "http://localhost:5000/api/v1/threadPost",
+            url: `${api}/threadPost`,
             data: formData,
             headers: { 
                 "Content-Type": "multipart/form-data",
@@ -94,61 +93,60 @@ export const ThreadsUpload : React.FC= () => {
         }
     };
     
-        const onSubmit: SubmitHandler<threadsForm> = async (data : { content: any; image: any ; }) => {
-            console.log("test");
-            if(!imagePreview || imagePreview === '') data.image = null;
-            textareaRef.current = "";
-            setTextValue('')
-            await mutateAsync(data);
-            refetch();
-        }
+    const onSubmit: SubmitHandler<threadsForm> = async (data : { content: any; image: any ; }) => {
+        console.log("test");
+        if(!imagePreview || imagePreview === '') data.image = null;
+        textareaRef.current = "";
+        setTextValue('')
+        await mutateAsync(data);
+        refetch();
+    }
 
-        const changeImage = (event : React.ChangeEvent<HTMLInputElement>) => {
-            const file = event.target.files && event.target.files[0];
-            if(file){
-                setImagePreview(URL.createObjectURL(file));
-                fileInputRef.current = file;
-            }
+    const changeImage = (event : React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files && event.target.files[0];
+        if(file){
+            setImagePreview(URL.createObjectURL(file));
+            fileInputRef.current = file;
         }
+    }
 
-        const clearFileInput = () => {
-            if (fileInputRef.current) {
-              fileInputRef.current = null;
-              setImagePreview('')
-              console.log('File input cleared');
-            }
-          };
-          
+    const clearFileInput = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current = null;
+            setImagePreview('')
+            console.log('File input cleared');
+        }
+        };
+        
 
     return (
-    <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'1rem 0 0.5rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
-    <Heading as={'h2'} size={'xl'} marginY={'1.5rem'} color={'whitesmoke'}>Home</Heading>
+    <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'0rem 0 0.5rem'} p={'1rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
     <HStack alignItems={'start'}>
     {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px', '0.2rem')}
     <form onSubmit={handleSubmit(onSubmit)}>
-    <FormControl display={'flex'} alignItems={'start'} marginBottom={'1rem'}>
-        <VStack justifyContent={'start'}>
-                <Textarea placeholder="What is Happening..." width={'320px'} minHeight={'40px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} value={textValue} ></Textarea>
+    <FormControl display={'flex'} alignItems={'start'}>
+        <VStack justifyContent={'start'} min-height={'60px'}>
+                <Textarea placeholder="What is Happening..." width={'420px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} value={textValue} ></Textarea>
                 {imagePreview && 
                 
                 <Box position="relative" display="inline-block">
-                <Image src={imagePreview} height="200px" />
-                <IconButton
-                position="absolute"
-                top="15%"
-                right="3%"
-                transform="translate(-50%, -50%)"
-                icon={<BsXCircle />}
-                color={'white'}
-                fontSize={'1.33rem'}
-                size={'sm'}
-                isRound={true}
-                colorScheme="red"
-                variant={'solid'}
-                aria-label="close"
-                onClick={clearFileInput}
-                >
-            </IconButton>
+                    <Image src={imagePreview} height="200px" />
+                    <IconButton
+                    position="absolute"
+                    top="15%"
+                    right="3%"
+                    transform="translate(-50%, -50%)"
+                    icon={<BsXCircle />}
+                    color={'white'}
+                    fontSize={'1.33rem'}
+                    size={'sm'}
+                    isRound={true}
+                    colorScheme="red"
+                    variant={'solid'}
+                    aria-label="close"
+                    onClick={clearFileInput}
+                    >
+                    </IconButton>
                 </Box>}
                 </VStack>
                 <Box position="relative" display="inline-block">

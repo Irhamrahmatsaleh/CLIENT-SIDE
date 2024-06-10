@@ -22,9 +22,9 @@ model likes {
   user_id    Int
   thread_id  Int
   created_at DateTime @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @db.Timestamp(6)
-  created_by String   @db.VarChar
+  created_by Int?
   update_at  DateTime @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @db.Timestamp(6) @updatedAt
-  updated_by String   @db.VarChar
+  updated_by Int?
   users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_3f519ed95f775c781a254089171")
   threads    threads  @relation(fields: [thread_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_dfee0c14f2a697eeb0b0bfc50cc")
 }
@@ -33,12 +33,12 @@ model replies {
   id         Int      @id(map: "PK_08f619ebe431e27e9d206bea132") @default(autoincrement())
   user_id    Int
   thread_id  Int
-  image      String   @db.VarChar
+  image      String?   @db.VarChar
   content    String?  @db.VarChar
   created_at DateTime @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @db.Timestamp(6)
-  created_by String   @db.VarChar
+  created_by Int?   
   updated_at DateTime @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @db.Timestamp(6) @updatedAt
-  updated_by String   @db.VarChar
+  updated_by Int?
   threads    threads  @relation(fields: [thread_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_1af58ca9000874da2171004d164")
   users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c961efa3687d100ed22cd409534")
 }

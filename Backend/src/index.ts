@@ -23,12 +23,17 @@ router.patch("/user:id",authenticateToken, upload.none(), userController.updateU
 router.delete("/user:id",authenticateToken, userController.deleteUser)
 
 router.get("/thread",authenticateToken, upload.none(), threadController.findAllThread)
-router.get("/thread:id",authenticateToken, upload.none(), threadController.findThread)
-
+router.get("/threadProfile",authenticateToken, upload.none(), threadController.findThread)
+router.get("/thread:id",authenticateToken, upload.none(), threadController.findIDThread)
 router.post("/threadPost",authenticateToken,upload.single('image'), threadController.postThread)
 router.patch("/thread:id",authenticateToken, upload.none(), threadController.updateThread)
 router.delete("/thread:id",authenticateToken, threadController.deleteThread)
+router.get("/image",authenticateToken, upload.none(), threadController.findImage)
 
+router.get("/replies:id",authenticateToken, upload.none(), threadController.findRepliesID)
+router.post("/replies:id",authenticateToken,upload.single('image'), threadController.postReplies)
+
+router.post("/search",authenticateToken, upload.none(), followController.fetchSearchedUser)
 router.get("/following", authenticateToken, upload.none(), followController.fetchFollowing)
 router.get("/follower", authenticateToken, upload.none(), followController.fetchFollower)
 router.get("/suggested", authenticateToken, upload.none(), followController.fetchRandomUserSuggestion)

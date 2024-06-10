@@ -91,4 +91,16 @@ function imageMessage(img : string)
     src={img}/>
 }
 
-export default {dateDifferences, imageCircle, imageMessage, editProfileCard}
+function timeString(timeStamp : Date){
+    const date = new Date(timeStamp);
+    const timeOnly = date.toLocaleString([], { hour:'2-digit', minute:'2-digit', hour12:true });
+    return timeOnly;
+}
+
+function dateString(timeStamp : Date){
+    const date = new Date(timeStamp);
+    const timeOnly = date.toLocaleString([], { day:'2-digit', month:'long', year:'numeric'});
+    return timeOnly;
+}
+
+export default {dateDifferences, imageCircle, imageMessage, editProfileCard, timeString, dateString}

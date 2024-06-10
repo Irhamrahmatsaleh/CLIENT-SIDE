@@ -16,14 +16,51 @@ class threadServices {
         });
       }
 
-
-  
-
-
     async FindThread(idUser : number){
       try{  
-        const fetchedData = await this.prisma.threads.findFirst({where: {id: idUser}})
-        return fetchedData;
+        const fetchedData = await this.prisma.threads.findMany({
+          where: {created_by: idUser},
+          include : {
+            users: {
+              select: {
+                username: true,
+                full_name: true,
+                photo_profile: true
+              }
+            },
+            likes:true
+          },
+        })
+        if (fetchedData){
+          return fetchedData;
+        } else {
+          throw new Error("All Thread Empty");
+        }
+      } catch (error){
+        throw new Error(error);
+      }
+    }
+
+    async FindThreadID(idThread : number){
+      try{  
+        const fetchedData = await this.prisma.threads.findFirst({
+          where: {id: idThread},
+          include : {
+            users: {
+              select: {
+                username: true,
+                full_name: true,
+                photo_profile: true
+              }
+            },
+            likes:true
+          },
+        })
+        if (fetchedData){
+          return fetchedData;
+        } else {
+          throw new Error("All Thread Empty");
+        }
       } catch (error){
         throw new Error(error);
       }
@@ -31,7 +68,6 @@ class threadServices {
 
     async FindAllThread(){
       try{
-
         const fetchedData = await this.prisma.threads.findMany({
           include : {
             users: {
@@ -56,7 +92,58 @@ class threadServices {
       }
     }
 
-    async PostThread(dto : dataContent_thread, user : users)
+    
+    async FindAllImage(){
+      try{
+        const fetchedData = await this.prisma.threads.findMany({
+          include : {
+            users: {
+              select: {
+                username: true,
+                full_name: true,
+                photo_profile: true
+              }
+            },
+            likes:true
+          },
+        })
+
+        if (fetchedData){
+          return fetchedData;
+        } else {
+          throw new Error("All Image Empty");
+        }
+
+      } catch (error){
+        throw new Error(error);
+      }
+    }
+
+    async FindRepliesID(idThread : number){
+      try{  
+        const fetchedData = await this.prisma.replies.findMany({
+          where: {thread_id: idThread},
+          include : {
+            users : {
+              select : {
+                photo_profile : true,
+                username : true,
+                full_name : true
+              }
+            }
+          }
+        })
+        if (fetchedData){
+          return fetchedData;
+        } else {
+          throw new Error("All Thread Empty");
+        }
+      } catch (error){
+        throw new Error(error);
+      }
+    }
+
+    async PostReplies(dto : dataContent_thread, user : users, idThread : number)
     {
       
         try {
@@ -64,6 +151,45 @@ class threadServices {
         
             if (validate.error) {
               throw new Error('validate error');
+            }
+
+           // Upload image if provided
+          let imageUrl = null;
+          if (dto.image) {
+            const upload = await cloudinary.uploader.upload(dto.image, {
+                upload_preset: "threads"
+            });
+            imageUrl = upload.secure_url;
+        }
+            
+            const createdData = await this.prisma.replies.create({ 
+                data: {
+                    user_id: user.id,
+                    thread_id: idThread,
+                    content: dto.content,
+                    image: imageUrl,
+                    created_by: user.id,
+                    updated_by: user.id,
+                }
+            });
+
+            if(!createdData) throw new Error("error create data");
+            return createdData;
+        } catch (err)
+        {
+          console.error(err);
+            throw new Error(err);
+        }
+    }
+
+    async PostThread(dto : dataContent_thread, user : users)
+    {
+      
+        try {
+            const validate = threadValidate.validate(dto);
+        
+            if (validate.error) {
+              throw new Error('validate post thread error');
             }
 
            // Upload image if provided
@@ -84,7 +210,7 @@ class threadServices {
                 }
             });
 
-            if(!createdData) throw new Error("error create data");
+            if(!createdData) throw new Error("error create threads");
             return createdData;
         } catch (err)
         {

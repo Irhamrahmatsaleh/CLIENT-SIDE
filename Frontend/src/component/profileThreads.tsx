@@ -1,12 +1,11 @@
-import { thread } from "@/libs/type";
-import { Box, Flex, Link, LinkBox, LinkOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Image, Heading } from '@chakra-ui/react';
+import { thread, threadProfile } from "@/libs/type";
+import { Box, Flex, Link, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import f from './function';
 import { useQuery } from "@tanstack/react-query";
-import { ThreadsUpload } from "./threadsform";
 import { api } from "../libs/api";
 
 export async function fetchThreads(){
@@ -26,29 +25,8 @@ export async function fetchThreads(){
     }
 }
 
-export async function fetchUserThreads(id : number){
-    try {
-        const token = localStorage.getItem('token');
-        const response = await Axios({
-            method: "get",
-            url: `${api}/threadProfile${id}`,
-            headers: { 
-                "Content-Type": "multipart/form-data",
-                'Authorization': `Bearer ${token}`
-             },
-        })
-    return response.data;
-    } catch(error){
-        return error;
-    }
-}
-
 export default function Threads(){
     
-    const { data: threads } = useQuery<thread[]>({
-        queryKey: ["threads"],
-        queryFn: fetchThreads,
-        });
     const [thread, setThread] = useState<thread[]>([]);
     const [likedStates, setLikedStates] = useState<boolean[]>([]);
     const [isHover, setHover] = useState(false);
@@ -61,34 +39,27 @@ export default function Threads(){
         setHover(false);
     };
 
-    useEffect(() => {
+    useEffect(  () => {
         async function fetchThreads(){
             try {
                 const token = localStorage.getItem('token');
                 const response = await Axios({
                     method: "get",
-                    url: `${api}/thread`,
+                    url: `${api}/threadProfile`,
                     headers: { 
                         "Content-Type": "multipart/form-data",
                         'Authorization': `Bearer ${token}`
                      },
                 })
                 setThread(response.data);
+                console.log(response.data);
             } catch(error){
+
                 return error;
             }
         }
         fetchThreads();
     }, [])
-
-    if(!thread || thread.length === 0)
-        {
-           return (
-            <>
-            <h1>Threads Empty</h1>
-            </>
-           ) 
-        }
 
     const likeHandle = (index : number) => {
         const newLiked = [...likedStates];
@@ -96,7 +67,7 @@ export default function Threads(){
         setLikedStates(newLiked);
     }
 
-    const tabThreads = threads?.map((item, index) => {
+    const data = thread.map((item, index) => {
             const likeIcon = <Link onClick={() => {likeHandle(index);}}> {likedStates[index] ? <BsHeartFill/> : <BsHeart/>} </Link>
             if(item.users == null)
                 {
@@ -134,7 +105,7 @@ export default function Threads(){
                     {likeIcon}
                     <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes.length}</Text>
                     <LinkBox>
-                    <LinkOverlay href={`/threads/${item.id}`}><Box onMouseOver={mouseEnter} onMouseLeave={mouseLeave}>{isHover ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                    <LinkOverlay href={`/threads`}><Box onMouseOver={mouseEnter} onMouseLeave={mouseLeave}>{isHover ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
                     </LinkBox>
                     <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
                     </Flex>
@@ -142,39 +113,18 @@ export default function Threads(){
             </Flex>
             )
         })
-
-    const tabImage = threads?.map((item, index) => {
-        return (
-            <Image src={item.image} my={'0.33rem'} height={'auto'} key={index}/>
-        )
-    })
     
     return(
-        <Box>
-        <Heading as={'h3'} fontSize={'1.5rem'} mt={'2rem'} mb={'1rem'} color={'whitesmoke'}>Home</Heading>
-        <Tabs isFitted colorScheme="green">
-                <TabList mb='1rem' color={'white'}>
-                    <Tab>Threads</Tab>
-                    <Tab>Media</Tab>
-                </TabList>
-                <ThreadsUpload />
-                <Flex flexDirection={'column'} justifyContent={'start'} height={'480px'} overflowY="scroll" overflowX="hidden" css={{
-                        '::-webkit-scrollbar': {
-                        display: 'none',
-                        },
-                        '-ms-overflow-style': 'none',
-                        'scrollbar-width': 'none',
-                    }}>
-                <TabPanels>
-                    <TabPanel>
-                    {tabThreads}
-                    </TabPanel>
-                    <TabPanel>
-                    {tabImage}
-                    </TabPanel>
-                </TabPanels>
-                </Flex>
-                </Tabs>
-        </Box>
+        <>
+            <Flex flexDirection={'column'} justifyContent={'start'} mt={'1rem'} height={'720px'} overflowY="scroll" overflowX="hidden" css={{
+        '::-webkit-scrollbar': {
+          display: 'none',
+        },
+        '-ms-overflow-style': 'none', // IE and Edge
+        'scrollbar-width': 'none', // Firefox
+      }}>
+                {data}
+            </Flex>
+        </>
     )
 }

@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { forms, profileThreads } from "../component/threadsform";
-import Threads from "../component/threads";
+import ThreadsProfile from '../component/profileThreads'
 import Sidebar, { sideButton } from "../component/sidebar";
 import Profile from "../component/profileCard";
 import React from "react";
@@ -13,7 +13,7 @@ export default function profile()
         {Sidebar(sideButton.profile)}
         <Flex flexDirection={'column'} width={'40%'}>
         {forms(profileThreads)}
-        <Threads />
+        <ThreadsProfile />
         </Flex>
         <Profile />
         </Flex>

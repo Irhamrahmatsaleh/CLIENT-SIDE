@@ -12,7 +12,6 @@ export default function home ()
         <Flex justifyContent={'start'} bg={bgColor} maxHeight={'733px'}>
         {Sidebar(sideButton.home)}
         <Flex flexDirection={'column'} width={'40%'}>
-        <ThreadsUpload />
         <Threads />
         </Flex>
         <Profile />

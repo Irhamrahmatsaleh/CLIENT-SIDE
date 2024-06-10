@@ -8,6 +8,7 @@ import f from './function'
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Axios from 'axios';
+import { api } from '../libs/api';
 
 export enum sideButton {
     home,
@@ -26,7 +27,7 @@ async function submit(data: Object) {
   console.log("data " + objectToFormData(data));
   const response = await Axios({
       method: "post",
-      url: "http://localhost:5000/api/v1/user",
+      url: `${api}/user`,
       data: objectToFormData(data),
       headers: { "Content-Type": "multipart/form-data" },
     })

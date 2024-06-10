@@ -14,6 +14,9 @@ import Register from './pages/register';
 import Search from './pages/search';
 import Status from './pages/status';
 import { RootState } from "./redux/store";
+import { useParams } from 'react-router-dom';
+import Replies from "./component/replies";
+import { api } from "./libs/api";
 
 
 export default function App() {
@@ -36,7 +39,7 @@ export default function App() {
       const token = localStorage.token;
       const response = await Axios({
         method: "post",
-        url: `http://localhost:5000/api/v1/check`,
+        url: `${api}/check`,
         headers: { 
             "Content-Type": "multipart/form-data",
             'Authorization': `Bearer ${token}`
@@ -82,7 +85,8 @@ export default function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/follow" element={<Follow />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/threads" element={<Status/>} />
+          <Route path="/threadsProfile" element={<Status/>} />
+          <Route path="/threads/:id" element={<Replies/>} />
         </Routes>
     </ChakraProvider>
   )

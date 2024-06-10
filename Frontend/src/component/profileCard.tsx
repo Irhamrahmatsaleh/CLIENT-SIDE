@@ -4,7 +4,8 @@
     import { useEffect, useState } from "react";
     import React from "react";
     import Axios from "axios";
-import { following, suggested } from "@/libs/type";
+    import { following, suggested } from "@/libs/type";
+    import { api } from "../libs/api";
 
     const color = {
         grey: '#909090',
@@ -22,7 +23,6 @@ import { following, suggested } from "@/libs/type";
         const notFollowButton = <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button>
         const isFollowButton =  <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>
 
-        //make the following list an array then map through each just like threads, needs some json
         const followHandle = (index : number) => {
             const newFollowed = [...isFollowed];
             newFollowed[index] = !newFollowed[index];
@@ -77,7 +77,7 @@ import { following, suggested } from "@/libs/type";
                 const token = localStorage.getItem('token');
                 const response = await Axios({
                     method: "get",
-                    url: `http://localhost:5000/api/v1/suggested`,
+                    url: `${api}/suggested`,
                     headers: { 
                         "Content-Type": "multipart/form-data",
                         'Authorization': `Bearer ${token}`
@@ -85,7 +85,6 @@ import { following, suggested } from "@/libs/type";
                 })
                 setSuggested(response.data);
             }
-
             fetchSuggested();
         },[])
 

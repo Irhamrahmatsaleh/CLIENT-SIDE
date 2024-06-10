@@ -12,9 +12,10 @@ export type loginSchema = {
     }
 
 export type followers = {
+    id?: number,
     full_name: string,
     username: string,
-    photo_profile: string
+    photo_profile: string,
     }
 
 export type following = {
@@ -31,13 +32,13 @@ export type users = {
     username: string,
     full_name: string
     email: string,
-    password: string,
+    password?: string,
     photo_profile: string,
     bio: string,
     created_at: Date,
     created_by: string,
     updated_at: Date,
-    updated_by: string
+    updated_by: string,
 }
 
 export const loginValidate = Joi.object<loginSchema>({

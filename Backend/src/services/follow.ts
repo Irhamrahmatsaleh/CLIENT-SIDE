@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { UserJWTPayload } from "../types/payload";
 import { number } from "joi";
-import { following } from "../dto/user";
+import { following, users } from "../dto/user";
 
 class followServices {
     private prisma : PrismaClient;
@@ -36,7 +36,7 @@ class followServices {
                     follower: true
                 }
             });
-            return follower;
+            return follower
         } catch(err) {
             throw new Error(err);
         }
@@ -71,6 +71,57 @@ class followServices {
             });
             return followedArr;
         } catch(err) {
+            throw new Error(err);
+        }
+    }
+
+    async searchedUsers(word : string, thisUser : UserJWTPayload){
+        try {
+            let users : users[];
+            if(word[0] === '@')
+                {
+                    users = await this.prisma.users.findMany({
+                        where: {
+                            username: {
+                                contains: word,
+                                mode: 'insensitive'
+                            }
+                        }
+                    })
+                } else {
+                    users = await this.prisma.users.findMany({
+                        where: {
+                            full_name: {
+                                contains: word,
+                                mode: 'insensitive'
+                            }
+                        }
+                    })
+                }
+                users.forEach((item) => {
+                    delete item.password;
+                })
+                console.log('users',users);
+
+                const followed = await this.prisma.following.findMany({
+                    where: {
+                        follower_id: thisUser.id,
+                    },
+                });
+
+                console.log('users followed',followed);
+
+                // Create a set of followed user IDs for quick lookup
+                const followedUserIds = new Set(followed.map(f => f.followed_id));
+
+                // Map users to include isFollowed property
+                const followedArr = users.map(user => {
+                    const isFollowed = followedUserIds.has(user.id);
+                    return { ...user, isFollowed };
+                });
+                console.log('followedarr',followedArr);
+            return(followedArr);
+        } catch (err) {
             throw new Error(err);
         }
     }
