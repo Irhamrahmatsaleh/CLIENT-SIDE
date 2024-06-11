@@ -43,6 +43,23 @@ export async function fetchUserThreads(id : number){
     }
 }
 
+export async function setLike(id : number){
+    try {
+        const token = localStorage.getItem('token');
+        const response = await Axios({
+            method: "get",
+            url: `${api}/like${id}`,
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                'Authorization': `Bearer ${token}`
+             },
+        })
+    return response.data;
+    } catch(error){
+        return error;
+    }
+}
+
 export default function Threads(){
     
     const { data: threads } = useQuery<thread[]>({
@@ -50,22 +67,60 @@ export default function Threads(){
         queryFn: fetchThreads,
         });
     const [, setThread] = useState<thread[]>([]);
-    const [likedStates, setLikedStates] = useState<boolean[]>([]);
-    const [isHover, setHover] = useState(false);
+    // const [likedStates, setLikedStates] = useState<boolean[]>([]);
+    // const [isHover, setHover] = useState(false);
 
-    const mouseEnter = () => {
-        setHover(true);
-    };
+    // const mouseEnter = () => {
+    //     setHover(true);
+    // };
 
-    const mouseLeave = () => {
-        setHover(false);
-    };
+    // const mouseLeave = () => {
+    //     setHover(false);
+    // };
+
+    const [isLiked, setIsLiked] = useState<boolean[]>([]);
+    const handleLike = async (id : number, index : number) => {
+            likeHandle(index, true);
+            try {
+                const token = localStorage.getItem('token');
+                const response = await Axios({
+                    method: "get",
+                    url: `${api}/like${id}`,
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+            } catch (error) {
+                console.error('Error liking the item', error);
+                likeHandle(index, false);
+            }
+            };
+
+    const handleUnlike = async (id : number, index : number) => {
+        likeHandle(index, false);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await Axios({
+                method: "get",
+                url: `${api}/unlike${id}`,
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+        } catch (error) {
+            console.error('Error unliking the item', error);
+            likeHandle(index, true);
+        }
+        };
+    
 
     useEffect(() => {
         async function fetchThreads(){
             try {
                 const token = localStorage.getItem('token');
-                const response = await Axios({
+                const response= await Axios({
                     method: "get",
                     url: `${api}/thread`,
                     headers: { 
@@ -74,6 +129,9 @@ export default function Threads(){
                      },
                 })
                 setThread(response.data);
+                setIsLiked(response.data.map((data : any) => {
+                    return data["isliked"];
+                }))
             } catch(error){
                 return error;
             }
@@ -81,14 +139,14 @@ export default function Threads(){
         fetchThreads();
     }, [])
 
-    const likeHandle = (index : number) => {
-        const newLiked = [...likedStates];
-        newLiked[index] = !newLiked[index];
-        setLikedStates(newLiked);
+    const likeHandle = (index : number, con : boolean) => {
+        console.log(isLiked);
+        const newLiked = [...isLiked];
+        newLiked[index] = con;
+        setIsLiked(newLiked);
     }
 
     const tabThreads = threads?.map((item, index) => {
-            const likeIcon = <Link onClick={() => {likeHandle(index);}}> {likedStates[index] ? <BsHeartFill/> : <BsHeart/>} </Link>
             if(item.users == null)
                 {
                     return;
@@ -122,10 +180,11 @@ export default function Threads(){
                         {item.image ? (f.imageMessage(item.image)) : <></>}
                     </Box>
                     <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
-                    {likeIcon}
+                    {isLiked[index] ? 
+                    <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>}
                     <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes.length}</Text>
                     <LinkBox>
-                    <LinkOverlay href={`/threads/${item.id}`}><Box onMouseOver={mouseEnter} onMouseLeave={mouseLeave}>{isHover ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                    <LinkOverlay href={`/threads/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
                     </LinkBox>
                     <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
                     </Flex>

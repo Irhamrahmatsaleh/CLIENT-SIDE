@@ -45,6 +45,14 @@ export type likes = {
     updated_by : string
   }
 
+export type likeMap = {
+  user_id    : number
+}
+
+export type replyMap = {
+  user_id    : number
+}
+
 export type thread = {
     id: number,
     image: string,
@@ -53,9 +61,12 @@ export type thread = {
     updated_by: number,
     created_at: Date,
     update_at: Date,
-    created_by: number
-    users: users
-    likes: likes[]
+    created_by: number,
+    users: users,
+    likes: likeMap[],
+    replies : replyMap[],
+    isLiked : boolean,
+    isReplied: boolean
 }
 
 export type userReplies = {
@@ -107,7 +118,7 @@ export type suggested = {
     created_at : Date,
     update_at  : Date,
     follower    : follower,
-    isFollowed: false
+    isFollowed: boolean
   }
 
   export type follower = {

@@ -10,6 +10,23 @@ import f from './function';
         grey: '#909090',
         greyCard: '#262626'
     }
+
+    export async function setFollow(id : number){
+        try {
+            const token = localStorage.getItem('token');
+            const response = await Axios({
+                method: "get",
+                url: `${api}/follow${id}`,
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                    'Authorization': `Bearer ${token}`
+                 },
+            })
+        return response.data;
+        } catch(error){
+            return error;
+        }
+    }
     
     export default function Profile()
     {
@@ -18,19 +35,20 @@ import f from './function';
         const onClose = () => setIsOpen(false);
         const onOpen = () => setIsOpen(true);
 
-        const [isFollowed, setFollow] = useState<boolean[]>([]);
+        const [getSuggested, setSuggested] = useState<suggested[]>([]);
+        // const [isFollowed, setFollow] = useState<boolean[]>([]);
         const notFollowButton = <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button>
         const isFollowButton =  <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>
 
-        const followHandle = (index : number) => {
-            const newFollowed = [...isFollowed];
-            newFollowed[index] = !newFollowed[index];
-            setFollow(newFollowed);
-        }
+        // const followHandle = (index : number) => {
+        //     const newFollowed = [...isFollowed];
+        //     newFollowed[index] = !newFollowed[index];
+        //     setFollow(newFollowed);
+        // }
 
-        const followButton =  (index : number) => {
+        const followButton =  (item : suggested, index : number) => {
             return (
-                <Link onClick={() => {followHandle(index)}}> {isFollowed[index] ? isFollowButton : notFollowButton} </Link>
+                <Link onClick={() => {!item.isFollowed; setFollow(index)}}> {item.isFollowed ? isFollowButton : notFollowButton} </Link>
             )
         }
 
@@ -70,7 +88,7 @@ import f from './function';
         </Flex>
         </Flex>
 
-        const [getSuggested, setSuggested] = useState<suggested[]>([]);
+
         useEffect (() => {
             async function fetchSuggested(){
                 const token = localStorage.getItem('token');
@@ -88,13 +106,13 @@ import f from './function';
         },[])
 
 
-        useEffect(() => {
-            const follow = getSuggested.map(isFollow => {
-                return isFollow.isFollowed;   
-           })
+        // useEffect(() => {
+        //     const follow = getSuggested.map(isFollow => {
+        //         return isFollow.isFollowed;   
+        //    })
 
-           setFollow(follow);
-        },[getSuggested])
+        //    setFollow(follow);
+        // },[getSuggested])
 
         const followerData =  getSuggested.map((item,index) => {
             const follow = item.follower;
@@ -107,7 +125,7 @@ import f from './function';
                 <Text fontSize={'1rem'} color='color.grey'>{follow && follow.username}</Text>
                 </Flex>
             </Flex>
-            {followButton(index)}
+            {followButton(item, index)}
             </Flex>
             )
         })

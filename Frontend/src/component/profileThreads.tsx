@@ -6,6 +6,8 @@ import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { api } from "../libs/api";
 import f from './function';
+import { setLike } from "./threads";
+import { useQuery } from "@tanstack/react-query";
 
 export async function fetchThreads(){
     try {
@@ -25,18 +27,22 @@ export async function fetchThreads(){
 }
 
 export default function Threads(){
-    
-    const [thread, setThread] = useState<thread[]>([]);
-    const [likedStates, setLikedStates] = useState<boolean[]>([]);
-    const [isHover, setHover] = useState(false);
+    const { data: threads } = useQuery<thread[]>({
+        queryKey: ["threads"],
+        queryFn: fetchThreads,
+        });
+    const [, setThread] = useState<thread[]>([]);
+    const [isLiked, setIsLiked] = useState<boolean[]>([]);
+    // const [likedStates, setLikedStates] = useState<boolean[]>([]);
+    // const [isHover, setHover] = useState(false);
 
-    const mouseEnter = () => {
-        setHover(true);
-    };
+    // const mouseEnter = () => {
+    //     setHover(true);
+    // };
 
-    const mouseLeave = () => {
-        setHover(false);
-    };
+    // const mouseLeave = () => {
+    //     setHover(false);
+    // };
 
     useEffect(  () => {
         async function fetchThreads(){
@@ -51,7 +57,9 @@ export default function Threads(){
                      },
                 })
                 setThread(response.data);
-                console.log(response.data);
+                setIsLiked(response.data.map((data : any) => {
+                    return data["isliked"];
+                }))
             } catch(error){
 
                 return error;
@@ -60,56 +68,94 @@ export default function Threads(){
         fetchThreads();
     }, [])
 
-    const likeHandle = (index : number) => {
-        const newLiked = [...likedStates];
-        newLiked[index] = !newLiked[index];
-        setLikedStates(newLiked);
+
+    const handleLike = async (id : number, index : number) => {
+            likeHandle(index, true);
+            try {
+                const token = localStorage.getItem('token');
+                const response = await Axios({
+                    method: "get",
+                    url: `${api}/like${id}`,
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+            } catch (error) {
+                console.error('Error liking the item', error);
+                likeHandle(index, false);
+            }
+            };
+
+    const handleUnlike = async (id : number, index : number) => {
+        likeHandle(index, false);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await Axios({
+                method: "get",
+                url: `${api}/unlike${id}`,
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+        } catch (error) {
+            console.error('Error unliking the item', error);
+            likeHandle(index, true);
+        }
+        };
+
+    const likeHandle = (index : number, con : boolean) => {
+        console.log(isLiked);
+        const newLiked = [...isLiked];
+        newLiked[index] = con;
+        setIsLiked(newLiked);
     }
 
-    const data = thread.map((item, index) => {
-            const likeIcon = <Link onClick={() => {likeHandle(index);}}> {likedStates[index] ? <BsHeartFill/> : <BsHeart/>} </Link>
+    const data = threads?.map((item, index) => {
             if(item.users == null)
                 {
                     return;
                 }
             return (
             <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
-                <Box className="picture" >
-                {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px')}
+            <Box className="picture" >
+            {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px')}
+            </Box>
+            <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
+                <Flex 
+                fontSize={'small'}
+                color={'rgb(199, 199, 199)'}
+                marginEnd={'0.5rem'}
+                marginBottom={'0.33rem'}
+                gap={'0.33rem'} >
+                    <Text fontWeight={'bold'} color={'white'}>
+                    {item.users.username && item.users.username}
+                    </Text>
+                    <Text>
+                    @{item.users.username && item.users.username}
+                    </Text>
+                    <Text>
+                    {f.dateDifferences(item.update_at)}
+                    </Text>
+                </Flex>
+                <Box marginBottom={'0.5rem'}>
+                    <Text marginBottom={'0.33rem'}>
+                    {item.content}
+                    </Text>
+                    {item.image ? (f.imageMessage(item.image)) : <></>}
                 </Box>
-                <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
-                    <Flex 
-                    fontSize={'small'}
-                    color={'rgb(199, 199, 199)'}
-                    marginEnd={'0.5rem'}
-                    marginBottom={'0.33rem'}
-                    gap={'0.33rem'} >
-                        <Text fontWeight={'bold'} color={'white'}>
-                        {item.users.username && item.users.username}
-                        </Text>
-                        <Text>
-                        @{item.users.username && item.users.username}
-                        </Text>
-                        <Text>
-                        {f.dateDifferences(item.update_at)}
-                        </Text>
-                    </Flex>
-                    <Box marginBottom={'0.5rem'}>
-                        <Text marginBottom={'0.33rem'}>
-                        {item.content}
-                        </Text>
-                        {item.image ? (f.imageMessage(item.image)) : <></>}
-                    </Box>
-                    <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
-                    {likeIcon}
-                    <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes.length}</Text>
-                    <LinkBox>
-                    <LinkOverlay href={`/threads`}><Box onMouseOver={mouseEnter} onMouseLeave={mouseLeave}>{isHover ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
-                    </LinkBox>
-                    <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
-                    </Flex>
+                <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
+                {isLiked[index] ? 
+                <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>}
+                <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes.length}</Text>
+                <LinkBox>
+                <LinkOverlay href={`/threads/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                </LinkBox>
+                <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
                 </Flex>
             </Flex>
+        </Flex>
             )
         })
     
