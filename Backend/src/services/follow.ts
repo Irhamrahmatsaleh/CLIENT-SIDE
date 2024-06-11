@@ -111,10 +111,8 @@ class followServices {
 
                 console.log('users followed',followed);
 
-                // Create a set of followed user IDs for quick lookup
                 const followedUserIds = new Set(followed.map(f => f.followed_id));
 
-                // Map users to include isFollowed property
                 const followedArr = users.map(user => {
                     const isFollowed = followedUserIds.has(user.id);
                     return { ...user, isFollowed };
@@ -125,6 +123,20 @@ class followServices {
             throw new Error(err);
         }
     }
+
+    async setFollow(idFollowed : number, idUser : number){
+        try {
+          const followData = await this.prisma.following.create({
+            data : {
+              follower_id: idUser,
+              followed_id: idFollowed,
+            }
+          })
+          return followData;
+        } catch(err){
+          throw new Error(err);
+        }
+      }
 }
 
 export default new followServices();

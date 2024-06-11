@@ -52,6 +52,10 @@ router.get("/following", authenticateToken, upload.none(), followController.fetc
 router.get("/follower", authenticateToken, upload.none(), followController.fetchFollower)
 router.get("/suggested", authenticateToken, upload.none(), followController.fetchRandomUserSuggestion)
 
+router.get("/like:id",authenticateToken, upload.none(), threadController.setLikedID)
+router.get("/unlike:id",authenticateToken, upload.none(), threadController.setUnlikedID)
+router.get("/follow:id",authenticateToken, upload.none(), threadController.findIDThread)
+
 app.listen(port, () => {
     console.log(`Port ${port} is listening`)
 })

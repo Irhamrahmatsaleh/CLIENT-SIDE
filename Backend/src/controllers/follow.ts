@@ -45,6 +45,24 @@ class followController{
             res.status(400).json({ error: err });;
         }
     }
+
+    async setFollowID(req : Request, res : Response)
+        /*  #swagger.parameters['followid'] = {
+            description: 'id for replies (int)'
+        } */
+    {
+        try {
+            const user = res.locals.verifyingUser;
+            const likedData = await followServices.setFollow(parseInt(req.params.id), user.id);
+            if(!likedData) throw new Error("Follow Error");
+            res.json({
+                followed_id: parseInt(req.params.id),
+                stats: "user followed"
+            });
+        } catch (err) {
+            res.status(404).json({ error: 'Follow Error' });;
+        }
+    }
 }
 
 export default new followController()

@@ -32,7 +32,8 @@ class threadController {
     async findAllThread(req : Request, res : Response)
     {
         try {
-            const userData = await threadService.FindAllThread();
+            const user = res.locals.verifyingUser;
+            const userData = await threadService.FindAllThread(user.id);
             if(!userData) throw new Error("Thread not found");
             res.send(userData);
         } catch (err) {
@@ -200,6 +201,43 @@ class threadController {
             res.sendStatus(400);
         }
     }
+
+    async setLikedID(req : Request, res : Response)
+        /*  #swagger.parameters['likeid'] = {
+            description: 'id for replies (int)'
+        } */
+    {
+        try {
+            const user = res.locals.verifyingUser;
+            const likedData = await threadService.setLiked(parseInt(req.params.id), user.id);
+            if(!likedData) throw new Error("Like Error");
+            res.json({
+                thread_id: parseInt(req.params.id),
+                stats: "thread liked"
+            });
+        } catch (err) {
+            res.status(404).json({ error: 'Like Error', err: err });;
+        }
+    }
+
+    async setUnlikedID(req : Request, res : Response)
+    /*  #swagger.parameters['unlikeid'] = {
+        description: 'id for replies (int)'
+    } */
+{
+    try {
+        const user = res.locals.verifyingUser;
+        const likedData = await threadService.setUnliked(parseInt(req.params.id), user.id);
+        if(!likedData) throw new Error("unlike Error");
+        res.json({
+            thread_id: parseInt(req.params.id),
+            stats: "thread unliked"
+        });
+    } catch (err) {
+        res.status(404).json({ error: 'unlike Error', err: err });;
+    }
+}
+
 }
 
 export default new threadController()

@@ -28,11 +28,29 @@ class threadServices {
                 photo_profile: true
               }
             },
-            likes:true
+            likes:{
+              select: {
+                user_id : true
+              }
+            },
+            replies:{
+              select: {
+                user_id : true
+              }
+            },
           },
         })
         if (fetchedData){
-          return fetchedData;
+            const threadData = fetchedData.map(data => {
+            const likesID = new Set(data.likes.map(l => l.user_id))
+            const replyID = new Set(data.replies.map(r => r.user_id))
+            const isliked = likesID.has(idUser);
+            const isReplied = replyID.has(idUser);
+            data.number_of_replies = data.replies.length;
+
+            return {...data, isliked, isReplied}
+          })
+          return threadData;
         } else {
           throw new Error("All Thread Empty");
         }
@@ -53,11 +71,30 @@ class threadServices {
                 photo_profile: true
               }
             },
-            likes:true
+            likes:{
+              select: {
+                user_id : true
+              }
+            },
+            replies:{
+              select: {
+                user_id : true
+              }
+            },
           },
         })
         if (fetchedData){
-          return fetchedData;
+          const likesID = new Set(fetchedData.likes.map(l => l.user_id))
+          const replyID = new Set(fetchedData.replies.map(r => r.user_id))
+          const isliked = likesID.has(idThread);
+          const isReplied = replyID.has(idThread);
+          fetchedData.number_of_replies = fetchedData.replies.length;
+
+          const threadData =  {
+            ...fetchedData, isliked, isReplied
+          }
+          
+          return threadData;
         } else {
           throw new Error("All Thread Empty");
         }
@@ -66,7 +103,7 @@ class threadServices {
       }
     }
 
-    async FindAllThread(){
+    async FindAllThread(idCurrentUser : number){
       try{
         const fetchedData = await this.prisma.threads.findMany({
           include : {
@@ -77,12 +114,30 @@ class threadServices {
                 photo_profile: true
               }
             },
-            likes:true
+            likes:{
+              select: {
+                user_id : true
+              }
+            },
+            replies:{
+              select: {
+                user_id : true
+              }
+            },
           },
         })
 
         if (fetchedData){
-          return fetchedData;
+          const threadData = fetchedData.map(data => {
+            const likesID = new Set(data.likes.map(l => l.user_id))
+            const replyID = new Set(data.replies.map(r => r.user_id))
+            const isliked = likesID.has(idCurrentUser);
+            const isReplied = replyID.has(idCurrentUser);
+            data.number_of_replies = data.replies.length;
+
+            return {...data, isliked, isReplied}
+          })
+          return threadData;
         } else {
           throw new Error("All Thread Empty");
         }
@@ -262,6 +317,34 @@ class threadServices {
         {
             throw new Error(err);
         }
+    }
+
+    async setLiked(idThread : number, idUser : number){
+      try {
+        const likedData = await this.prisma.likes.create({
+          data : {
+            user_id: idUser,
+            thread_id: idThread,
+            created_by: idUser,
+            updated_by: idUser
+          }
+        })
+        return likedData;
+      } catch(err){
+        throw new Error(err);
+      }
+    }
+
+    async setUnliked(idThread : number, idUser : number){
+      try {
+        const unlikedData = await this.prisma.likes.deleteMany({ where: {
+          user_id : idUser,
+          thread_id: idThread
+        }})
+        return unlikedData;
+      } catch(err){
+        throw new Error(err);
+      }
     }
 }
 
