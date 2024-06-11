@@ -24,13 +24,10 @@ export default function search() {
             if(prompt === '') {
                 return <></>
             }
-            const formData = new FormData();
-            formData.append('search', prompt);
             const token = localStorage.getItem('token');
             const response = await Axios({
-                method: "post",
-                url: `${api}/search`,
-                data: formData,
+                method: "get",
+                url: `${api}/search?search=${prompt}`,
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     'Authorization': `Bearer ${token}`
