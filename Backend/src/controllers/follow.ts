@@ -33,9 +33,12 @@ class followController{
     }
 
     async fetchSearchedUser(req: Request, res: Response){
+        /*  #swagger.parameters['search'] = {
+            description: 'search for users (string)'
+        } */
         try{
             const user = res.locals.verifyingUser;
-            const {search} = req.body;
+            const search = req.query.search as string;
             const users = await followServices.searchedUsers(search, user);
             res.send(users);
         }catch (err){

@@ -6,11 +6,6 @@ export type dataContent_thread =  {
     content           : string,
     }
 
-export type dataContent_replies =  {
-    image             : string | null,
-    content           : string,
-    }
-
 export type thread = {
     id: number,
     image: string,

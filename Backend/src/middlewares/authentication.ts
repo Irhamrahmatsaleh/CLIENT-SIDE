@@ -4,6 +4,11 @@ import jwt from "jsonwebtoken"
 export function authenticateToken(req: Request, res: Response, next: NextFunction)
 {
     const authHeader = req.headers.authorization;
+
+    /* #swagger.security = [{
+            "bearerAuth": []
+    }] */
+   
     //Bearer Token Check
     if(!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({

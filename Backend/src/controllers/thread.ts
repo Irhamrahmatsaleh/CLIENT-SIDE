@@ -16,6 +16,9 @@ class threadController {
     }
 
     async findIDThread(req : Request, res : Response)
+        /*  #swagger.parameters['threadid'] = {
+            description: 'id for thread (int)'
+        } */
     {
         try {
             const userData = await threadService.FindThreadID(parseInt(req.params.id));
@@ -52,6 +55,9 @@ class threadController {
     }
 
     async findRepliesID(req : Request, res : Response)
+        /*  #swagger.parameters['repliesid'] = {
+            description: 'id for replies (int)'
+        } */
     {
         try {
             const userData = await threadService.FindRepliesID(parseInt(req.params.id));
@@ -63,7 +69,28 @@ class threadController {
     }
 
     async postReplies(req : Request, res: Response){
-
+        /*  #swagger.parameters['repliesid'] = {
+            description: 'id for repliedThread (int)'
+        } */
+         /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/threadSchema"
+                        }  
+                    }
+                }
+            } 
+        */
+       /*
+        #swagger.consumes = ['multipart/form-data']  
+        #swagger.parameters['singleFile'] = {
+            in: 'formData',
+            type: 'file',
+            required: 'true',
+            description: 'Some description...',
+        } */
         try {
             const body = {
                 ...req.body,
@@ -89,7 +116,25 @@ class threadController {
     }
 
     async postThread(req : Request, res: Response){
-
+         /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/threadSchema"
+                        }  
+                    }
+                }
+            } 
+        */
+       /*
+        #swagger.consumes = ['multipart/form-data']  
+        #swagger.parameters['singleFile'] = {
+            in: 'formData',
+            type: 'file',
+            required: 'true',
+            description: 'Some description...',
+        } */
         try {
             const body = {
                 ...req.body,
@@ -115,6 +160,20 @@ class threadController {
     }
 
     async updateThread(req : Request, res: Response){
+        /*  #swagger.parameters['threadid'] = {
+            description: 'id for thread (int)'
+        } */
+         /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/threadSchema"
+                        }  
+                    }
+                }
+            } 
+        */
         try {           
             const dataUpdated  : dataContent_thread = await threadService.UpdateThread(parseInt(req.params.id),req.body)
             res.status(201).json({
@@ -128,6 +187,9 @@ class threadController {
     }
 
     async deleteThread(req : Request, res : Response){
+        /*  #swagger.parameters['threadid'] = {
+            description: 'id for thread (int)'
+        } */
         try {
             const userData : dataContent_thread = await threadService.DeleteThread(parseInt(req.params.id));
             res.status(201).json({

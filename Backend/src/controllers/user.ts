@@ -17,6 +17,17 @@ class userController {
     }
 
     async registerUser(req : Request, res: Response){
+         /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/registerSchema"
+                        }  
+                    }
+                }
+            } 
+        */
         try {
             const dataCreated = await user.RegisterUser(req.body)
             res.status(201).json({
@@ -31,6 +42,17 @@ class userController {
     }
 
     async loginUser(req : Request, res : Response){
+         /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/loginSchema"
+                        }  
+                    }
+                }
+            } 
+        */
         try {
             const userData = await user.LoginUser(req.body);
             res.status(200).json(
@@ -55,6 +77,20 @@ class userController {
       }
 
     async updateUser(req : Request, res : Response){
+         /*  #swagger.parameters['userid'] = {
+            description: 'id for user (int)'
+        } */
+        /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/registerSchema"
+                        }  
+                    }
+                }
+            } 
+        */
         try {           
             try {
                 const dataUpdated : registerSchema = await user.UpdateUser(parseInt(req.params.id),req.body)
@@ -73,6 +109,9 @@ class userController {
     }
 
     async deleteUser(req : Request, res : Response){
+        /*  #swagger.parameters['userid'] = {
+            description: 'id for user (int)'
+        } */
             try {
                 const idUser : number = parseInt(req.params.id);
                 const userData = await user.DeleteUser(idUser);

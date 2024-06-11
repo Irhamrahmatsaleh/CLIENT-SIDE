@@ -1,0 +1,616 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Circle API",
+    "description": "Description",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://b54-circleapp-production.up.railway.app"
+    },
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/api/v1/api-docs": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/register": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/registerSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/login": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/loginSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/check": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/{userid}": {
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for user (int)"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/registerSchema"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for user (int)"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/thread": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/threadProfile": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/{threadid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "threadid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for thread (int)"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "threadid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for thread (int)"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/threadSchema"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "threadid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for thread (int)"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/threadPost": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "singleFile",
+            "in": "formData",
+            "required": true,
+            "description": "Some description...",
+            "schema": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/threadSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/image": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/{repliesid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "repliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for replies (int)"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "repliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for repliedThread (int)"
+          },
+          {
+            "name": "singleFile",
+            "in": "formData",
+            "required": true,
+            "description": "Some description...",
+            "schema": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/threadSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "search",
+            "description": "search for users (string)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/following": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/follower": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/suggested": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "registerSchema": {
+        "type": "object",
+        "properties": {
+          "full_name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "test@test.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "pass1234"
+          }
+        },
+        "required": [
+          "full_name",
+          "email",
+          "password"
+        ]
+      },
+      "loginSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "test@test.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "pass1234"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "threadSchema": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "This is some threads content"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
