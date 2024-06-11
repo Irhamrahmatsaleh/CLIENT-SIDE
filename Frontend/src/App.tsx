@@ -37,7 +37,7 @@ export default function App() {
     try {
       const token = localStorage.token;
       const response = await Axios({
-        method: "post",
+        method: "get",
         url: `${api}/check`,
         headers: { 
             "Content-Type": "multipart/form-data",
