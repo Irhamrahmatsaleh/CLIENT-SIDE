@@ -10,7 +10,7 @@
       "url": "https://b54-circleapp-production.up.railway.app"
     },
     {
-      "url": "http://localhost:3000"
+      "url": "http://localhost:5000"
     }
   ],
   "paths": {
@@ -545,6 +545,91 @@
           }
         ]
       }
+    },
+    "/api/v1/{likeid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "likeid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for replies (int)"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/{unlikeid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "unlikeid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for replies (int)"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/{followid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "followid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "threadid",
+            "description": "id for thread (int)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -576,11 +661,11 @@
         "properties": {
           "email": {
             "type": "string",
-            "example": "test@test.com"
+            "example": "test@gmail.com"
           },
           "password": {
             "type": "string",
-            "example": "pass1234"
+            "example": "testtest"
           }
         },
         "required": [

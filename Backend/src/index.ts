@@ -7,6 +7,7 @@ import { authenticateToken } from './middlewares/authentication';
 import followController from './controllers/follow';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger-generated.json'
+import { InitializeRedis, redisClient } from './libs/redis';
 
 const port = process.env.PORT || 5000;
 const app = Express();
@@ -16,6 +17,7 @@ const swaggerOption = {
     explorer: true,
     swaggerOptions: {
       persistAuthorization: true,
+      displayRequestDuration: true
     }
 }
 
@@ -27,6 +29,7 @@ router.get('/api-docs', swaggerUi.setup(swaggerDocument, swaggerOption));
 
 //v1
 router.get("/", (req,res) => {
+    redisClient.set("HELLO", "WORLD");
     res.send("Welcome to API V1");
 })
 
@@ -36,8 +39,15 @@ router.get("/check",authenticateToken, upload.none(), userController.check)
 router.patch("/user:id",authenticateToken, upload.none(), userController.updateUser)
 router.delete("/user:id",authenticateToken, userController.deleteUser)
 
-router.get("/thread",authenticateToken, upload.none(), threadController.findAllThread)
-router.get("/threadProfile",authenticateToken, upload.none(), threadController.findThread)
+router.get("/thread",authenticateToken,  
+async (req: Request, res: Response, next: NextFunction) => {
+    const result = await redisClient.get("ALL_THREADS_DATA");
+    if (result) return res.json(JSON.parse(result));
+
+    next();
+},
+   upload.none(), threadController.findAllThread)
+router.get("/threadProfile",authenticateToken, upload.none(), threadController.findUserThread)
 router.get("/thread:id",authenticateToken, upload.none(), threadController.findIDThread)
 router.post("/threadPost",authenticateToken,upload.single('image'), threadController.postThread)
 router.patch("/thread:id",authenticateToken, upload.none(), threadController.updateThread)
@@ -56,7 +66,9 @@ router.get("/like:id",authenticateToken, upload.none(), threadController.setLike
 router.get("/unlike:id",authenticateToken, upload.none(), threadController.setUnlikedID)
 router.get("/follow:id",authenticateToken, upload.none(), threadController.findIDThread)
 
-app.listen(port, () => {
-    console.log(`Port ${port} is listening`)
+InitializeRedis().then(() => {
+    app.listen(port, () => {
+        console.log(`Port ${port} is listening`)
+    })
 })
 

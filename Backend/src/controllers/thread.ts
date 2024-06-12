@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
 import threadService from "../services/thread";
 import { dataContent_thread } from "../dto/thread";
+import { redisClient } from "../libs/redis";
 
 class threadController {
-    async findThread(req : Request, res : Response)
+    async findUserThread(req : Request, res : Response)
     {
         try {
             const user = res.locals.verifyingUser;
-            const userData = await threadService.FindThread(user.id);
-            if(!userData) throw new Error("Thread not found");
-            res.send(userData);
+            const userThreadData = await threadService.FindThread(user.id);
+            if(!userThreadData) throw new Error("Thread not found");
+            res.send(userThreadData);
         } catch (err) {
             res.status(404).json({ error: 'Thread not found' });;
         }
@@ -21,9 +22,9 @@ class threadController {
         } */
     {
         try {
-            const userData = await threadService.FindThreadID(parseInt(req.params.id));
-            if(!userData) throw new Error("Thread not found");
-            res.send(userData);
+            const threadData = await threadService.FindThreadID(parseInt(req.params.id));
+            if(!threadData) throw new Error("Thread not found");
+            res.send(threadData);
         } catch (err) {
             res.status(404).json({ error: 'Thread not found' });;
         }
@@ -33,9 +34,10 @@ class threadController {
     {
         try {
             const user = res.locals.verifyingUser;
-            const userData = await threadService.FindAllThread(user.id);
-            if(!userData) throw new Error("Thread not found");
-            res.send(userData);
+            const threadsData = await threadService.FindAllThread(user.id);
+            if(!threadsData) throw new Error("Thread not found");
+            await redisClient.set("ALL_THREADS_DATA", JSON.stringify(threadsData)); 
+            res.send(threadsData);
         } catch (err) {
             res.status(404).json({ error: 'Thread not found' });;
         }
@@ -146,6 +148,7 @@ class threadController {
             
             const dataCreated : dataContent_thread = await threadService.PostThread(body, user)
               
+            redisClient.del("ALL_THREADS_DATA")
             res.status(201).json({
                 stats: "data created",
                 value: dataCreated
@@ -177,6 +180,7 @@ class threadController {
         */
         try {           
             const dataUpdated  : dataContent_thread = await threadService.UpdateThread(parseInt(req.params.id),req.body)
+            redisClient.del("ALL_THREADS_DATA")
             res.status(201).json({
                 stats: "data updated",
                 value: dataUpdated
@@ -193,6 +197,7 @@ class threadController {
         } */
         try {
             const userData : dataContent_thread = await threadService.DeleteThread(parseInt(req.params.id));
+            redisClient.del("ALL_THREADS_DATA")
             res.status(201).json({
                 stats: "data deleted",
                 content: userData.content

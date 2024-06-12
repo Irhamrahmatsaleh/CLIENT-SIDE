@@ -13,7 +13,7 @@ const doc = {
       url: "https://b54-circleapp-production.up.railway.app"
     },
     {
-      url: "http://localhost:3000"
+      url: "http://localhost:5000"
     }
   ],
   components: {
@@ -24,8 +24,8 @@ const doc = {
           $password: 'pass1234'
       },
       loginSchema: {
-        $email: 'test@test.com',
-        $password: 'pass1234',
+        $email: 'test@gmail.com',
+        $password: 'testtest',
       },
       threadSchema: {
         $content: 'This is some threads content',
