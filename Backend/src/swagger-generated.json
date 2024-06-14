@@ -377,6 +377,58 @@
         ]
       }
     },
+    "/api/v1/{likeid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "likeid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for replies (int)"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/{unlikeid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "unlikeid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id for replies (int)"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/api/v1/{repliesid}": {
       "get": {
         "description": "",
@@ -546,58 +598,6 @@
         ]
       }
     },
-    "/api/v1/{likeid}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "likeid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "id for replies (int)"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/api/v1/{unlikeid}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "unlikeid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "id for replies (int)"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/api/v1/{followid}": {
       "get": {
         "description": "",
@@ -608,15 +608,34 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
-          },
+            },
+            "description": "id for other user (int)"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
           {
-            "name": "threadid",
-            "description": "id for thread (int)",
-            "in": "query",
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/{unfollowid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "unfollowid",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "id for other user (int)"
           }
         ],
         "responses": {

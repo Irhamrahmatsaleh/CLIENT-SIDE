@@ -254,7 +254,7 @@ class threadServices {
                 upload_preset: "threads"
             });
             imageUrl = upload.secure_url;
-        }
+          }
             
             const createdData = await this.prisma.threads.create({ 
                 data: {

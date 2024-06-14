@@ -6,6 +6,13 @@ export type registerSchema = {
     password      : string,
     }
 
+export type editProfileSchema = {
+    photo_profile : string,
+    full_name : string,
+    username : string,
+    bio : string
+    }
+
 export type loginSchema = {
     email         : string,
     password      : string,
@@ -50,4 +57,11 @@ export const registerValidate = Joi.object<registerSchema>({
     full_name     : Joi.string().required(),
     email         : Joi.string().required(),
     password      : Joi.string().min(8).alphanum().required(),
+})
+
+export const editProfileValidate = Joi.object<editProfileSchema>({
+    full_name     : Joi.string().required(),
+    username     : Joi.string().required(),
+    bio     : Joi.string(),
+    photo_profile: Joi.string().allow(null),
 })

@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 import user from "../services/user";
 import { registerSchema } from "../dto/user";
-
+import { transporter } from "../libs/nodemailer";
+import jwt from 'jsonwebtoken'
 
 class userController {
     async findUser(req : Request, res: Response){
-        const idUser : number = parseInt(req.params.id);
-        let userData : registerSchema;
         try {
-            userData = await user.FindUser(idUser);
+            const userLocals = res.locals.verifyingUser
+            const userData = await user.FindUser(userLocals.id);
             if(!userData) throw new Error("User not found");
             res.send(userData);
         } catch (err) {
@@ -30,14 +30,25 @@ class userController {
         */
         try {
             const dataCreated = await user.RegisterUser(req.body)
+            const token = jwt.sign(dataCreated.id.toString(), process.env.JWT_SECRET);
+            const fullUrl = req.protocol + "://" + req.get("host");
+
+            const info = await transporter.sendMail({
+            from: `Circle <${process.env.EMAIL_ADDRESS}>`, // sender address
+            to: dataCreated.email, // list of receivers
+            subject: "Verification Link", // Subject line
+            html: `<a href="${fullUrl}/api/v1/verify-email?token=${token}">Klik untuk verifikasi email kamu!</a>`, // html body
+            });
+
+            await user.createVerification(token, "EMAIL");
             res.status(201).json({
                 stats: "user created",
-                email: dataCreated
+                email: dataCreated.email
             });
 
         } catch (err)
         { 
-            res.status(400).send(err + ", data has not been saved");
+            res.status(400).send(err.message + ", data has not been saved");
         }
     }
 
@@ -66,6 +77,20 @@ class userController {
           }
     }
 
+    async verifyEmail(req: Request, res: Response) {
+        try {
+          const token = req.query.token as string;
+          await user.verify(token);
+          const frontendUrl = process.env.FRONTEND_URL;
+          res.redirect(`${frontendUrl}/login`);
+        } catch (error) {
+          res.status(500).json({
+            message: error.message,
+          });
+        }
+      }
+      
+
     async check(req: Request, res: Response) {
         try {
           res.json(res.locals.verifyingUser);
@@ -77,9 +102,6 @@ class userController {
       }
 
     async updateUser(req : Request, res : Response){
-         /*  #swagger.parameters['userid'] = {
-            description: 'id for user (int)'
-        } */
         /*  #swagger.requestBody = {
                 required: true,
                 content: {
@@ -93,18 +115,23 @@ class userController {
         */
         try {           
             try {
-                const dataUpdated : registerSchema = await user.UpdateUser(parseInt(req.params.id),req.body)
+                const body = {
+                    ...req.body,
+                    photo_profile: (req.file ? req.file.path : null),
+                  }
+                const userData = res.locals.verifyingUser;
+                const dataUpdated : registerSchema = await user.UpdateProfile(userData.id,body)
     
                 res.status(201).json({
                     stats: "data updated",
                     email: dataUpdated.email
                 });
             } catch(createErr) {
-                res.status(500).json({ error: 'Create User error', details: createErr.message});
+                res.status(500).send({ error: 'Create User error', details: createErr.message});
             }
         } catch (err)
         {  
-            res.status(400).json({ error: 'Create User error'});
+            res.status(400).send({ error: 'Create User error'});
         }
     }
 

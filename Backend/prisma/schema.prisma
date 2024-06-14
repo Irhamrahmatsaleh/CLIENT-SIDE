@@ -63,15 +63,30 @@ model users {
   full_name     String?     @db.VarChar
   email         String      @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
   password      String      @db.VarChar
-  photo_profile String?     @db.VarChar
+  photo_profile String?     @db.VarChar @default("https://cdn-icons-png.flaticon.com/128/847/847969.png")
   bio           String?     @db.VarChar
   created_at    DateTime    @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @db.Timestamp(6)
   created_by    String?      @db.VarChar
   updated_at    DateTime    @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @db.Timestamp(6) @updatedAt
   updated_by    String?      @db.VarChar
+  isVerified    Boolean     @default(false)
   follower      following[]  @relation("follower_id")
   following     following[] @relation("followed_id")
   likes         likes[]
   replies       replies[]
   threads       threads[]
+}
+
+model verification {
+  id Int @id @default(autoincrement())
+  token String           @unique
+  type  VerificationType @default(EMAIL)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  @@map("verifications")
+}
+
+enum VerificationType {
+  FORGOT_PASSWORD
+  EMAIL
 }

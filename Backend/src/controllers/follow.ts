@@ -25,7 +25,7 @@ class followController{
     async fetchRandomUserSuggestion(req: Request, res: Response){
         try {
             const user = res.locals.verifyingUser;
-            const followings = await followServices.followSuggested(user, 3);
+            const followings = await followServices.suggestedUser(user, 3);
             res.send(followings);
         } catch(err){
             res.status(500).json({ error: err });;
@@ -48,7 +48,7 @@ class followController{
 
     async setFollowID(req : Request, res : Response)
         /*  #swagger.parameters['followid'] = {
-            description: 'id for replies (int)'
+            description: 'id for other user (int)'
         } */
     {
         try {
@@ -63,6 +63,24 @@ class followController{
             res.status(404).json({ error: 'Follow Error' });;
         }
     }
+
+    async setUnfollowID(req : Request, res : Response)
+    /*  #swagger.parameters['unfollowid'] = {
+        description: 'id for other user (int)'
+    } */
+{
+    try {
+        const user = res.locals.verifyingUser;
+        const likedData = await followServices.setUnfollow(parseInt(req.params.id), user.id);
+        if(!likedData) throw new Error("Unfollow Error");
+        res.json({
+            followed_id: parseInt(req.params.id),
+            stats: "user unfollowed"
+        });
+    } catch (err) {
+        res.status(404).json({ error: 'Unfollow Error' });;
+    }
+}
 }
 
 export default new followController()

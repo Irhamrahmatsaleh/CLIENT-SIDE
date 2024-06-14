@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { UserJWTPayload } from "../types/payload";
 import { number } from "joi";
 import { following, users } from "../dto/user";
@@ -42,34 +42,30 @@ class followServices {
         }
     }
 
-    async followSuggested(user : UserJWTPayload,limit : number){
+    async suggestedUser(user : UserJWTPayload, limit : number){
         try {
             const userCount = await this.prisma.following.count();
-            const skip = Math.floor(Math.random() * Math.max(userCount - limit));
+            const skip =  Math.floor(Math.random() * Math.max(userCount - limit, 0));
+
+            const users : any[]= await this.prisma.$queryRaw(Prisma.sql`SELECT * FROM users ORDER BY RANDOM() LIMIT ${limit}`)
+
+            users.forEach((item) => {
+                delete item.password;
+            })
 
             const followed = await this.prisma.following.findMany({
-                take: limit,
-                skip: skip,
-                include: {
-                    follower: {
-                        select: {
-                            full_name: true,
-                            username: true,
-                            photo_profile: true,
-                        },
-                    },
+                where: {
+                    follower_id: user.id,
                 },
             });
-            const followedArr = followed.map((follow) => {
-
-                // delete follow.followed.password;
-                if (follow.followed_id === user.id) {
-                return { ...follow, isFollowed: true };
-                }
-                
-                return { ...follow, isFollowed: false };
+            
+            const followedUser = new Set(followed.map(f => f.followed_id));
+            const usersArr = users.filter(userData => userData.id !== user.id)
+            .map(userData => {
+                const isFollowed = followedUser.has(userData.id);
+                return { ...userData, isFollowed };
             });
-            return followedArr;
+            return usersArr;
         } catch(err) {
             throw new Error(err);
         }
@@ -101,7 +97,6 @@ class followServices {
                 users.forEach((item) => {
                     delete item.password;
                 })
-                console.log('users',users);
 
                 const followed = await this.prisma.following.findMany({
                     where: {
@@ -109,16 +104,15 @@ class followServices {
                     },
                 });
 
-                console.log('users followed',followed);
-
                 const followedUserIds = new Set(followed.map(f => f.followed_id));
 
-                const followedArr = users.map(user => {
+                const usersArr = users.filter(user => user.id !== thisUser.id)
+                .map(user => {
                     const isFollowed = followedUserIds.has(user.id);
                     return { ...user, isFollowed };
                 });
-                console.log('followedarr',followedArr);
-            return(followedArr);
+
+            return(usersArr);
         } catch (err) {
             throw new Error(err);
         }
@@ -126,13 +120,40 @@ class followServices {
 
     async setFollow(idFollowed : number, idUser : number){
         try {
-          const followData = await this.prisma.following.create({
-            data : {
+        if (idFollowed === idUser) throw new Error("Cannot follow your own account");
+
+        const followedData = await this.prisma.following.findMany({
+            where : {
               follower_id: idUser,
               followed_id: idFollowed,
             }
           })
+
+        if(followedData.length > 0) throw new Error("User already been followed");
+
+        const followData = await this.prisma.following.create({
+        data : {
+            follower_id: idUser,
+            followed_id: idFollowed,
+        }
+        })
           return followData;
+        } catch(err){
+          throw new Error(err);
+        }
+      }
+
+      async setUnfollow(idFollowed : number, idUser : number){
+        try {
+            if (idFollowed === idUser) throw new Error("Cannot unfollow your own account");
+          const unfollowData = await this.prisma.following.deleteMany({
+            where : {
+              follower_id: idUser,
+              followed_id: idFollowed,
+            }
+          })
+          if(unfollowData.count < 1) throw new Error("Account already been unfollowed");
+          return unfollowData;
         } catch(err){
           throw new Error(err);
         }
