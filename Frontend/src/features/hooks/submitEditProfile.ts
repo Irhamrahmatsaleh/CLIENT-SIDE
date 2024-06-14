@@ -14,7 +14,7 @@ export const useEditProfileForm = () => {
         handleSubmit,
         formState: { errors },
       } = useForm<editProfileForm>({
-        mode: "onChange",
+        mode: "onTouched",
         resolver: zodResolver(profileSchema)
       })
 

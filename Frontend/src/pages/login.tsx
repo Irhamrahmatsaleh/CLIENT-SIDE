@@ -22,12 +22,12 @@ export default function login()
                 <Input type='password' isRequired {...register("password", {required: true})}/>
                 <Text color={"error.primary"}>{errors.password?.message}</Text>
                 </Box>
-                <Link href="/register" color={'white'} alignSelf={'end'}>Forgot Password?</Link>
+                <Link href="/forgot-password" color={'white'} alignSelf={'end'}>Forgot Password?</Link>
 
                 <Button isDisabled={!!(errors.email?.message || errors.password?.message)} colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">Login</Button>
                 <HStack alignSelf={'start'} mt={'0.5rem'}>
                 <Text color={'white'} me={'0.33rem'}>Don't have an account yet?</Text>
-                <Link color={'teal'}>Create Account</Link>
+                <Link href="/register"  color={'teal'}>Create Account</Link>
                 </HStack>
 
             </FormControl>

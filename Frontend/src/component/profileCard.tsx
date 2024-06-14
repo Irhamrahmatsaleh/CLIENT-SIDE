@@ -123,7 +123,26 @@ const handleUnfollow = async (id : number, index : number) => {
             }
     };
 
-    
+    useEffect(() => {
+        async function fetchProfile(){
+            try {
+                const token = localStorage.getItem('token');
+                const response = await Axios({
+                    method: "get",
+                    url: `${api}/user`,
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        'Authorization': `Bearer ${token}`
+                     },
+                })
+                console.log(response.data['photo_profile'])
+            setPhotoPreview(response.data['photo_profile'])
+            } catch(error){
+                console.log(error)
+            }
+        }
+        fetchProfile();
+    },[])
 
     const { handleSubmit, onSubmit, register, errors } = useEditProfileForm();
     const profile = 
@@ -144,7 +163,8 @@ const handleUnfollow = async (id : number, index : number) => {
             <Flex flexDirection={'column'}>
                 <Box width={'100%'} marginX={'auto'} height={'60%'} mb={'0.5rem'}>
                 <Image src={photoPreview && photoPreview} width={'720px'} height={'120px'} objectFit={'cover'} borderRadius={'12px'}/>
-                <Image borderRadius={'50%'} width={'72px'} height={'72px'} objectFit={'cover'} src={ photoPreview && photoPreview} zIndex={4} position={'relative'} top={'-2rem'} left={'1rem'} border={`4px solid ${color.greyCard}`}/>
+                <Image borderRadius={'50%'} width={'72px'} height={'72px'} objectFit={'cover'} src={photoPreview && photoPreview} zIndex={4} position={'relative'} top={'-2rem'} left={'1rem'} border={`4px solid ${color.greyCard}`}/>
+                <Text color={"error.primary"}>{errors.photo_profile && errors.photo_profile.message}</Text>
                 </Box>
                 <FormControl display={'flex'} width={'100%'} flexDirection={'column'} alignItems={'start'} marginBottom={'0.33rem'} color={'white'}>
                     <Box mb={'1rem'} width={'100%'} border={`1px solid ${color.grey}`} p={'0.33rem'} borderRadius={'12px'}>
@@ -191,7 +211,7 @@ const handleUnfollow = async (id : number, index : number) => {
                         cursor="pointer"
                     />
                     </Box>
-            <Button colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>Save</Button>
+            <Button isDisabled={!!(errors.full_name?.message || errors.username?.message || errors.photo_profile?.message)} colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>Save</Button>
             </ModalFooter>
             </ModalContent>
             </form>

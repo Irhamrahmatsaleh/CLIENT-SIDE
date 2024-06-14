@@ -20,7 +20,7 @@ export default function register()
             </Box>
             <Box mb={'1rem'} width={'100%'}>
             <FormLabel color={'white'}>Email address</FormLabel>
-            <Input type='email' placeholder="example@example.com" isRequired {...register("email", {required: true})}/>
+            <Input type='email' placeholder="example@example.com" key={'email'} isRequired {...register("email", {required: true})}/>
             <Text color={"error.primary"}>{errors.email?.message}</Text>
             </Box>
             <Box mb={'1rem'} width={'100%'}>

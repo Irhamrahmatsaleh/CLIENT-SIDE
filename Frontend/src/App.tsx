@@ -16,6 +16,7 @@ import Register from './pages/register';
 import Search from './pages/search';
 import Status from './pages/status';
 import ForgotPassword from "./pages/forgotPassword";
+import ResetPassword from "./pages/resetPassword";
 import { RootState } from "./redux/store";
 
 
@@ -76,9 +77,10 @@ export default function App() {
   return (
     <ChakraProvider theme={theme}>
         <Routes>
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register key={'registerPage'}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
@@ -86,7 +88,6 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/threadsProfile" element={<Status/>} />
             <Route path="/threads/:id" element={<Replies/>} />
-            {/* <Route path="/dashboard" element={<DashboardPage />} /> */}
           </Route>
         </Routes>
     </ChakraProvider>

@@ -1,8 +1,8 @@
-import { Box, Button, Divider, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, VStack, useEventListener } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Axios, { AxiosError } from 'axios';
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
@@ -28,6 +28,10 @@ export const ThreadsUpload : React.FC= () => {
     const {
         register,
         handleSubmit,
+        formState:{errors},
+        resetField,
+        unregister,
+        getValues
       } = useForm<threadsForm>({
         mode: "onSubmit",
         resolver: zodResolver(createThreadSchema),
@@ -63,7 +67,7 @@ export const ThreadsUpload : React.FC= () => {
     });
     
     const onSubmit: SubmitHandler<threadsForm> = async (data : { content: any; image: any ; }) => {
-        console.log("test");
+        console.log("test", data.image);
         if(!imagePreview || imagePreview === '') data.image = null;
         textareaRef.current = "";
         setTextValue('')
@@ -83,11 +87,10 @@ export const ThreadsUpload : React.FC= () => {
         if (fileInputRef.current) {
             fileInputRef.current = null;
             setImagePreview('')
-            console.log('File input cleared');
+            delete errors.image;
             }
         };
         
-
     return (
     <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'0rem 0 0.5rem'} p={'1rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
     <HStack alignItems={'start'}>
@@ -95,7 +98,8 @@ export const ThreadsUpload : React.FC= () => {
     <form onSubmit={handleSubmit(onSubmit)}>
     <FormControl display={'flex'} alignItems={'start'}>
         <VStack justifyContent={'start'} min-height={'60px'}>
-                <Textarea placeholder="What is Happening..." width={'420px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} value={textValue} ></Textarea>
+                <Textarea placeholder="What is Happening..." width={'420px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} value={textValue} onClick={() => {
+                if(!getValues('image'))  resetField('image')}} ></Textarea>
                 {imagePreview && 
                 
                 <Box position="relative" display="inline-block">
@@ -113,7 +117,7 @@ export const ThreadsUpload : React.FC= () => {
                     colorScheme="red"
                     variant={'solid'}
                     aria-label="close"
-                    onClick={clearFileInput}
+                    onClick={() => {unregister('image'); setImagePreview('')}}
                     >
                     </IconButton>
                 </Box>}
@@ -130,7 +134,6 @@ export const ThreadsUpload : React.FC= () => {
                         width="100%"
                         aria-hidden="true"
                         {...register('image')}
-                        
                         onChange={changeImage}
                         ///useref errorr
                     />
@@ -147,8 +150,9 @@ export const ThreadsUpload : React.FC= () => {
                         cursor="pointer"
                     />
                     </Box>
-                <Button onClick={() => {console.log("Hit Submit")}} colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>Post</Button>
+                <Button isDisabled={!!(errors.image?.message)} colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>Post</Button>
             </FormControl>
+            <Text color={"error.primary"}>{errors.image && errors.image.message}</Text>
             </form>
             </HStack>
             </Flex>

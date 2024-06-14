@@ -9,13 +9,15 @@ import { resetSchema } from "../validators/reset-form";
 export const useResetForm = () => {
     const {
         register,
+        watch,
         handleSubmit,
         formState: { errors },
       } = useForm<resetForm>({
-        mode: "onChange",
+        mode: "all",
         resolver: zodResolver(resetSchema)
       })
 
+    
     const onSubmit: SubmitHandler<resetForm> = async(data) => {
         try {
             const response = await Axios({
@@ -49,9 +51,10 @@ export const useResetForm = () => {
 
         return {
           register,
+          watch,
           handleSubmit,
           onSubmit,
-          errors
+          errors,
         }
 
 }

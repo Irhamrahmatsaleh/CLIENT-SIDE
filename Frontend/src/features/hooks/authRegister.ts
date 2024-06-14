@@ -4,8 +4,12 @@ import Axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { registerSchema } from "../validators/register-form";
 import { api } from "../../libs/api";
+import { useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 export const useRegisterForm = () => {
+  const toast = useToast();
+  const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -23,17 +27,23 @@ export const useRegisterForm = () => {
                 data: objectToFormData(data),
                 headers: { "Content-Type": "multipart/form-data" },
                 })
-            // handle success
-            console.log(response);
-            const token = response.data.user.token;
-            
-            if (token) {
-                localStorage.setItem("token", response.data.user.token);
-                console.log("token ", token)
-            }
-
-            } catch (error) {
-            // handle error
+            if(response.status === 201)
+              {
+                  toast({
+                      title: "Register success!, Please check your email to verify",
+                      status: "success",
+                      duration: 5000,
+                      isClosable: true,
+                    });
+                  navigate("/");
+              }
+            } catch (error : any) {
+              toast({
+                title: error.response.data,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+              });
             console.log(error);
             }
     }

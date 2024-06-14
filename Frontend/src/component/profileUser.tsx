@@ -1,10 +1,12 @@
 import { Box, Button, Divider, Flex, FormControl, FormHelperText, Heading, IconButton, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsImage } from "react-icons/bs";
 import { useEditProfileForm } from "../features/hooks/submitEditProfile";
 import { editProfileForm } from "../libs/type";
 import { fetchProfile } from "./profileCard";
+import Axios from "axios";
+import { api } from "../libs/api";
 
 export default function profileUser(){
     const { data: profileData  } = useQuery<editProfileForm>({
@@ -26,6 +28,26 @@ export default function profileUser(){
         }
     }
     const { handleSubmit, onSubmit, register, errors } = useEditProfileForm();
+
+    useEffect(() => {
+        async function fetchProfile(){
+            try {
+                const token = localStorage.getItem('token');
+                const response = await Axios({
+                    method: "get",
+                    url: `${api}/user`,
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        'Authorization': `Bearer ${token}`
+                     },
+                })
+            setPhotoPreview(response.data['photo_profile'])
+            } catch(error){
+                console.log(error)
+            }
+        }
+        fetchProfile();
+    },[])
     return (
         <Flex flexDirection={'column'} alignItems={'start'} width={'100%'} borderRadius={'14px'} justifyContent={'space-around'} height={'45%'} pt={'1rem'} mt={'2rem'} mx={'auto'}>
         <Heading as={'h3'} size={'md'} marginStart={'1.33rem'} mb={'1rem'} color={'whitesmoke'} fontWeight={'medium'}>My Profile</Heading>
@@ -45,6 +67,7 @@ export default function profileUser(){
                         <Box width={'100%'} marginX={'auto'} height={'60%'} mb={'0.5rem'}>
                         <Image src={photoPreview && photoPreview} width={'720px'} height={'120px'} objectFit={'cover'} borderRadius={'12px'}/>
                         <Image borderRadius={'50%'} width={'72px'} height={'72px'} objectFit={'cover'} src={ photoPreview && photoPreview} zIndex={4} position={'relative'} top={'-2rem'} left={'1rem'} border={`4px solid ${'circle.greyCard'}`}/>
+                        <Text color={"error.primary"}>{errors.photo_profile && errors.photo_profile.message}</Text>
                         </Box>
                         <FormControl display={'flex'} width={'100%'} flexDirection={'column'} alignItems={'start'} marginBottom={'0.33rem'} color={'white'}>
                             <Box mb={'1rem'} width={'100%'} border={`1px solid grey`} p={'0.33rem'} borderRadius={'12px'}>
@@ -91,7 +114,7 @@ export default function profileUser(){
                                 cursor="pointer"
                             />
                             </Box>
-                    <Button colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>Save</Button>
+                    <Button isDisabled={!!(errors.full_name?.message || errors.username?.message || errors.photo_profile?.message)} colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>Save</Button>
                     </ModalFooter>
                     </ModalContent>
                     </form>

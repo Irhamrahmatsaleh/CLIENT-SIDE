@@ -52,10 +52,10 @@ export const useLoginForm = () => {
                       });
                     navigate("/");
                 }
-            } catch (error) {
+            } catch (error : any) {
             // handle error
             toast({
-                title: "Email / password is wrong!",
+                title: error.response.data,
                 status: "error",
                 duration: 3000,
                 isClosable: true,
