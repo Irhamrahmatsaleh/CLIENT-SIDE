@@ -5,13 +5,13 @@
          "es6"
       ],
       "target": "ES2022",
-      "module": "ESNext",
+      "module": "CommonJS",
       "moduleResolution": "node",
       "outDir": "./build",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true,
       "resolveJsonModule": true,
-      "esModuleInterop": true
+      "esModuleInterop": true,
    }
 }

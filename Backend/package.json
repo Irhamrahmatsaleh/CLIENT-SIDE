@@ -3,7 +3,6 @@
    "version": "1.0.0",
    "description": "",
    "main": "index.js",
-   "types": "module",
    "scripts": {
       "build": "tsc && prisma generate",
       "start": "node build/index.js",
@@ -12,7 +11,7 @@
       "migration:generate": "npx typeorm-ts-node-commonjs migration:generate src/migrations/circleMigration -d src/data-source.ts",
       "migration:run": "npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
       "swagger": "node ./src/swagger.js",
-      "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --coverage --config jest-unit.config.json"
+      "test": "jest"
    },
    "keywords": [],
    "author": "",

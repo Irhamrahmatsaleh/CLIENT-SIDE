@@ -41,6 +41,7 @@ const limiter = rateLimit({
 });
 
 app.use(Express.urlencoded({ extended: false }));
+app.use(Express.json());
 app.use(Cors())
 app.use("/api/v1", router);
 router.use(limiter);

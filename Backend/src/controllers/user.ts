@@ -29,6 +29,7 @@ class userController {
             } 
         */
         try {
+            console.log("BODY", req.body);
             const dataCreated = await user.RegisterUser(req.body)
             const token = jwt.sign(dataCreated.id.toString(), process.env.JWT_SECRET);
             const fullUrl = req.protocol + "://" + req.get("host");
