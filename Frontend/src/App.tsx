@@ -15,6 +15,7 @@ import Profile from './pages/profile';
 import Register from './pages/register';
 import Search from './pages/search';
 import Status from './pages/status';
+import ForgotPassword from "./pages/forgotPassword";
 import { RootState } from "./redux/store";
 
 
@@ -77,6 +78,7 @@ export default function App() {
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />

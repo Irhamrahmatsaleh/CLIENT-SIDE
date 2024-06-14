@@ -5,6 +5,25 @@ export type registerForm = {
     password : string
 }
 
+export type editProfileForm = {
+  photo_profile?: string,
+  full_name : string,
+  username : string,
+  bio : string,
+  follower: number,
+  following: number
+}
+
+
+export type passwordForm = {
+  email : string
+}
+
+export type resetForm = {
+  password : string,
+  c_password : string
+}
+
 export type loginForm = {
     email : string,
     password : string

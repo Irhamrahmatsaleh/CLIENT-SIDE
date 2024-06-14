@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, Text, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Axios, { AxiosError } from 'axios';
@@ -8,9 +8,11 @@ import { BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
 import { createThreadSchema } from "../features/validators/threads";
 import { api } from "../libs/api";
-import { thread, threadsForm } from "../libs/type";
+import { editProfileForm, thread, threadsForm } from "../libs/type";
 import f from './function';
 import { fetchThreads } from "./threads";
+import { fetchProfile } from "./profileCard";
+import { useEditProfileForm } from "../features/hooks/submitEditProfile";
 
 export const ThreadsUpload : React.FC= () => {
     const textareaRef = useRef<string>() ;
@@ -82,7 +84,7 @@ export const ThreadsUpload : React.FC= () => {
             fileInputRef.current = null;
             setImagePreview('')
             console.log('File input cleared');
-        }
+            }
         };
         
 
@@ -200,27 +202,6 @@ export const status =
 </Flex>
 </Flex>
 
-export const profileThreads =
-<Flex flexDirection={'column'} alignItems={'start'} width={'100%'} borderRadius={'14px'} justifyContent={'space-around'} height={'45%'} pt={'1rem'} mt={'2rem'} mx={'auto'}>
-<Heading as={'h3'} size={'md'} marginStart={'1.33rem'} mb={'1rem'} color={'whitesmoke'} fontWeight={'medium'}>Bagus Hendrawan</Heading>
-<Box width={'90%'} marginX={'auto'} height={'42%'} mb={'1rem'}>
-    <Image src="https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" width={'720px'} height={'80px'} objectFit={'cover'} borderRadius={'12px'}/>
-    <Image borderRadius={'50%'} width={'64px'} height={'64px'} objectFit={'cover'} src={'https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'} zIndex={4} position={'relative'} top={'-2rem'} left={'1rem'} border={`4px solid color.greyCard`}/>
-    <Button colorScheme='gray' size={'sm'} variant='outline' color={'white'} zIndex={4} position={'relative'} top={'-3rem'} left={'24rem'} borderRadius={'14px'}>Edit Profile</Button>
-</Box>
-<Flex flexDirection={'column'} alignItems={'start'} width={'90%'} marginX={'auto'} gap={'0.33rem'}>
-    <Heading as={'h3'} size={'md'} color={'whitesmoke'}>Bagus Hendrawan</Heading>
-    <Text fontSize={'1rem'} color='color.grey'>@bag-user</Text>
-    <Text color={'white'}>Not all who wander are lost</Text>
-</Flex>
-<Flex justifyContent={'start'} width={'90%'} gap={'0.33rem'} marginX={'auto'} color={'white'} fontSize={'small'}>
-    <Text fontWeight={'bold'}>229</Text>
-    <Text me={'0.33rem'} color='color.grey'>Following</Text>
-    <Text fontWeight={'bold'}>344</Text>
-    <Text color='color.grey'>Followers</Text>
-</Flex>
-<Divider orientation='horizontal' borderColor={'rgb(110, 110, 110, 0.333)'} mt={'1rem'}/>
-</Flex>
 
 export const otherProfileThreads =
 <Flex flexDirection={'column'} alignItems={'start'} width={'100%'} borderRadius={'14px'} justifyContent={'space-around'} height={'45%'} pt={'1rem'} mt={'1.33rem'} mx={'auto'}>

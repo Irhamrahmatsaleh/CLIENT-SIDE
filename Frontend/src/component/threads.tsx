@@ -140,7 +140,6 @@ export default function Threads(){
     }, [])
 
     const likeHandle = (index : number, con : boolean) => {
-        console.log(isLiked);
         const newLiked = [...isLiked];
         newLiked[index] = con;
         setIsLiked(newLiked);

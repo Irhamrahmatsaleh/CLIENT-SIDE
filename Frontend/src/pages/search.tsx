@@ -34,6 +34,9 @@ export default function search() {
                  },
             })
             setSearchedUsers(response.data);
+            setFollow(response.data.map((data : any) => {
+                return data["isFollowed"];
+            }))
         } catch(error) {
             return error;
         }
@@ -45,28 +48,47 @@ export default function search() {
     
     const bgColor = '#1D1D1D'
 
-        const notFollowButton = <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button>
-        const isFollowButton =  <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>
-
-    const followHandle = (index : number) => {
+    const followHandle = (index : number, con : boolean) => {
         const newFollowed = [...isFollowed];
-        newFollowed[index] = !newFollowed[index];
+        newFollowed[index] = con;
         setFollow(newFollowed);
     }
 
-    const followButton =  (index : number) => {
-        return (
-            <Link onClick={() => {followHandle(index)}}> {isFollowed[index] ? isFollowButton : notFollowButton} </Link>
-        )
+    const handleFollow = async (id : number, index : number) => {
+        followHandle(index, true);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await Axios({
+                method: "get",
+                url: `${api}/follow${id}`,
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+        } catch (error) {
+            console.error('Error follow the user', error);
+            followHandle(index, false);
+        }
+        };
+
+const handleUnfollow = async (id : number, index : number) => {
+    followHandle(index, false);
+    try {
+        const token = localStorage.getItem('token');
+        const response = await Axios({
+            method: "get",
+            url: `${api}/unfollow${id}`,
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                'Authorization': `Bearer ${token}`
+            },
+        });
+    } catch (error) {
+        console.error('Error unfollow the user', error);
+        followHandle(index, true);
     }
-
-    useEffect(() => {
-        const follow : boolean[] = searchedUsers.map(isFollow => {
-            return isFollow.isFollowed ?? false;   
-       })
-
-       setFollow(follow);
-    },[searchedUsers])
+    };
 
     const searchBar =
     <FormControl isRequired mt={'2rem'}>
@@ -144,7 +166,7 @@ function SearchedUsers({ user, index }: SearchedCardsProps) {
                 <Text color={'white'} fontSize={'0.95rem'}>{user.bio}</Text>
                 </Flex>
             </Flex>
-            {followButton(index)}
+            {!isFollowed[index] ? <Button onClick={() => handleFollow(user.id, index)} justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button> : <Button onClick={() => handleUnfollow(user.id, index)} justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>}
         </Flex>
     );
   }

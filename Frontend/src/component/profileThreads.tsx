@@ -1,13 +1,12 @@
 import { thread } from "@/libs/type";
 import { Box, Flex, Link, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
+import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
 import { api } from "../libs/api";
 import f from './function';
-import { setLike } from "./threads";
-import { useQuery } from "@tanstack/react-query";
 
 export async function fetchThreads(){
     try {
@@ -33,16 +32,6 @@ export default function Threads(){
         });
     const [, setThread] = useState<thread[]>([]);
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
-    // const [likedStates, setLikedStates] = useState<boolean[]>([]);
-    // const [isHover, setHover] = useState(false);
-
-    // const mouseEnter = () => {
-    //     setHover(true);
-    // };
-
-    // const mouseLeave = () => {
-    //     setHover(false);
-    // };
 
     useEffect(  () => {
         async function fetchThreads(){

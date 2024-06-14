@@ -1,21 +1,22 @@
-import { registerForm } from "@/libs/type";
+import { registerForm, resetForm } from "@/libs/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { registerSchema } from "../validators/register-form";
+import { passwordSchema } from "../validators/password-form";
 import { api } from "../../libs/api";
+import { resetSchema } from "../validators/reset-form";
 
-export const useRegisterForm = () => {
+export const useResetForm = () => {
     const {
         register,
         handleSubmit,
         formState: { errors },
-      } = useForm<registerForm>({
+      } = useForm<resetForm>({
         mode: "onChange",
-        resolver: zodResolver(registerSchema)
+        resolver: zodResolver(resetSchema)
       })
 
-    const onSubmit: SubmitHandler<registerForm> = async(data) => {
+    const onSubmit: SubmitHandler<resetForm> = async(data) => {
         try {
             const response = await Axios({
                 method: "post",

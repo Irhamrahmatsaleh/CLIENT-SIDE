@@ -10,15 +10,7 @@ interface FollowTabComponentProps {
 }
 
 const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
-    const [isFollowed, setFollow] = useState(false);
-    const notFollowButton = <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button>
-    const isFollowButton =  <Button justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>
-
-    const followerButton =  
-    <Link onClick={() => {setFollow(!isFollowed)}}> {isFollowed ? isFollowButton : notFollowButton} </Link>
-
-    const followingButton =  
-    <Link onClick={() => {setFollow(!isFollowed)}}> { isFollowButton } </Link>
+    const [isFollowed, setFollow] = useState<boolean[]>([]);
 
     const [followers, setFollowers] = useState<following[]>([]);
     const [followeds, setFolloweds] = useState<following[]>([]);
@@ -81,8 +73,48 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
         })
         setFolloweds(response.data);
     }
-    
 
+        const followHandle = (index : number, con : boolean) => {
+            const newFollowed = [...isFollowed];
+            newFollowed[index] = con;
+            setFollow(newFollowed);
+        }
+
+        const handleFollow = async (id : number, index : number) => {
+            followHandle(index, true);
+            try {
+                const token = localStorage.getItem('token');
+                const response = await Axios({
+                    method: "get",
+                    url: `${api}/follow${id}`,
+                    headers: { 
+                        "Content-Type": "multipart/form-data",
+                        'Authorization': `Bearer ${token}`
+                    },
+                });
+            } catch (error) {
+                console.error('Error follow the user', error);
+                followHandle(index, false);
+            }
+            };
+
+    const handleUnfollow = async (id : number, index : number) => {
+        followHandle(index, false);
+        try {
+            const token = localStorage.getItem('token');
+            const response = await Axios({
+                method: "get",
+                url: `${api}/unfollow${id}`,
+                headers: { 
+                    "Content-Type": "multipart/form-data",
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+        } catch (error) {
+            console.error('Error unfollow the user', error);
+            followHandle(index, true);
+        }
+        };
 
     const followerData =  followers.map((item,index) => {
             return (
@@ -94,7 +126,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
                 <Text fontSize={'1rem'} color='color.grey'>{item && item.follower.username}</Text>
                 </Flex>
             </Flex>
-            {followerButton}
+            <Button onClick={() => handleFollow(item.id, index)} justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'white'}  borderRadius={'14px'}>Follow</Button>
             </Flex>
             )
         })
@@ -111,7 +143,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
                 <Text fontSize={'1rem'} color='color.grey'>{item && item.followed.username}</Text>
                 </Flex>
                 </Flex>
-                {followingButton}
+                <Button onClick={() => handleUnfollow(item.id, index)} justifySelf={'end'} colorScheme='gray' size={'sm'} variant='outline' color={'gray'} borderColor={'gray'}  borderRadius={'14px'}>Following</Button>
                 </Flex>
             )
         })
