@@ -14,7 +14,7 @@ import { RedisClientType, createClient } from 'redis';
 import { delRedisThreads as deleteRedisThreads } from './middlewares/redis-del';
 
 const port = process.env.PORT || 5000;
-const app = Express();
+export const app = Express();
 const router = Express.Router();
 
 async function connectRedis(){

@@ -43,7 +43,8 @@ class userController {
             await user.createVerification(token, "EMAIL");
             res.status(201).json({
                 stats: "user created",
-                email: dataCreated.email
+                email: dataCreated.email,
+                smtp: info
             });
 
         } catch (err)
