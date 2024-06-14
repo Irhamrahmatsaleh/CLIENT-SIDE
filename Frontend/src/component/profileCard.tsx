@@ -1,12 +1,12 @@
-import { editProfileForm, suggested, users } from "../libs/type";
-import { Box, Button, Flex, HStack, Heading, Image, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, FormControl, FormHelperText, Input, Textarea, IconButton } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import Axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { BsFacebook, BsGithub, BsImage, BsInstagram, BsLinkedin } from "react-icons/bs";
-import { api } from "../libs/api";
-import f from './function';
 import { useEditProfileForm } from "../features/hooks/submitEditProfile";
-import { useQuery } from "@tanstack/react-query";
+import { api } from "../libs/api";
+import { editProfileForm, users } from "../libs/type";
+import f from './function';
 
     const color = {
         grey: '#909090',
@@ -73,7 +73,7 @@ export default function Profile()
         followHandle(index, true);
         try {
             const token = localStorage.getItem('token');
-            const response = await Axios({
+            await Axios({
                 method: "get",
                 url: `${api}/follow${id}`,
                 headers: { 
@@ -91,7 +91,7 @@ const handleUnfollow = async (id : number, index : number) => {
     followHandle(index, false);
     try {
         const token = localStorage.getItem('token');
-        const response = await Axios({
+        await Axios({
             method: "get",
             url: `${api}/unfollow${id}`,
             headers: { 
@@ -115,13 +115,13 @@ const handleUnfollow = async (id : number, index : number) => {
         }
     }
 
-    const clearFileInput = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current = null;
-            setPhotoPreview(profileData?.photo_profile)
-            console.log('File input cleared');
-            }
-    };
+    // const clearFileInput = () => {
+    //     if (fileInputRef.current) {
+    //         fileInputRef.current = null;
+    //         setPhotoPreview(profileData?.photo_profile)
+    //         console.log('File input cleared');
+    //         }
+    // };
 
     useEffect(() => {
         async function fetchProfile(){

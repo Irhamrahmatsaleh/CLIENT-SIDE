@@ -1,9 +1,9 @@
-import { passwordForm, registerForm } from "@/libs/type";
+import { passwordForm } from "@/libs/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { passwordSchema } from "../validators/password-form";
 import { api } from "../../libs/api";
+import { passwordSchema } from "../validators/password-form";
 
 export const usePasswordForm = () => {
     const {

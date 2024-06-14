@@ -20,7 +20,7 @@ export default function resetPassword()
             </Box>
             <Box mb={'1rem'} width={'100%'}>
             <FormLabel color={'white'}>Confirm Password</FormLabel>
-            <Input type='password' isRequired {...register("c_password", {required: true, validate: (value, formValue) => value === watchFields.password || 'Password does not match' })}/>
+            <Input type='password' isRequired {...register("c_password", {required: true, validate: (value) => value === watchFields.password || 'Password does not match' })}/>
             <Text color={"error.primary"}>{errors.c_password?.message}</Text>
             </Box>
             <Button isDisabled={!!(errors.c_password?.message)} colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">Send Email</Button>

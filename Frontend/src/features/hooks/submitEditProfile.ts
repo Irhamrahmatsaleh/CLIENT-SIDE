@@ -1,12 +1,11 @@
-import { editProfileForm, registerForm, users } from "@/libs/type";
+import { editProfileForm, users } from "@/libs/type";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Axios, { AxiosError } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { registerSchema } from "../validators/register-form";
+import { fetchProfile } from "../../component/profileCard";
 import { api } from "../../libs/api";
 import { profileSchema } from "../validators/profileSchema";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchProfile } from "../../component/profileCard";
 
 export const useEditProfileForm = () => {
     const {

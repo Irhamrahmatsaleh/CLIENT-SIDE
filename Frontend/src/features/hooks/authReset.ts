@@ -1,8 +1,7 @@
-import { registerForm, resetForm } from "@/libs/type";
+import { resetForm } from "@/libs/type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { passwordSchema } from "../validators/password-form";
 import { api } from "../../libs/api";
 import { resetSchema } from "../validators/reset-form";
 

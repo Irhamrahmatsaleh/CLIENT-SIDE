@@ -1,4 +1,4 @@
-import { Button, Flex, FlexProps, FormControl, Heading, Input, InputGroup, InputLeftElement, Link, Text } from "@chakra-ui/react";
+import { Button, Flex, FlexProps, FormControl, Heading, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react";
 import Axios from "axios";
 import { useEffect, useState } from "react";
 import { BsPerson } from "react-icons/bs";
@@ -58,7 +58,7 @@ export default function search() {
         followHandle(index, true);
         try {
             const token = localStorage.getItem('token');
-            const response = await Axios({
+            await Axios({
                 method: "get",
                 url: `${api}/follow${id}`,
                 headers: { 
@@ -76,7 +76,7 @@ const handleUnfollow = async (id : number, index : number) => {
     followHandle(index, false);
     try {
         const token = localStorage.getItem('token');
-        const response = await Axios({
+        await Axios({
             method: "get",
             url: `${api}/unfollow${id}`,
             headers: { 

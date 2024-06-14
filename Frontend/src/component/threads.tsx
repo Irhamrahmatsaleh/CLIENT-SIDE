@@ -1,13 +1,13 @@
 import { thread } from "@/libs/type";
-import { Box, Flex, Link, LinkBox, LinkOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Image, Heading } from '@chakra-ui/react';
+import { Box, Flex, Heading, Image, Link, LinkBox, LinkOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill } from "react-icons/bs";
-import f from './function';
-import { useQuery } from "@tanstack/react-query";
-import { ThreadsUpload } from "./threadsform";
 import { api } from "../libs/api";
+import f from './function';
+import { ThreadsUpload } from "./threadsform";
 
 export async function fetchThreads(){
     try {
@@ -83,7 +83,7 @@ export default function Threads(){
             likeHandle(index, true);
             try {
                 const token = localStorage.getItem('token');
-                const response = await Axios({
+                await Axios({
                     method: "get",
                     url: `${api}/like${id}`,
                     headers: { 
@@ -101,7 +101,7 @@ export default function Threads(){
         likeHandle(index, false);
         try {
             const token = localStorage.getItem('token');
-            const response = await Axios({
+            await Axios({
                 method: "get",
                 url: `${api}/unlike${id}`,
                 headers: { 
@@ -153,7 +153,7 @@ export default function Threads(){
             return (
             <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
                 <Box className="picture" >
-                {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px')}
+                {f.imageCircle(item.users.photo_profile, '32px')}
                 </Box>
                 <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                     <Flex 
@@ -163,10 +163,10 @@ export default function Threads(){
                     marginBottom={'0.33rem'}
                     gap={'0.33rem'} >
                         <Text fontWeight={'bold'} color={'white'}>
-                        {item.users.username && item.users.username}
+                        {item.users.full_name && item.users.full_name}
                         </Text>
                         <Text>
-                        @{item.users.username && item.users.username}
+                        {item.users.username && item.users.username}
                         </Text>
                         <Text>
                         {f.dateDifferences(item.update_at)}

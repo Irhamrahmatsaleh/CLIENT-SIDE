@@ -1,8 +1,8 @@
-import { Box, Button, Divider, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, VStack, useEventListener } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, Text, Textarea, VStack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Axios, { AxiosError } from 'axios';
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
@@ -10,9 +10,8 @@ import { createThreadSchema } from "../features/validators/threads";
 import { api } from "../libs/api";
 import { editProfileForm, thread, threadsForm } from "../libs/type";
 import f from './function';
-import { fetchThreads } from "./threads";
 import { fetchProfile } from "./profileCard";
-import { useEditProfileForm } from "../features/hooks/submitEditProfile";
+import { fetchThreads } from "./threads";
 
 export const ThreadsUpload : React.FC= () => {
     const textareaRef = useRef<string>() ;
@@ -20,7 +19,7 @@ export const ThreadsUpload : React.FC= () => {
     const [imagePreview, setImagePreview] = useState<string>("");
     const [textValue, setTextValue] = useState<string>();
 
-    const { refetch } = useQuery<thread[]>({
+    const {refetch } = useQuery<thread[]>({
         queryKey: ["threads"],
         queryFn: fetchThreads,
         });
@@ -83,18 +82,24 @@ export const ThreadsUpload : React.FC= () => {
         }
     }
 
-    const clearFileInput = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current = null;
-            setImagePreview('')
-            delete errors.image;
-            }
-        };
+    // const clearFileInput = () => {
+    //     if (fileInputRef.current) {
+    //         fileInputRef.current = null;
+    //         setImagePreview('')
+    //         delete errors.image;
+    //         }
+    //     };
+    
+    const { data: profileData  } = useQuery<editProfileForm>({
+        queryKey: ["profile"],
+        queryFn: fetchProfile,
+        });
+    
         
     return (
     <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'0rem 0 0.5rem'} p={'1rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
     <HStack alignItems={'start'}>
-    {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px', '0.2rem')}
+    {f.imageCircle(profileData?.photo_profile ? profileData.photo_profile : 'null', '32px', '0.2rem')}
     <form onSubmit={handleSubmit(onSubmit)}>
     <FormControl display={'flex'} alignItems={'start'}>
         <VStack justifyContent={'start'} min-height={'60px'}>

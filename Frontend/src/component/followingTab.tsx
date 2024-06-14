@@ -1,9 +1,9 @@
-import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Link, Button } from "@chakra-ui/react"
-import React, { useEffect, useState } from "react"
-import Axios from 'axios'
-import f from './function'
 import { following } from "@/libs/type";
+import { Button, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import Axios from 'axios';
+import React, { useEffect, useState } from "react";
 import { api } from "../libs/api";
+import f from './function';
 
 interface FollowTabComponentProps {
     // Define any props if necessary
@@ -84,7 +84,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
             followHandle(index, true);
             try {
                 const token = localStorage.getItem('token');
-                const response = await Axios({
+                await Axios({
                     method: "get",
                     url: `${api}/follow${id}`,
                     headers: { 
@@ -102,7 +102,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
         followHandle(index, false);
         try {
             const token = localStorage.getItem('token');
-            const response = await Axios({
+            await Axios({
                 method: "get",
                 url: `${api}/unfollow${id}`,
                 headers: { 

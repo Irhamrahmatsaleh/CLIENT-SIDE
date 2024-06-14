@@ -1,9 +1,9 @@
-import { Box, Button, Flex, FormControl, FormLabel, HStack, Heading, Input, Link, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormLabel, HStack, Heading, Input, Link, Spinner, Text } from "@chakra-ui/react";
 import { useRegisterForm } from "../features/hooks/authRegister";
 
 export default function register()
 {
-    const { handleSubmit, onSubmit, register, errors } = useRegisterForm();
+    const { handleSubmit, onSubmit, register, errors, isSubmitSuccessful, isSubmitting } = useRegisterForm();
    
     return (
         <Box width={"100%"} height={"733px"} bg="circle.greyBg" position={"absolute"}>
@@ -28,7 +28,7 @@ export default function register()
             <Input type='password' isRequired {...register("password", {required: true})}/>
             <Text color={"error.primary"}>{errors.password?.message}</Text>
             </Box>
-            <Button isDisabled={!!(errors.email?.message || errors.password?.message)} colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">Create Account</Button>
+            <Button isDisabled={!!(errors.email?.message || errors.password?.message || isSubmitting && !isSubmitSuccessful)} colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">{isSubmitting && !isSubmitSuccessful ? <Spinner/> : "Create Account"}</Button>
             <HStack alignSelf={'start'} mt={'0.5rem'}>
             <Text color={'white'} me={'0.33rem'}>Already have account?</Text>
             <Link href="/login" color={'teal'}>Login</Link>

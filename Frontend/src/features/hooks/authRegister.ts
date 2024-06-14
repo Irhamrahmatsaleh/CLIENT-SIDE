@@ -10,57 +10,59 @@ import { useNavigate } from "react-router-dom";
 export const useRegisterForm = () => {
   const toast = useToast();
   const navigate = useNavigate();
-    const {
+  const {
+      register,
+      handleSubmit,
+      formState: { errors, isSubmitting, isSubmitSuccessful },
+    } = useForm<registerForm>({
+      mode: "onChange",
+      resolver: zodResolver(registerSchema)
+    })
+
+  const onSubmit: SubmitHandler<registerForm> = async(data) => {
+      try {
+          const response = await Axios({
+              method: "post",
+              url: `${api}/register`,
+              data: objectToFormData(data),
+              headers: { "Content-Type": "multipart/form-data" },
+              })
+          if(response.status === 201)
+            {
+                toast({
+                    title: "Register success!, Please check your email to verify",
+                    status: "success",
+                    duration: 5000,
+                    isClosable: true,
+                  });
+                navigate("/");
+            }
+          } catch (error : any) {
+            toast({
+              title: error.response.data,
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          console.log(error);
+          }
+  }
+
+      function objectToFormData(obj: Record<string, any>): FormData{
+          const formData = new FormData();
+          for (const key in obj) {
+              formData.append(key, obj[key]);
+          }
+          return formData;
+        }
+
+      return {
         register,
         handleSubmit,
-        formState: { errors },
-      } = useForm<registerForm>({
-        mode: "onChange",
-        resolver: zodResolver(registerSchema)
-      })
-
-    const onSubmit: SubmitHandler<registerForm> = async(data) => {
-        try {
-            const response = await Axios({
-                method: "post",
-                url: `${api}/register`,
-                data: objectToFormData(data),
-                headers: { "Content-Type": "multipart/form-data" },
-                })
-            if(response.status === 201)
-              {
-                  toast({
-                      title: "Register success!, Please check your email to verify",
-                      status: "success",
-                      duration: 5000,
-                      isClosable: true,
-                    });
-                  navigate("/");
-              }
-            } catch (error : any) {
-              toast({
-                title: error.response.data,
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-              });
-            console.log(error);
-            }
-    }
-
-        function objectToFormData(obj: Record<string, any>): FormData{
-            const formData = new FormData();
-            for (const key in obj) {
-                formData.append(key, obj[key]);
-            }
-            return formData;
-          }
-
-        return {
-          register,
-          handleSubmit,
-          onSubmit,
-          errors
-        }
+        onSubmit,
+        errors,
+        isSubmitting,
+        isSubmitSuccessful
+      }
 
 }
