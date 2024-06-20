@@ -1,17 +1,17 @@
 import Express, { NextFunction, Request, Response } from 'express'
 import Cors from 'cors'
-import userController from './controllers/user'
-import threadController from './controllers/thread'
-import { upload } from './middlewares/image-thread';
-import { authenticateToken } from './middlewares/authentication';
-import followController from './controllers/follow';
+import userController from './src/controllers/user'
+import threadController from './src/controllers/thread'
+import { upload } from './src/middlewares/image-thread';
+import { authenticateToken } from './src/middlewares/authentication';
+import followController from './src/controllers/follow';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger-generated.json'
-import { redisClient } from './libs/redis';
+import swaggerDocument from './src/swagger-generated.json'
+import { redisClient } from './src/libs/redis';
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import { RedisClientType, createClient } from 'redis';
-import { delRedisThreads as deleteRedisThreads } from './middlewares/redis-del';
+import { delRedisThreads as deleteRedisThreads } from './src/middlewares/redis-del';
 
 const port = process.env.PORT || 5000;
 export const app = Express();
@@ -54,16 +54,16 @@ router.get("/", (req,res) => {
     res.send("Welcome to API V1");
 })
 
-router.post("/register", upload.none(), userController.registerUser)
-router.post("/login", upload.none(), userController.loginUser)
-router.get("/check",authenticateToken, upload.none(), userController.check)
-router.get("/user",authenticateToken, upload.none(), userController.findUser)
+router.post("/register", upload.none(), userController.registerUser);
+router.post("/login", upload.none(), userController.loginUser);
+router.get("/check",authenticateToken, upload.none(), userController.check);
+router.get("/user",authenticateToken, upload.none(), userController.findUser);
 router.get("/verify-email", userController.verifyEmail);
 router.post("/request-password",upload.none(), userController.requestPassword);
 router.post("/reset-password/:token",upload.none(), userController.resetPassword);
 
-router.patch("/user",authenticateToken, upload.single('photo_profile'), userController.updateUser)
-router.delete("/user:id",authenticateToken, userController.deleteUser)
+router.patch("/user",authenticateToken, upload.single('photo_profile'), userController.updateUser);
+router.delete("/user:id",authenticateToken, userController.deleteUser);
 
 router.get("/thread",authenticateToken,  
 // async (req: Request, res: Response, next: NextFunction) => {

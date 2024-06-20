@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../../index";
+import { app } from "../../../index";
 import { faker } from "@faker-js/faker";
 
 const full_name = faker.person.fullName(); // Rowan Nikolaus
