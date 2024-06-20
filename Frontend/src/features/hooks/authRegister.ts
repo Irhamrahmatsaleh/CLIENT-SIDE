@@ -43,7 +43,7 @@ export const useRegisterForm = () => {
             }
           } catch (error : any) {
             toast({
-              title: error.response.data,
+              title: error,
               status: "error",
               duration: 3000,
               isClosable: true,
