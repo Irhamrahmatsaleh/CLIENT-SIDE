@@ -3,7 +3,7 @@ import { useLoginForm } from "../features/hooks/authLogin";
 
 export default function login()
 {
-    const { handleSubmit, onSubmit, register, errors, isSubmitting, isSubmitSuccessful } = useLoginForm();
+    const { handleSubmit, onSubmit, register, errors, isSubmitting } = useLoginForm();
     return (
         <Box width={"100%"} height={"733px"} bgColor="circle.greyBg" position={"absolute"}>
         <Flex flexDirection={'column'} maxWidth={'720px'} bg="circle.greyCard" borderRadius={'12px'} px={'2rem'} py={'1.5rem'} mt={'6rem'} mx={'auto'}>
@@ -23,8 +23,7 @@ export default function login()
                 <Text color={"error.primary"}>{errors.password?.message}</Text>
                 </Box>
                 <Link href="/forgot-password" color={'white'} alignSelf={'end'}>Forgot Password?</Link>
-
-                <Button isDisabled={!!(errors.email?.message || errors.password?.message || isSubmitting && !isSubmitSuccessful)} colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">{isSubmitting && !isSubmitSuccessful ? <Spinner/> : "Login"}</Button>
+                <Button isDisabled={!!(errors.email?.message || errors.password?.message || isSubmitting)} colorScheme='green' variant='solid' width={'100%'} borderRadius={'20px'} marginTop={'1rem'} type="submit">{isSubmitting ? <Spinner/> : "Login"}</Button>
                 <HStack alignSelf={'start'} mt={'0.5rem'}>
                 <Text color={'white'} me={'0.33rem'}>Don't have an account yet?</Text>
                 <Link href="/register"  color={'teal'}>Create Account</Link>

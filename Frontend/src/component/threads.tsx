@@ -1,10 +1,10 @@
 import { thread } from "@/libs/type";
-import { Box, Flex, Heading, Image, Link, LinkBox, LinkOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading, IconButton, Image, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
 import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
 import { api } from "../libs/api";
 import f from './function';
 import { ThreadsUpload } from "./threadsform";
@@ -43,6 +43,23 @@ export async function fetchUserThreads(id : number){
     }
 }
 
+export async function deleteThread(id : number){
+    try {
+        const token = localStorage.getItem('token');
+        const response = await Axios({
+            method: "delete",
+            url: `${api}/thread${id}`,
+            headers: { 
+                "Content-Type": "multipart/form-data",
+                'Authorization': `Bearer ${token}`
+             },
+        })
+    return response.data;
+    } catch(error){
+        return error;
+    }
+}
+
 export async function setLike(id : number){
     try {
         const token = localStorage.getItem('token');
@@ -61,10 +78,10 @@ export async function setLike(id : number){
 }
 
 export default function Threads(){
-    
-    const { data: threads } = useQuery<thread[]>({
+    const toast = useToast();
+    const { data: threads, refetch } = useQuery<thread[]>({
         queryKey: ["threads"],
-        queryFn: fetchThreads,
+        queryFn: fetchThreads
         });
     const [, setThread] = useState<thread[]>([]);
     // const [likedStates, setLikedStates] = useState<boolean[]>([]);
@@ -95,6 +112,7 @@ export default function Threads(){
                 console.error('Error liking the item', error);
                 likeHandle(index, false);
             }
+            refetch();
             };
 
     const handleUnlike = async (id : number, index : number) => {
@@ -113,6 +131,28 @@ export default function Threads(){
             console.error('Error unliking the item', error);
             likeHandle(index, true);
         }
+        refetch();
+        };
+
+    const handleDelete = async (idThread : number) => {
+        try {
+            await deleteThread(idThread);
+            toast({
+                title: "Delete thread success!",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+                });
+        } catch (error) {
+            console.error('Error unliking the item', error);
+            toast({
+                title: "Delete thread failed!",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                });
+        }
+        refetch();
         };
     
 
@@ -139,6 +179,10 @@ export default function Threads(){
         fetchThreads();
     }, [])
 
+    useEffect(() => {
+        if(isLiked) refetch();
+    }, [isLiked])
+
     const likeHandle = (index : number, con : boolean) => {
         const newLiked = [...isLiked];
         newLiked[index] = con;
@@ -151,7 +195,8 @@ export default function Threads(){
                     return;
                 }
             return (
-            <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
+            <Flex alignItems={'start'} color={'white'} justifyContent={'space-between'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
+                <Flex alignItems={'start'}>
                 <Box className="picture" >
                 {f.imageCircle(item.users.photo_profile, '32px')}
                 </Box>
@@ -172,12 +217,14 @@ export default function Threads(){
                         {f.dateDifferences(item.update_at)}
                         </Text>
                     </Flex>
+
                     <Box marginBottom={'0.5rem'}>
                         <Text marginBottom={'0.33rem'}>
                         {item.content}
                         </Text>
                         {item.image ? (f.imageMessage(item.image)) : <></>}
                     </Box>
+
                     <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                     {isLiked[index] ? 
                     <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>}
@@ -188,6 +235,23 @@ export default function Threads(){
                     <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
                     </Flex>
                 </Flex>
+                </Flex>
+                <Box>
+                <Menu>
+                    <MenuButton
+                        as={IconButton}
+                        aria-label='Options'
+                        icon={<BsThreeDots />}
+                        colorScheme="black"
+                        variant=''
+                    />
+                    <MenuList color={'black'}>
+                        <MenuItem onClick={() => handleDelete(item.id)} icon={<BsTrash />}>
+                        Delete Threads
+                        </MenuItem>
+                    </MenuList>
+                </Menu>
+                </Box>
             </Flex>
             )
         })

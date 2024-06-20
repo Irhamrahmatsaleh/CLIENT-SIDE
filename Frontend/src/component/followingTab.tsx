@@ -4,9 +4,23 @@ import Axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { api } from "../libs/api";
 import f from './function';
+import { useQuery } from "@tanstack/react-query";
 
 interface FollowTabComponentProps {
     // Define any props if necessary
+}
+
+async function fetchFollowedUser(){
+    const token = localStorage.getItem('token');
+    const response = await Axios({
+        method: "get",
+        url: `${api}/following`,
+        headers: { 
+            "Content-Type": "multipart/form-data",
+            'Authorization': `Bearer ${token}`
+         },
+    })
+    return response.data;
 }
 
 const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
@@ -14,6 +28,13 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
 
     const [followers, setFollowers] = useState<following[]>([]);
     const [followeds, setFolloweds] = useState<following[]>([]);
+
+    const { refetch } = useQuery<following>({
+        queryKey: ["following"],
+        queryFn: fetchFollowedUser,
+    });
+
+    
 
     useEffect (() => {
         async function fetchFollower(){
@@ -96,6 +117,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
                 console.error('Error follow the user', error);
                 followHandle(index, false);
             }
+            refetch();
             };
 
     const handleUnfollow = async (id : number, index : number) => {
@@ -114,6 +136,7 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
             console.error('Error unfollow the user', error);
             followHandle(index, true);
         }
+        refetch();
         };
 
     const followerData =  followers.map((item,index) => {

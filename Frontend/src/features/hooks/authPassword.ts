@@ -1,4 +1,5 @@
 import { passwordForm } from "@/libs/type";
+import { useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -6,10 +7,11 @@ import { api } from "../../libs/api";
 import { passwordSchema } from "../validators/password-form";
 
 export const usePasswordForm = () => {
+  const toast = useToast();
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors,isSubmitting },
       } = useForm<passwordForm>({
         mode: "onChange",
         resolver: zodResolver(passwordSchema)
@@ -19,22 +21,27 @@ export const usePasswordForm = () => {
         try {
             const response = await Axios({
                 method: "post",
-                url: `${api}/register`,
+                url: `${api}/request-password`,
                 data: objectToFormData(data),
                 headers: { "Content-Type": "multipart/form-data" },
                 })
             // handle success
             console.log(response);
-            const token = response.data.user.token;
-            
-            if (token) {
-                localStorage.setItem("token", response.data.user.token);
-                console.log("token ", token)
-            }
-
+            toast({
+              title: "Link sent to your email!",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
             } catch (error) {
             // handle error
             console.log(error);
+            toast({
+              title: "Request reset failed, please try again!",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
             }
     }
 
@@ -50,6 +57,7 @@ export const usePasswordForm = () => {
           register,
           handleSubmit,
           onSubmit,
+          isSubmitting,
           errors
         }
 

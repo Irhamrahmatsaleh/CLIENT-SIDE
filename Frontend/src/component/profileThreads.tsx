@@ -1,19 +1,20 @@
 import { thread } from "@/libs/type";
-import { Box, Flex, Link, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Image, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
 import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
-import { BsHeart, BsHeartFill } from "react-icons/bs";
+import { BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
 import { api } from "../libs/api";
 import f from './function';
+import { deleteThread } from "./threads";
 
-export async function fetchThreads(){
+export async function fetchThreadsProfile(){
     try {
         const token = localStorage.getItem('token');
         const response = await Axios({
             method: "get",
-            url: `${api}/thread`,
+            url: `${api}/threadProfile`,
             headers: { 
                 "Content-Type": "multipart/form-data",
                 'Authorization': `Bearer ${token}`
@@ -26,10 +27,11 @@ export async function fetchThreads(){
 }
 
 export default function Threads(){
-    const { data: threads } = useQuery<thread[]>({
-        queryKey: ["threads"],
-        queryFn: fetchThreads,
+    const { data: threadsProfile, refetch } = useQuery<thread[]>({
+        queryKey: ["threadsProfile"],
+        queryFn: fetchThreadsProfile,
         });
+    const toast = useToast();
     const [, setThread] = useState<thread[]>([]);
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
 
@@ -94,6 +96,27 @@ export default function Threads(){
         }
         };
 
+    const handleDelete = async (idThread : number) => {
+        try {
+            await deleteThread(idThread);
+            toast({
+                title: "Delete thread success!",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+                });
+        } catch (error) {
+            console.error('Error unliking the item', error);
+            toast({
+                title: "Delete thread failed!",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+                });
+        }
+        refetch();
+        };
+
     const likeHandle = (index : number, con : boolean) => {
         console.log(isLiked);
         const newLiked = [...isLiked];
@@ -101,13 +124,18 @@ export default function Threads(){
         setIsLiked(newLiked);
     }
 
-    const data = threads?.map((item, index) => {
+    useEffect(() => {
+        if(isLiked) refetch();
+    }, [isLiked])
+
+    const data = threadsProfile?.map((item, index) => {
             if(item.users == null)
                 {
                     return;
                 }
             return (
-            <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
+            <Flex alignItems={'start'} justifyContent={'space-between'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
+            <Flex alignItems={'start'}>
             <Box className="picture" >
             {f.imageCircle(item.users.photo_profile, '32px')}
             </Box>
@@ -122,7 +150,7 @@ export default function Threads(){
                     {item.users.username && item.users.username}
                     </Text>
                     <Text>
-                    @{item.users.username && item.users.username}
+                    {item.users.username && item.users.username}
                     </Text>
                     <Text>
                     {f.dateDifferences(item.update_at)}
@@ -144,21 +172,56 @@ export default function Threads(){
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
                 </Flex>
             </Flex>
+            </Flex>
+            <Box>
+                <Menu>
+                    <MenuButton
+                        as={IconButton}
+                        aria-label='Options'
+                        icon={<BsThreeDots />}
+                        colorScheme="black"
+                        variant=''
+                    />
+                    <MenuList color={'black'}>
+                        <MenuItem onClick={() => handleDelete(item.id)} icon={<BsTrash />}>
+                        Delete Threads
+                        </MenuItem>
+                    </MenuList>
+                </Menu>
+                </Box>
         </Flex>
             )
         })
     
+    const tabImage = threadsProfile?.map((item, index) => {
+        return (
+            <Image src={item.image} my={'0.33rem'} height={'auto'} key={index}/>
+        )
+    })
     return(
-        <>
-            <Flex flexDirection={'column'} justifyContent={'start'} mt={'1rem'} height={'720px'} overflowY="scroll" overflowX="hidden" css={{
-        '::-webkit-scrollbar': {
-          display: 'none',
-        },
-        '-ms-overflow-style': 'none', // IE and Edge
-        'scrollbar-width': 'none', // Firefox
-      }}>
-                {data}
-            </Flex>
-        </>
+        <Box>
+        <Tabs isFitted colorScheme="green">
+                <TabList mb='1rem' color={'white'}>
+                    <Tab>Threads</Tab>
+                    <Tab>Media</Tab>
+                </TabList>
+                <Flex flexDirection={'column'} justifyContent={'start'} height={'280px'} overflowY="scroll" overflowX="hidden" css={{
+                        '::-webkit-scrollbar': {
+                        display: 'none',
+                        },
+                        '-ms-overflow-style': 'none',
+                        'scrollbar-width': 'none',
+                    }}>
+                <TabPanels>
+                    <TabPanel>
+                    {data}
+                    </TabPanel>
+                    <TabPanel>
+                    {tabImage}
+                    </TabPanel>
+                </TabPanels>
+                </Flex>
+                </Tabs>
+        </Box>
     )
 }

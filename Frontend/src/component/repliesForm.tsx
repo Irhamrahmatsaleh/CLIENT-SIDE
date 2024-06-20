@@ -8,9 +8,10 @@ import { BsImage, BsXCircle } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import { createThreadSchema } from "../features/validators/threads";
 import { api } from "../libs/api";
-import { replies, repliesForm, thread, threadsForm } from "../libs/type";
+import { editProfileForm, replies, repliesForm, thread, threadsForm } from "../libs/type";
 import f from './function';
 import { fetchReplies } from "./replies";
+import { fetchProfile } from "./profileCard";
 
 
 export const RepliesForm : React.FC= () => {
@@ -23,6 +24,11 @@ export const RepliesForm : React.FC= () => {
     const { refetch } = useQuery<replies[]>({
         queryKey: ["replies"],
         queryFn: () => fetchReplies(id),
+        });
+
+    const { data: profileData  } = useQuery<editProfileForm>({
+        queryKey: ["profile"],
+        queryFn: fetchProfile,
         });
 
     const {
@@ -91,7 +97,7 @@ export const RepliesForm : React.FC= () => {
     return (
     <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'0rem 0 0.5rem'} p={'1rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
     <HStack alignItems={'start'}>
-    {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px', '0.2rem')}
+    {f.imageCircle(profileData?.photo_profile ? profileData?.photo_profile : "null", '32px', '0.2rem')}
     <form onSubmit={handleSubmit(onSubmit)}>
     <FormControl display={'flex'} alignItems={'start'}>
         <VStack justifyContent={'start'} min-height={'60px'}>

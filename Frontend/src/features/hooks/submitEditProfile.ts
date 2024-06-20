@@ -6,14 +6,17 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { fetchProfile } from "../../component/profileCard";
 import { api } from "../../libs/api";
 import { profileSchema } from "../validators/profileSchema";
+import { useToast } from "@chakra-ui/react";
 
 export const useEditProfileForm = () => {
+  const toast = useToast();
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        reset,
+        formState: { errors, isSubmitting, isSubmitSuccessful },
       } = useForm<editProfileForm>({
-        mode: "onTouched",
+        mode: "all",
         resolver: zodResolver(profileSchema)
       })
 
@@ -22,7 +25,7 @@ export const useEditProfileForm = () => {
       queryFn: fetchProfile,
       });
 
-    const { mutateAsync } = useMutation<
+const { mutateAsync } = useMutation<
     users,
     AxiosError,
     editProfileForm
@@ -44,16 +47,30 @@ export const useEditProfileForm = () => {
               data: formData,
               headers: { "Content-Type": "multipart/form-data",'Authorization': `Bearer ${token}` },
               })
-        },
+          },
     });
 
     const onSubmit: SubmitHandler<editProfileForm> = async(data) => {
         try {
             await mutateAsync(data);
             refetch();
+            toast({
+              title: "Edit Profile submitted!",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+          });
+
             } catch (error) {
             // handle error
             console.log(error);
+            toast({
+              title: "Edit Profile failed!",
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+          });
+
             }
     }
 
@@ -61,6 +78,9 @@ export const useEditProfileForm = () => {
           register,
           handleSubmit,
           onSubmit,
+          reset,
+          isSubmitting,
+          isSubmitSuccessful,
           errors
         }
 

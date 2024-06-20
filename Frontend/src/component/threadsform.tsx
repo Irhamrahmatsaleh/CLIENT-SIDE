@@ -1,77 +1,64 @@
-import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, Text, Textarea, VStack } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import Axios, { AxiosError } from 'axios';
-import React, { useRef, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Box, Button, Divider, Flex, FormControl, HStack, Heading, IconButton, Image, Input, Link, Spinner, Text, Textarea, Tooltip, VStack } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import Axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { SubmitHandler } from "react-hook-form";
 import { BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsHeartFill, BsImage, BsXCircle } from "react-icons/bs";
-import { createThreadSchema } from "../features/validators/threads";
-import { api } from "../libs/api";
-import { editProfileForm, thread, threadsForm } from "../libs/type";
+import { useDebounce } from 'use-debounce';
+import { useThreadsPostForm } from "../features/hooks/authThreads";
+import { editProfileForm, threadsForm } from "../libs/type";
 import f from './function';
 import { fetchProfile } from "./profileCard";
-import { fetchThreads } from "./threads";
 
 export const ThreadsUpload : React.FC= () => {
+    const { handleSubmit, mutateAsync, register, errors, isSubmitting, resetField, getValues, unregister } = useThreadsPostForm();    
     const textareaRef = useRef<string>() ;
     const fileInputRef = useRef<File | null>(null) ;
     const [imagePreview, setImagePreview] = useState<string>("");
-    const [textValue, setTextValue] = useState<string>();
 
-    const {refetch } = useQuery<thread[]>({
-        queryKey: ["threads"],
-        queryFn: fetchThreads,
-        });
+    const [prompt, setPrompt] = useState<string>('');
+    const [suggestion, setSuggestion] = useState<string>('');
+    const [fetchDebounce] = useDebounce(prompt, 1000);
 
-    const {
-        register,
-        handleSubmit,
-        formState:{errors},
-        resetField,
-        unregister,
-        getValues
-      } = useForm<threadsForm>({
-        mode: "onSubmit",
-        resolver: zodResolver(createThreadSchema),
-        });
+    useEffect(() => {
+        fetchSuggestion(fetchDebounce);
+    }, [fetchDebounce])
 
-
-    const { mutateAsync } = useMutation<
-    thread,
-    AxiosError,
-    threadsForm
-    >({
-        mutationFn: async(data: { content: any; image: any; }) => {
-            console.log("mutate mutation");
-            const formData =  new FormData();
-            formData.append('content', data.content);
-            if (data.image && data.image[0]) {
-                formData.append('image', data.image[0]);
-                } else {
-                formData.append('image', 'none');
-                }
-            
-            const token = localStorage.getItem('token');
-            return await Axios({
-            method: "post",
-            url: `${api}/threadPost`,
-            data: formData,
-            headers: { 
-                "Content-Type": "multipart/form-data",
-                'Authorization': `Bearer ${token}`
+    async function fetchSuggestion(prompt : string){
+        try {
+            if(prompt === '') {
+                return <></>
+            }
+            const response = await Axios({
+                method: "post",
+                url: `https://api.mistral.ai/v1/chat/completions`,
+                data: {
+                    "model": "mistral-small-latest",
+                    "messages": [
+                            {
+                            "role": "user",
+                            "content": `${prompt}. finish my previous sentence based on random related topic of your pick answer it directly single sentence. dont need to answer the sentence, just finish it directly without conjunction`
+                            }
+                            ]
                 },
+                headers: { 
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${import.meta.env.VITE_AI_KEY}`
+                 },
             })
-        },
-    });
+            setSuggestion(response.data.choices[0].message.content)
+        } catch(error) {
+            return error;
+        }
+    }
     
     const onSubmit: SubmitHandler<threadsForm> = async (data : { content: any; image: any ; }) => {
-        console.log("test", data.image);
         if(!imagePreview || imagePreview === '') data.image = null;
         textareaRef.current = "";
-        setTextValue('')
         await mutateAsync(data);
-        refetch();
+        unregister('image'); 
+        setImagePreview('');
     }
 
     const changeImage = (event : React.ChangeEvent<HTMLInputElement>) => {
@@ -81,21 +68,13 @@ export const ThreadsUpload : React.FC= () => {
             fileInputRef.current = file;
         }
     }
-
-    // const clearFileInput = () => {
-    //     if (fileInputRef.current) {
-    //         fileInputRef.current = null;
-    //         setImagePreview('')
-    //         delete errors.image;
-    //         }
-    //     };
     
     const { data: profileData  } = useQuery<editProfileForm>({
         queryKey: ["profile"],
         queryFn: fetchProfile,
         });
     
-        
+    
     return (
     <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'0rem 0 0.5rem'} p={'1rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
     <HStack alignItems={'start'}>
@@ -103,8 +82,12 @@ export const ThreadsUpload : React.FC= () => {
     <form onSubmit={handleSubmit(onSubmit)}>
     <FormControl display={'flex'} alignItems={'start'}>
         <VStack justifyContent={'start'} min-height={'60px'}>
-                <Textarea placeholder="What is Happening..." width={'420px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} value={textValue} onClick={() => {
-                if(!getValues('image'))  resetField('image')}} ></Textarea>
+                
+                <Tooltip label={suggestion} aria-label='A tooltip'>
+                <Textarea placeholder="What is Happening..." width={'420px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} onClick={() => {
+                if(!getValues('image'))  resetField('image')}} onInput={(e) => {setPrompt((e.target as HTMLInputElement).value);}}></Textarea>
+                </Tooltip>
+
                 {imagePreview && 
                 
                 <Box position="relative" display="inline-block">
@@ -155,7 +138,7 @@ export const ThreadsUpload : React.FC= () => {
                         cursor="pointer"
                     />
                     </Box>
-                <Button isDisabled={!!(errors.image?.message)} colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>Post</Button>
+                <Button isDisabled={!!(errors.image?.message || isSubmitting)} colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>{isSubmitting ? <Spinner/> : "Post"}</Button>
             </FormControl>
             <Text color={"error.primary"}>{errors.image && errors.image.message}</Text>
             </form>

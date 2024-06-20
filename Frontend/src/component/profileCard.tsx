@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text, Textarea } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import Axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -52,8 +52,7 @@ export default function Profile()
     const { data: profileData  } = useQuery<editProfileForm>({
         queryKey: ["profile"],
         queryFn: fetchProfile,
-        });
-        
+    });
     const [isOpen, setIsOpen] = useState(false);
 
     const onClose = () => setIsOpen(false);
@@ -144,7 +143,8 @@ const handleUnfollow = async (id : number, index : number) => {
         fetchProfile();
     },[])
 
-    const { handleSubmit, onSubmit, register, errors } = useEditProfileForm();
+    const { handleSubmit, onSubmit, register, errors, isSubmitting } = useEditProfileForm();
+
     const profile = 
     <Flex flexDirection={'column'} bgColor={color.greyCard} alignItems={'start'} width={'90%'} borderRadius={'14px'} justifyContent={'space-around'} height={'45%'} py={'1rem'}>
     <Heading as={'h3'} size={'md'} marginStart={'1.33rem'} mb={'1rem'} color={'whitesmoke'} fontWeight={'medium'}>My Profile</Heading>
@@ -169,15 +169,15 @@ const handleUnfollow = async (id : number, index : number) => {
                 <FormControl display={'flex'} width={'100%'} flexDirection={'column'} alignItems={'start'} marginBottom={'0.33rem'} color={'white'}>
                     <Box mb={'1rem'} width={'100%'} border={`1px solid ${color.grey}`} p={'0.33rem'} borderRadius={'12px'}>
                     <FormHelperText fontSize={'0.75rem'} color={color.grey} ms={'1rem'}>Name</FormHelperText>
-                    <Input border={'none'} type='text' placeholder="John Doe" {...register("full_name", {required: true})} isRequired/>
+                    <Input border={'none'} type='text' placeholder="John Doe" {...register("full_name", {required: true})} isRequired defaultValue={profileData?.full_name}/>
                     </Box>
                     <Box mb={'1rem'} width={'100%'} border={`1px solid ${color.grey}`} p={'0.33rem'} borderRadius={'12px'}>
                     <FormHelperText fontSize={'0.75rem'} color={color.grey} ms={'1rem'}>Username</FormHelperText>
-                    <Input border={'none'} type='text' placeholder="@john_doe" {...register("username", {required: true})} isRequired/>
+                    <Input border={'none'} type='text' placeholder="@john_doe" {...register("username", {required: true})} defaultValue={profileData?.username} isRequired/>
                     </Box>
                     <Box width={'100%'} border={`1px solid ${color.grey}`} p={'0.33rem'} borderRadius={'12px'}>
                     <FormHelperText fontSize={'0.75rem'} color={color.grey} ms={'1rem'}>Bio</FormHelperText>
-                    <Textarea width={'100%'} minHeight={'80px'} border={'none'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("bio")}></Textarea>
+                    <Textarea width={'100%'} minHeight={'80px'} border={'none'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("bio")} defaultValue={profileData?.bio}></Textarea>
                     </Box>
                 </FormControl>
             </Flex>
@@ -211,7 +211,8 @@ const handleUnfollow = async (id : number, index : number) => {
                         cursor="pointer"
                     />
                     </Box>
-            <Button isDisabled={!!(errors.full_name?.message || errors.username?.message || errors.photo_profile?.message)} colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>Save</Button>
+            <Button isDisabled={!!(errors.full_name?.message || errors.username?.message || errors.photo_profile?.message || isSubmitting )} colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>{isSubmitting  ? <Spinner/> : "Save"}</Button>
+            
             </ModalFooter>
             </ModalContent>
             </form>

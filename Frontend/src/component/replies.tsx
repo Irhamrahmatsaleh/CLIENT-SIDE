@@ -86,7 +86,7 @@ export default function Replies(){
     const replied =
             <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'}>
             <Box className="picture" >
-            {f.imageCircle('https://images.pexels.com/photos/1172207/pexels-photo-1172207.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', '32px')}
+            {f.imageCircle(thread ? thread?.users.photo_profile : "null", '32px')}
             </Box>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                 <Flex 
@@ -99,7 +99,7 @@ export default function Replies(){
                     {thread?.users.full_name ? thread?.users.full_name : 'null'}
                     </Text>
                     <Text>
-                    @{thread?.users.username ? thread?.users.username : 'null'}
+                    {thread?.users.username ? thread?.users.username : 'null'}
                     </Text>
                 </Flex>
                 <Box marginBottom={'0.5rem'}>
