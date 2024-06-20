@@ -29,7 +29,6 @@ class userController {
             } 
         */
         try {
-            console.log("BODY", req.body);
             const dataCreated = await user.RegisterUser(req.body)
             const token = jwt.sign(dataCreated.id.toString(), process.env.JWT_SECRET);
             const fullUrl = req.protocol + "://" + req.get("host");
@@ -152,6 +151,53 @@ class userController {
                 res.sendStatus(400);
             }
         }
+
+    async requestPassword(req: Request, res: Response){
+        try {
+            const email = req.body.email;
+            const userData = await user.checkEmail(email);
+            if(!userData) throw new Error("User for password reset not found");
+
+            const token = jwt.sign({id: userData.id}, process.env.JWT_SECRET, {expiresIn: '1h'})
+
+            const fullUrl = req.protocol + "://" + req.hostname + ":" + process.env.FRONTEND_PORT;
+
+            const info = await transporter.sendMail({
+            from: `Circle <${process.env.EMAIL_ADDRESS}>`, // sender address
+            to: email, // list of receivers
+            subject: "Reset Password Link", // Subject line
+            html: `<a href="${fullUrl}/reset-password/${token}">Klik untuk verifikasi email kamu!</a>`, // html body
+            });
+
+            res.status(201).json({
+                stats: "reset password link sent to your email",
+                email: userData.email,
+                link: `<a href="${fullUrl}/reset-password/${token}">Klik untuk verifikasi email kamu!</a>`
+            }).send;
+        } catch(err) {
+            throw new Error(err)
+        }
+    }
+
+    async resetPassword(req: Request, res: Response) {
+        try {
+          const token = req.params.token as string;
+          const verify = await jwt.verify(token, process.env.JWT_SECRET);
+          if(!verify) throw new Error("Token link error please request again")
+            console.log(verify.id)
+          const resetedPassword = await user.ChangePassword(parseInt(verify.id),req.body.password);
+          if(!resetedPassword) throw new Error("Reset password error")
+          const fullUrl = req.protocol + "://" + req.hostname + ":" + process.env.FRONTEND_PORT;
+          res.status(201).json({
+            stats: "Password sucessfully reset!",
+            user_id: verify.id
+        }).send;
+        } catch (error) {
+          res.status(500).json({
+            message: error.message,
+          });
+        }
+      }
 }
 
 export default new userController();

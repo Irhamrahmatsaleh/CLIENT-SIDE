@@ -12,7 +12,6 @@ export type editProfileSchema = {
     username : string,
     bio : string
     }
-
 export type loginSchema = {
     email         : string,
     password      : string,

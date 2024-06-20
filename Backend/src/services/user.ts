@@ -250,6 +250,37 @@ import 'dotenv/config'
             throw new Error(err);
         }
     }
+
+    async checkEmail(userEmail:string){
+      try {
+        return await this.prisma.users.findUnique({where:{email:userEmail}});
+      }catch(err){
+        throw new Error(err);
+      }
+    }
+
+    async ChangePassword(userId:number,newPassword:string){
+      try {
+        const encPassword = await new Promise<string>((resolve, reject) => {
+          Bcrypt.hash(newPassword, this.saltRound, async function(err, hash) {
+              if (err)
+                  {
+                      reject(new Error("error hashing"));
+                  } else {
+                      resolve(hash);
+                  }
+              });
+      });
+        const updatedData = await this.prisma.users.update(
+          {
+              where: { id : userId},
+              data: {password: encPassword}
+          });
+          return updatedData
+      } catch(err){
+        throw new Error(err);
+      }
+    }
 }
 
 export default new userService();

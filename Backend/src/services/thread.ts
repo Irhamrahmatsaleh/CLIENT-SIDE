@@ -303,12 +303,12 @@ class threadServices {
         throw new Error(err);
     }
     }
-    async DeleteThread(idUser : number)
+    async DeleteThread(idThread : number)
     {
         try {
             const deletedData = await this.prisma.threads.delete({
                 where: {
-                    id : idUser
+                    id : idThread
                 }
             })
             

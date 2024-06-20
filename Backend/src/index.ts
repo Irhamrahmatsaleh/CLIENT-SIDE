@@ -32,7 +32,7 @@ const swaggerOption = {
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 1000, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    limit: 2000, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
     standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
     store: new RedisStore({
@@ -59,17 +59,19 @@ router.post("/login", upload.none(), userController.loginUser)
 router.get("/check",authenticateToken, upload.none(), userController.check)
 router.get("/user",authenticateToken, upload.none(), userController.findUser)
 router.get("/verify-email", userController.verifyEmail);
+router.post("/request-password",upload.none(), userController.requestPassword);
+router.post("/reset-password/:token",upload.none(), userController.resetPassword);
 
 router.patch("/user",authenticateToken, upload.single('photo_profile'), userController.updateUser)
 router.delete("/user:id",authenticateToken, userController.deleteUser)
 
 router.get("/thread",authenticateToken,  
-async (req: Request, res: Response, next: NextFunction) => {
-    const result = await redisClient.get("ALL_THREADS_DATA");
-    if (result) return res.json(JSON.parse(result));
+// async (req: Request, res: Response, next: NextFunction) => {
+//     const result = await redisClient.get("ALL_THREADS_DATA");
+//     if (result) return res.json(JSON.parse(result));
 
-    next();
-},
+//     next();
+// },
 upload.none(), threadController.findAllThread)
 
 router.get("/threadProfile",authenticateToken, upload.none(), threadController.findUserThread)
