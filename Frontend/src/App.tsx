@@ -60,6 +60,7 @@ export default function App() {
         duration: 3000,
         isClosable: true,
       });
+      <Navigate to={"/login"} />
     }
   }
 
