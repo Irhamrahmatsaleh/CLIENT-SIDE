@@ -27,8 +27,9 @@ export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const PrivateRoute = () => {
+    console.log("NAVIGATE")
       if(!isLoading) {
-        
+
         if (currentUser.email) return <Outlet />;
 
         return <Navigate to={"/login"} />;
