@@ -21,10 +21,14 @@ export const useRegisterForm = () => {
 
   const onSubmit: SubmitHandler<registerForm> = async(data) => {
       try {
+        const formData = new FormData();
+        formData.append('full_name', data.full_name);
+        formData.append('email', data.email);
+        formData.append('password', data.password);
           const response = await Axios({
               method: "post",
               url: `${api}/register`,
-              data: objectToFormData(data),
+              data: formData,
               headers: { "Content-Type": "multipart/form-data" },
               })
           if(response.status === 201)
@@ -48,13 +52,13 @@ export const useRegisterForm = () => {
           }
   }
 
-      function objectToFormData(obj: Record<string, any>): FormData{
-          const formData = new FormData();
-          for (const key in obj) {
-              formData.append(key, obj[key]);
-          }
-          return formData;
-        }
+      // function objectToFormData(obj: Record<string, any>): FormData{
+      //     const formData = new FormData();
+      //     for (const key in obj) {
+      //         formData.append(key, obj[key]);
+      //     }
+      //     return formData;
+      //   }
 
       return {
         register,
