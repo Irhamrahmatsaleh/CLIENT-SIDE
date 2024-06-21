@@ -6,7 +6,7 @@
    "scripts": {
       "build": "tsc && prisma generate",
       "start": "node build/index.js",
-      "dev": "nodemon src/index.ts",
+      "dev": "nodemon index.ts",
       "typeorm": "typeorm-ts-node-commonjs",
       "migration:generate": "npx typeorm-ts-node-commonjs migration:generate src/migrations/circleMigration -d src/data-source.ts",
       "migration:run": "npx typeorm-ts-node-commonjs migration:run -d src/data-source.ts",

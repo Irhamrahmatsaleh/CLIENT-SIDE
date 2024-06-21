@@ -69,7 +69,7 @@ model users {
   created_by    String?      @db.VarChar
   updated_at    DateTime    @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @db.Timestamp(6) @updatedAt
   updated_by    String?      @db.VarChar
-  isVerified    Boolean     @default(false)
+  isverified    Boolean     @default(false)
   follower      following[]  @relation("follower_id")
   following     following[] @relation("followed_id")
   likes         likes[]

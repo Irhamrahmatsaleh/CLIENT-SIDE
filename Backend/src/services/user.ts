@@ -118,7 +118,7 @@ import 'dotenv/config'
       
           return await this.prisma.users.update({
             data: {
-              isVerified: true,
+              isverified: true,
             },
             where: {
               id: Number(userId),
@@ -145,7 +145,7 @@ import 'dotenv/config'
             });
         
             if (!user) throw new Error("User not found!");
-            if(!user.isVerified) throw new Error("User not verified!");
+            if(!user.isverified) throw new Error("User not verified!");
         
             const isValidPassword = await Bcrypt.compare(dto.password, user.password);
         
