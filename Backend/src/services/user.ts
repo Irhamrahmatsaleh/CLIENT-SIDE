@@ -1,4 +1,4 @@
-import { PrismaClient, VerificationType } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
 import Bcrypt from 'bcrypt'
 import { editProfileSchema, editProfileValidate, loginSchema, loginValidate, registerSchema, registerValidate } from "../dto/user";
 import {v2 as cloudinary} from 'cloudinary';
@@ -72,6 +72,14 @@ import 'dotenv/config'
                     });
             });
 
+            const email = await this.prisma.users.findUnique({
+              where:{
+                email: dto.email
+              }
+            })
+
+            if(email) throw new Error ("Email already registered");
+
             const createdData = await this.prisma.users.create({ 
                 data: {
                     full_name: dto.full_name,
@@ -89,7 +97,7 @@ import 'dotenv/config'
         }
     }
 
-    async createVerification(token: string, type: VerificationType) {
+    async createVerification(token: string, type: string) {
         try {
           return await this.prisma.verification.create({
             data: {
@@ -112,7 +120,6 @@ import 'dotenv/config'
           const userId = jwt.verify(verification.token, process.env.JWT_SECRET);
       
           if (verification.type === "FORGOT_PASSWORD") {
-            //TODO: create forgot password
             return;
           }
       

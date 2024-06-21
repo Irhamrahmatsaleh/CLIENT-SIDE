@@ -80,13 +80,8 @@ model users {
 model verification {
   id Int @id @default(autoincrement())
   token String           @unique
-  type  VerificationType @default(EMAIL)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  type  String @default("EMAIL")
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
   @@map("verifications")
-}
-
-enum VerificationType {
-  FORGOT_PASSWORD
-  EMAIL
 }
