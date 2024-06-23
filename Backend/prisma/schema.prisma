@@ -26,7 +26,7 @@ model likes {
   update_at  DateTime @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @updatedAt @db.Timestamp(6)
   updated_by Int?
   users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_3f519ed95f775c781a254089171")
-  threads    threads  @relation(fields: [thread_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_dfee0c14f2a697eeb0b0bfc50cc")
+  threads    threads  @relation(fields: [thread_id], references: [id], onDelete: Cascade, map: "FK_dfee0c14f2a697eeb0b0bfc50cc")
 }
 
 model likesreplies {
@@ -38,7 +38,7 @@ model likesreplies {
   update_at  DateTime @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @updatedAt @db.Timestamp(6)
   updated_by Int?
   users      users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  replies    replies  @relation(fields: [reply_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies    replies  @relation(fields: [reply_id], references: [id], onDelete: Cascade)
 }
 
 model replies {
@@ -52,10 +52,10 @@ model replies {
   created_by    Int?
   updated_at    DateTime       @default(dbgenerated("('now'::text)::timestamp(6) with time zone")) @updatedAt @db.Timestamp(6)
   updated_by    Int?
-  threads       threads?        @relation(fields: [thread_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_1af58ca9000874da2171004d164")
+  threads       threads?        @relation(fields: [thread_id], references: [id], onDelete: Cascade, map: "FK_1af58ca9000874da2171004d164")
   users         users          @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_c961efa3687d100ed22cd409534")
   likesreplies  likesreplies[]
-  repliesNested replies?       @relation("ChildReplies", fields: [parent_id], references: [id])
+  repliesNested replies?       @relation("ChildReplies", fields: [parent_id], references: [id], onDelete: Cascade)
   childReplies  replies[]       @relation("ChildReplies")
 }
 
