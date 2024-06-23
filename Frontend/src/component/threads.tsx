@@ -187,9 +187,10 @@ export default function Threads(){
             return (
             <Flex alignItems={'start'} color={'white'} justifyContent={'space-between'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
                 <Flex alignItems={'start'}>
-                <Box as='a' href={linkProfile} className="picture" >
+                <Link href={linkProfile}><Box  className="picture" >
                 {f.imageCircle(item.users.photo_profile, '32px')}
                 </Box>
+                </Link>
                 <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                     <Flex
                     fontSize={'small'}
