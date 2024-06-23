@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, FormHelperText, HStack, Heading, IconButton, Image, Input, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text, Textarea } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, FormHelperText, Link as ChakraLink, HStack, Heading, IconButton, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Spinner, Text, Textarea } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import Axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -7,6 +7,7 @@ import { useEditProfileForm } from "../features/hooks/submitEditProfile";
 import { api } from "../libs/api";
 import { editProfileForm, users } from "../libs/type";
 import f from './function';
+import { Link } from "react-router-dom";
 
     const color = {
         grey: '#909090',
@@ -335,9 +336,10 @@ const handleUnfollow = async (id : number, index : number) => {
         return (
         <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
             <Flex>
-            <Box as='a' href={"/otherprofile/" + item.id}>
+            <Link to={"/otherprofile/" + item.id}><Box >
             {f.imageCircle(item && item.photo_profile, '40px')}
             </Box>
+            </Link>
             <Flex flexDirection={'column'} ms={'1rem'}>
             <Text color={'white'}>{item && item.full_name}</Text>
             <Text fontSize={'1rem'} color='circle.grey'>{item && item.username}</Text>
@@ -365,10 +367,10 @@ const handleUnfollow = async (id : number, index : number) => {
             <Text fontSize={'0.9rem'} color={color.grey}>•</Text>
         </Flex>
         <Flex gap={'0.5rem'}>
-            <Link _hover={{color : "whitesmoke"}} href="https://github.com/bagushendrawan" fontSize={'0.9rem'} color={color.grey}><BsGithub></BsGithub></Link>
-            <Link _hover={{color : "whitesmoke"}} href="https://www.linkedin.com/in/bagus-hendrawan/" fontSize={'0.9rem'} color={color.grey}><BsLinkedin></BsLinkedin></Link>
-            <Link _hover={{color : "whitesmoke"}} href="https://web.facebook.com/profile.php?id=100011604010888" fontSize={'0.9rem'} color={color.grey}><BsFacebook></BsFacebook></Link>
-            <Link _hover={{color : "whitesmoke"}} href="https://www.instagram.com/bag_user/" fontSize={'0.9rem'} color={color.grey}><BsInstagram></BsInstagram></Link>
+            <ChakraLink _hover={{color : "whitesmoke"}} href="https://github.com/bagushendrawan" fontSize={'0.9rem'} color={color.grey}><BsGithub></BsGithub></ChakraLink>
+            <ChakraLink _hover={{color : "whitesmoke"}} href="https://www.linkedin.com/in/bagus-hendrawan/" fontSize={'0.9rem'} color={color.grey}><BsLinkedin></BsLinkedin></ChakraLink>
+            <ChakraLink _hover={{color : "whitesmoke"}} href="https://web.facebook.com/profile.php?id=100011604010888" fontSize={'0.9rem'} color={color.grey}><BsFacebook></BsFacebook></ChakraLink>
+            <ChakraLink _hover={{color : "whitesmoke"}} href="https://www.instagram.com/bag_user/" fontSize={'0.9rem'} color={color.grey}><BsInstagram></BsInstagram></ChakraLink>
         </Flex>
     </Flex>
     <Flex ms={'1.33rem'} alignItems={'center'}>
@@ -377,7 +379,7 @@ const handleUnfollow = async (id : number, index : number) => {
         <Image src="/Red.svg"></Image>
         <Text fontSize={'0.7rem'} color={color.grey}>DumbWays Indonesia • </Text>
         </HStack>
-        <Link fontSize={'0.7rem'} color={color.grey}>#1 Coding Bootcamp</Link>
+        <ChakraLink fontSize={'0.7rem'} color={color.grey}>#1 Coding Bootcamp</ChakraLink>
     </Flex>
     </Flex>
 
