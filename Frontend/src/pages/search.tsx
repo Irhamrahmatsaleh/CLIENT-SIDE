@@ -1,4 +1,4 @@
-import { Button, Flex, FlexProps, FormControl, Heading, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, FlexProps, FormControl, Heading, Input, InputGroup, InputLeftElement, Text } from "@chakra-ui/react";
 import Axios from "axios";
 import { useEffect, useState } from "react";
 import { BsPerson } from "react-icons/bs";
@@ -159,7 +159,9 @@ function SearchedUsers({ user, index }: SearchedCardsProps) {
     return (
         <Flex alignItems={'center'} justifyContent={'space-between'} mb={'1rem'}>
             <Flex>
+                <Box as='a' href={"/otherprofile/" + user.id}>
                 {f.imageCircle(user.photo_profile, '40px')}
+                </Box>
                 <Flex flexDirection={'column'} ms={'1rem'}>
                 <Text color={'white'} fontWeight={'bold'}>{user.full_name}</Text>
                 <Text fontSize={'1rem'} color={color.grey} mb={'0.2rem'}>{user.username}</Text>

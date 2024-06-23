@@ -163,7 +163,87 @@ const handleUnfollow = async (id : number, index : number) => {
             <Flex flexDirection={'column'}>
                 <Box width={'100%'} marginX={'auto'} height={'60%'} mb={'0.5rem'}>
                 <Image src={photoPreview && photoPreview} width={'720px'} height={'120px'} objectFit={'cover'} borderRadius={'12px'}/>
-                <Image borderRadius={'50%'} width={'72px'} height={'72px'} objectFit={'cover'} src={photoPreview && photoPreview} zIndex={4} position={'relative'} top={'-2rem'} left={'1rem'} border={`4px solid ${color.greyCard}`}/>
+                <Box sx={{
+                '.container': {
+                    position: 'relative',
+                    width: '72px',
+                    height: '72px',
+                    top: '-2rem',
+                    left: '1rem',
+                    zIndex:'4',
+                },
+                '.image': {
+                    width: '100%',
+                    height: '100%',
+                    objectFit:'cover',
+                    border: `4px solid #262626`,
+                    borderRadius:'50%'
+                  },
+                    '.overlay': {
+                    position: 'absolute',
+                    top: '1',
+                    bottom: '0',
+                    left: '1',
+                    right: '0',
+                    height: '90%',
+                    width: '90%',
+                    opacity: '0',
+                    transition: '.3s ease',
+                    backgroundColor: 'rgba(255, 255, 255, 0.33)',
+                    borderRadius:'50%'
+                    },
+                '.container:hover .overlay': {
+                    opacity: '1',
+                  },
+
+                '.icon': {
+                color: 'green',
+                fontSize: '2rem',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                msTransform: 'translate(-50%, -50%)',
+                textAlign: 'center',
+                },
+                '.icon-image:hover': {
+                    color: 'rgb(124, 195, 124)'
+                  } 
+                }}>
+                    <Box className="container">
+                    <Image src={photoPreview && photoPreview} alt="Avatar" className="image"/>
+                    <Input
+                        type="file"
+                        id="photo-input"
+                        opacity="0"
+                        position="absolute"
+                        left="0"
+                        top="0"
+                        height="100%"
+                        width="100%"
+                        aria-hidden="true"
+                        {...register('photo_profile')}
+                        
+                        onChange={changePhoto}
+                    />
+                    <Box className="overlay">
+                    <IconButton
+                        as="label"
+                        htmlFor="photo-input"
+                        colorScheme="white"
+                        aria-label="Add Picture"
+                        size="sm"
+                        variant="ghost"
+                        fontSize="1.33rem"
+                        icon={<BsImage className="icon-image"/>}
+                        marginEnd="0.5rem"
+                        cursor="pointer"
+                        className="icon"
+                    />
+                    </Box>
+                    </Box>
+                </Box>
+                {/* <Button borderRadius={'50%'} _hover={{bgImage: `url(${photoPreview})`, bgColor: "white" }} width={'72px'} height={'72px'} bgSize={'cover'} bgPosition={'center'} bgImage={photoPreview && photoPreview} zIndex={4} position={'relative'} top={'-2rem'} left={'1rem'} border={`4px solid ${color.greyCard}`}><BsImage opacity={0} className=".image-icon"></BsImage></Button>  */}
                 <Text color={"error.primary"}>{errors.photo_profile && errors.photo_profile.message}</Text>
                 </Box>
                 <FormControl display={'flex'} width={'100%'} flexDirection={'column'} alignItems={'start'} marginBottom={'0.33rem'} color={'white'}>
@@ -183,7 +263,7 @@ const handleUnfollow = async (id : number, index : number) => {
             </Flex>
             </ModalBody>
             <ModalFooter>
-            <Box position="relative" display="inline-block">
+            {/* <Box position="relative" display="inline-block">
                     <Input
                         type="file"
                         id="photo-input"
@@ -210,7 +290,7 @@ const handleUnfollow = async (id : number, index : number) => {
                         marginEnd="0.5rem"
                         cursor="pointer"
                     />
-                    </Box>
+                    </Box> */}
             <Button isDisabled={!!(errors.full_name?.message || errors.username?.message || errors.photo_profile?.message || isSubmitting )} colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>{isSubmitting  ? <Spinner/> : "Save"}</Button>
             
             </ModalFooter>
@@ -255,7 +335,9 @@ const handleUnfollow = async (id : number, index : number) => {
         return (
         <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
             <Flex>
+            <Box as='a' href={"/otherprofile/" + item.id}>
             {f.imageCircle(item && item.photo_profile, '40px')}
+            </Box>
             <Flex flexDirection={'column'} ms={'1rem'}>
             <Text color={'white'}>{item && item.full_name}</Text>
             <Text fontSize={'1rem'} color='circle.grey'>{item && item.username}</Text>
@@ -283,10 +365,10 @@ const handleUnfollow = async (id : number, index : number) => {
             <Text fontSize={'0.9rem'} color={color.grey}>•</Text>
         </Flex>
         <Flex gap={'0.5rem'}>
-            <Link fontSize={'0.9rem'} color={color.grey}><BsGithub></BsGithub></Link>
-            <Link fontSize={'0.9rem'} color={color.grey}><BsLinkedin></BsLinkedin></Link>
-            <Link fontSize={'0.9rem'} color={color.grey}><BsFacebook></BsFacebook></Link>
-            <Link fontSize={'0.9rem'} color={color.grey}><BsInstagram></BsInstagram></Link>
+            <Link _hover={{color : "whitesmoke"}} href="https://github.com/bagushendrawan" fontSize={'0.9rem'} color={color.grey}><BsGithub></BsGithub></Link>
+            <Link _hover={{color : "whitesmoke"}} href="https://www.linkedin.com/in/bagus-hendrawan/" fontSize={'0.9rem'} color={color.grey}><BsLinkedin></BsLinkedin></Link>
+            <Link _hover={{color : "whitesmoke"}} href="https://web.facebook.com/profile.php?id=100011604010888" fontSize={'0.9rem'} color={color.grey}><BsFacebook></BsFacebook></Link>
+            <Link _hover={{color : "whitesmoke"}} href="https://www.instagram.com/bag_user/" fontSize={'0.9rem'} color={color.grey}><BsInstagram></BsInstagram></Link>
         </Flex>
     </Flex>
     <Flex ms={'1.33rem'} alignItems={'center'}>

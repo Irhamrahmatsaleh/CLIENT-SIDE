@@ -60,17 +60,13 @@ const { mutateAsync } = useMutation<
               duration: 3000,
               isClosable: true,
           });
-
             } catch (error) {
-            // handle error
-            console.log(error);
             toast({
               title: "Edit Profile failed!",
               status: "error",
               duration: 3000,
               isClosable: true,
           });
-
             }
     }
 

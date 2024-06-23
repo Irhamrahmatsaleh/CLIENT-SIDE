@@ -1,10 +1,10 @@
 import { Flex } from "@chakra-ui/react";
+import OtherThreadsProfile from '../component/otherProfileThreads';
+import OtherProfile from '../component/otherProfileUser';
 import Profile from "../component/profileCard";
-import ThreadsProfile from '../component/profileThreads';
 import Sidebar, { sideButton } from "../component/sidebar";
-import ProfileUser from '../component/profileUser'
 
-export default function profile()
+export default function otherProfile()
 {
     const bgColor = '#1D1D1D'
     return (
@@ -18,8 +18,8 @@ export default function profile()
                         '-ms-overflow-style': 'none',
                         'scrollbar-width': 'none',
                     }}>
-        <ProfileUser/>
-        <ThreadsProfile />
+        <OtherProfile/>
+        <OtherThreadsProfile />
         </Flex>
         </Flex>
         <Profile />

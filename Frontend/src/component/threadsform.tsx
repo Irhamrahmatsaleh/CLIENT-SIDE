@@ -19,7 +19,7 @@ export const ThreadsUpload : React.FC= () => {
 
     const [prompt, setPrompt] = useState<string>('');
     const [suggestion, setSuggestion] = useState<string>('');
-    const [fetchDebounce] = useDebounce(prompt, 1000);
+    const [fetchDebounce] = useDebounce(prompt, 500);
 
     useEffect(() => {
         fetchSuggestion(fetchDebounce);

@@ -1,3 +1,4 @@
+import { useRepliesParentform } from "../features/hooks/authRepliesParent";
 import { Box, Button, Flex, FormControl, HStack, IconButton, Image, Input, Spinner, Text, Textarea, VStack, useToast } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -6,16 +7,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BsImage, BsXCircle } from "react-icons/bs";
 import { useParams } from "react-router-dom";
-import { useRepliesform } from "../features/hooks/authReplies";
-import { useRepliesThreadform } from "../features/hooks/authRepliesThread";
 import { createThreadSchema } from "../features/validators/threads";
 import { api } from "../libs/api";
 import { editProfileForm, repliesForm, thread, threadsForm } from "../libs/type";
 import f from './function';
 import { fetchProfile } from "./profileCard";
+import { useReplieChildrenform } from "../features/hooks/authRepliesChildrenForm";
 
 
-export const RepliesForm : React.FC= () => {
+export const RepliesFormChild : React.FC= () => {
     const toast = useToast();
     const {id} = useParams();
     const textareaRef = useRef<string>() ;
@@ -23,8 +23,8 @@ export const RepliesForm : React.FC= () => {
     const [imagePreview, setImagePreview] = useState<string>("");
     const [textValue, setTextValue] = useState<string>();
 
-    const {refetchReplies} = useRepliesform();
-    const {refetchThreads} = useRepliesThreadform();
+    const {refetchChildrenReplies} = useReplieChildrenform();
+    const {refetchParent} = useRepliesParentform();
 
     const { data: profileData  } = useQuery<editProfileForm>({
         queryKey: ["profile"],
@@ -43,7 +43,8 @@ export const RepliesForm : React.FC= () => {
 
         useEffect(() => {
             if(isSubmitSuccessful){
-                refetchReplies();
+                refetchChildrenReplies();
+                setImagePreview('')
                 toast({
                     title: "Replies submitted!",
                     status: "success",
@@ -51,7 +52,7 @@ export const RepliesForm : React.FC= () => {
                     isClosable: true,
                   });
                 reset();
-                refetchThreads();
+                refetchParent();
             }
            
           }, [isSubmitSuccessful])
@@ -74,7 +75,7 @@ export const RepliesForm : React.FC= () => {
             const token = localStorage.getItem('token');
             return await Axios({
             method: "post",
-            url: `${api}/replies${id}`,
+            url: `${api}/childrenreplies${id}`,
             data: formData,
             headers: { 
                 "Content-Type": "multipart/form-data",
@@ -90,7 +91,7 @@ export const RepliesForm : React.FC= () => {
         textareaRef.current = "";
         setTextValue('')
         await mutateAsync(data);
-        refetchReplies();
+        refetchChildrenReplies();
     }
 
     const changeImage = (event : React.ChangeEvent<HTMLInputElement>) => {

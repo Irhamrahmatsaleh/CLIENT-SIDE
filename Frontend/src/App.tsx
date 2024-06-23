@@ -3,8 +3,9 @@ import { ChakraProvider, useToast } from "@chakra-ui/react";
 import Axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import Replies from "./component/replies";
+import RepliesChildren from "./component/repliesChildren";
 import { SET_USER } from "./features/auth/authSlice";
 import { api } from "./libs/api";
 import theme from './libs/chakra-theme';
@@ -18,16 +19,17 @@ import Status from './pages/status';
 import ForgotPassword from "./pages/forgotPassword";
 import ResetPassword from "./pages/resetPassword";
 import { RootState } from "./redux/store";
+import OtherProfile from "./pages/otherProfile";
 
 
 export default function App() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
+  let location = useLocation();
   const dispatch = useDispatch();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const PrivateRoute = () => {
-    console.log("NAVIGATE")
       if(!isLoading) {
 
         if (currentUser.email) return <Outlet />;
@@ -74,7 +76,9 @@ export default function App() {
     }
   }, []);
 
-
+  useEffect(() => {
+    console.log("Location ", location.pathname)
+  }, [location])
 
   return (
     <ChakraProvider theme={theme}>
@@ -88,8 +92,10 @@ export default function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/follow" element={<Follow />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/otherprofile/:id" element={<OtherProfile />} />
             <Route path="/threadsProfile" element={<Status/>} />
             <Route path="/threads/:id" element={<Replies/>} />
+            <Route path="/replies/:id" element={<RepliesChildren/>} />
           </Route>
         </Routes>
     </ChakraProvider>

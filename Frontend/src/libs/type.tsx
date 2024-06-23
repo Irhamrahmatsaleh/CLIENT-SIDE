@@ -6,6 +6,7 @@ export type registerForm = {
 }
 
 export type editProfileForm = {
+  id : number
   photo_profile?: string,
   full_name : string,
   username : string,
@@ -85,14 +86,46 @@ export type thread = {
     likes: likeMap[],
     replies : replyMap[],
     isLiked : boolean,
-    isReplied: boolean
+    isReplied: boolean,
+    isUser: boolean
+}
+
+export type repliesParent = {
+  id: number,
+  image: string,
+  content: string,
+  parent_id: number,
+  number_of_replies: number,
+  updated_by: number,
+  created_at: Date,
+  updated_at: Date,
+  created_by: number,
+  users: users,
+  likesreplies: likeMap[],
+  replies : replyMap[],
+  isLiked : boolean,
+  isReplied: boolean,
+  isUser: boolean,
+  repliesCount : number
 }
 
 export type userReplies = {
+  id: number
   full_name: string,
   username: string,
   photo_profile: string,
 }
+
+export type likesReplies = {
+  id         : number
+  user_id    : number
+  reply_id  : number
+  created_at : Date
+  created_by : string
+  update_at  : Date 
+  updated_by : string
+}
+
 
 export type replies = {
   id: number,
@@ -104,7 +137,13 @@ export type replies = {
   created_by: number,
   updated_at: Date,
   updated_by: number,
-  users: userReplies
+  users: userReplies,
+  likesreplies : likesReplies,
+  isUser: boolean,
+  likesCount : number,
+  repliesCount : number,
+  isReplied : boolean,
+  isLiked : boolean
 }
 
 

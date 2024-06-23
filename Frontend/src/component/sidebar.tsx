@@ -13,6 +13,7 @@ import { editProfileForm, thread, threadsForm } from "../libs/type";
 import f from './function';
 import { fetchProfile } from "./profileCard";
 import { fetchThreads } from "./threads";
+import { api } from '../libs/api';
 
 export enum sideButton {
     home,
@@ -143,7 +144,7 @@ export default function Sidebar(side : sideButton){
     return(
         <Flex flexDirection={'column'} margin={'1.33rem 2rem'} width={'25%'} borderEnd={'1px solid rgb(110, 110, 110, 0.333)'} justifyContent={'start'}>
             <Flex flexDirection={'column'}>
-            <Heading as={'h2'} size={'2xl'} marginBottom={'2rem'} color={'lime'}>Circle</Heading>
+            <Heading as='a' href={api + "/api-docs"} size={'2xl'} _hover={{color : "whitesmoke", cursor: "pointer"}} marginBottom={'2rem'} color={'lime'}>Circle</Heading>
             
             {buttonHome()}
             {buttonFollow()}

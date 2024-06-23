@@ -83,17 +83,6 @@ export default function Threads(){
         queryKey: ["threads"],
         queryFn: fetchThreads
         });
-    const [, setThread] = useState<thread[]>([]);
-    // const [likedStates, setLikedStates] = useState<boolean[]>([]);
-    // const [isHover, setHover] = useState(false);
-
-    // const mouseEnter = () => {
-    //     setHover(true);
-    // };
-
-    // const mouseLeave = () => {
-    //     setHover(false);
-    // };
 
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
     const handleLike = async (id : number, index : number) => {
@@ -168,7 +157,6 @@ export default function Threads(){
                         'Authorization': `Bearer ${token}`
                      },
                 })
-                setThread(response.data);
                 setIsLiked(response.data.map((data : any) => {
                     return data["isliked"];
                 }))
@@ -177,11 +165,7 @@ export default function Threads(){
             }
         }
         fetchThreads();
-    }, [])
-
-    useEffect(() => {
-        if(isLiked) refetch();
-    }, [isLiked])
+    }, [threads])
 
     const likeHandle = (index : number, con : boolean) => {
         const newLiked = [...isLiked];
@@ -194,14 +178,20 @@ export default function Threads(){
                 {
                     return;
                 }
+            let linkProfile : string = "";
+            if(item.isUser) {
+                linkProfile = "/profile"
+            } else {
+                linkProfile = "/otherprofile/" + item.users.id
+            }
             return (
             <Flex alignItems={'start'} color={'white'} justifyContent={'space-between'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
                 <Flex alignItems={'start'}>
-                <Box className="picture" >
+                <Box as='a' href={linkProfile} className="picture" >
                 {f.imageCircle(item.users.photo_profile, '32px')}
                 </Box>
                 <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
-                    <Flex 
+                    <Flex
                     fontSize={'small'}
                     color={'rgb(199, 199, 199)'}
                     marginEnd={'0.5rem'}
@@ -215,6 +205,9 @@ export default function Threads(){
                         </Text>
                         <Text>
                         {f.dateDifferences(item.update_at)}
+                        </Text>
+                        <Text fontWeight={'bold'}>
+                        {item.isUser && " - You"}
                         </Text>
                     </Flex>
 

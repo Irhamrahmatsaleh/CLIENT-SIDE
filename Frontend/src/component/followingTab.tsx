@@ -1,5 +1,5 @@
 import { following } from "@/libs/type";
-import { Button, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import Axios from 'axios';
 import React, { useEffect, useState } from "react";
 import { api } from "../libs/api";
@@ -143,7 +143,9 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
             return (
                 <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
                 <Flex>
+                <Box as='a' href={"/otherprofile/" + item.follower.id}>
                 {f.imageCircle(item && item.follower.photo_profile, '40px')}
+                </Box>
                 <Flex flexDirection={'column'} ms={'1rem'}>
                 <Text color={'white'}>{item && item.follower.full_name}</Text>
                 <Text fontSize={'1rem'} color='color.grey'>{item && item.follower.username}</Text>
@@ -160,7 +162,9 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
             return (
                 <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
                 <Flex>
+                <Box as='a' href={"/otherprofile/" + item.followed.id}>
                 {f.imageCircle(item && item.followed.photo_profile, '40px')}
+                </Box>
                 <Flex flexDirection={'column'} ms={'1rem'}>
                 <Text color={'white'}>{item && item.followed.full_name}</Text>
                 <Text fontSize={'1rem'} color='color.grey'>{item && item.followed.username}</Text>

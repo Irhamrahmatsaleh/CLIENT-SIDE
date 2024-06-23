@@ -1,40 +1,26 @@
+
 import { Box, Flex, HStack, IconButton, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Text, useToast } from '@chakra-ui/react';
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsDot, BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
 import { useNavigate, useParams } from "react-router-dom";
-import { useRepliesform } from "../features/hooks/authReplies";
-import { useRepliesThreadform } from "../features/hooks/authRepliesThread";
+import { useReplieChildrenform } from '../features/hooks/authRepliesChildrenForm';
+import { useRepliesParentform } from '../features/hooks/authRepliesParent';
 import { api } from "../libs/api";
 import f from './function';
 import Profile from "./profileCard";
-import { RepliesForm } from "./repliesForm";
+import { deleteReply } from "./replies";
+import { RepliesFormChild } from "./repliesFormChild";
 import Sidebar, { sideButton } from "./sidebar";
 
-export async function fetchReplies(id : string | undefined){
-    try {
-        const token = localStorage.getItem('token');
-        const response = await Axios({
-            method: "get",
-            url: `${api}/replies${id}`,
-            headers: { 
-                "Content-Type": "multipart/form-data",
-                'Authorization': `Bearer ${token}`
-             },
-        })
-    return response.data;
-    } catch(error){
-        return error;
-    }
-}
 
-export async function fetchThreadsReplies(id : string | undefined){
+export async function fetchRepliesParent(id : string | undefined){
     try {
         const token = localStorage.getItem('token');
         const response = await Axios({
             method: "get",
-            url: `${api}/thread${id}`,
+            url: `${api}/singlereplies${id}`,
             headers: { 
                 "Content-Type": "multipart/form-data",
                 'Authorization': `Bearer ${token}`
@@ -46,12 +32,12 @@ export async function fetchThreadsReplies(id : string | undefined){
     }
 }
 
-export async function deleteReply(id : number){
+export async function fetchRepliesChildren(id : string | undefined){
     try {
         const token = localStorage.getItem('token');
         const response = await Axios({
-            method: "delete",
-            url: `${api}/replies${id}`,
+            method: "get",
+            url: `${api}/childrenreplies${id}`,
             headers: { 
                 "Content-Type": "multipart/form-data",
                 'Authorization': `Bearer ${token}`
@@ -63,14 +49,15 @@ export async function deleteReply(id : number){
     }
 }
 
-export default function Replies(){
-    const navigate = useNavigate();
+
+export default function RepliesChildren(){
     const toast = useToast();
+    const navigate = useNavigate();
     const {id} = useParams();
     const [likedStates, setLikedStates] = useState<boolean>(false);
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
-    const {replies, refetchReplies} = useRepliesform();
-    const {threadID, refetchThreads} = useRepliesThreadform();
+    const {repliesChildren, refetchChildrenReplies} = useReplieChildrenform();
+    const {repliesParent, refetchParent} = useRepliesParentform();
 
 
     const handleLikeThreads = async (id : number | undefined) => {
@@ -79,7 +66,7 @@ export default function Replies(){
             const token = localStorage.getItem('token');
             await Axios({
                 method: "get",
-                url: `${api}/like${id}`,
+                url: `${api}/lreplies${id}`,
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     'Authorization': `Bearer ${token}`
@@ -88,7 +75,7 @@ export default function Replies(){
         } catch (error) {
             setLikedStates(false);
         }
-        refetchThreads();
+        refetchParent();
         };
 
     const handleUnlikeThreads = async (id : number | undefined) => {
@@ -97,7 +84,7 @@ export default function Replies(){
             const token = localStorage.getItem('token');
             await Axios({
                 method: "get",
-                url: `${api}/unlike${id}`,
+                url: `${api}/ulreplies${id}`,
                 headers: { 
                     "Content-Type": "multipart/form-data",
                     'Authorization': `Bearer ${token}`
@@ -106,7 +93,7 @@ export default function Replies(){
         } catch (error) {
             setLikedStates(true);
         }
-        refetchThreads();
+        refetchParent();
         };
 
     useEffect(() => {
@@ -115,19 +102,19 @@ export default function Replies(){
                 const token = localStorage.getItem('token');
                 const response = await Axios({
                     method: "get",
-                    url: `${api}/thread${id}`,
+                    url: `${api}/singlereplies${id}`,
                     headers: { 
                         "Content-Type": "multipart/form-data",
                         'Authorization': `Bearer ${token}`
                         },
                 })
-                setLikedStates(response.data['isliked']);
+                setLikedStates(response.data['isLiked']);
             } catch(error){
                 return error;
             }
         }
         fetchThreadsEffect();
-    }, []);
+    }, [likedStates]);
 
     const handleLike = async (id : number, index : number) => {
         likeHandle(index, true);
@@ -145,7 +132,7 @@ export default function Replies(){
             console.error('Error liking the item', error);
             likeHandle(index, false);
         }
-        refetchReplies();
+        refetchChildrenReplies();
         };
 
     const handleUnlike = async (id : number, index : number) => {
@@ -164,7 +151,7 @@ export default function Replies(){
             console.error('Error unliking the item', error);
             likeHandle(index, true);
         }
-        refetchReplies();
+        refetchChildrenReplies();
         };
 
     const handleDelete = async (idThread : number) => {
@@ -185,8 +172,8 @@ export default function Replies(){
                 isClosable: true,
                 });
         }
-        refetchReplies();
-        refetchThreads();
+        refetchChildrenReplies();
+        refetchParent();
         };
 
         useEffect(() => {
@@ -195,7 +182,7 @@ export default function Replies(){
                     const token = localStorage.getItem('token');
                     const response= await Axios({
                         method: "get",
-                        url: `${api}/replies${id}`,
+                        url: `${api}/childrenreplies${id}`,
                         headers: { 
                             "Content-Type": "multipart/form-data",
                             'Authorization': `Bearer ${token}`
@@ -209,7 +196,15 @@ export default function Replies(){
                 }
             }
             fetchRepliesList();
-        }, [replies])
+        }, [repliesChildren])
+
+        // useEffect(() => {
+        //    const response = refetchChildrenReplies();
+        //     // setIsLiked(response.data.map((data : any) => {
+        //     //     return data["isLiked"];
+        //     // }))
+        //     console.log("REFECCTH", response)
+        // }, [repliesChildren])
     
         const likeHandle = (index : number, con : boolean) => {
             const newLiked = [...isLiked];
@@ -220,7 +215,7 @@ export default function Replies(){
     const replied =
             <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'}>
             <Box className="picture" >
-            {f.imageCircle(threadID ? threadID?.users.photo_profile : "null", '32px')}
+            {f.imageCircle(repliesParent ? repliesParent?.users.photo_profile : "null", '32px')}
             </Box>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                 <Flex 
@@ -230,42 +225,42 @@ export default function Replies(){
                 marginBottom={'0.33rem'}
                 gap={'0.33rem'} >
                     <Text fontWeight={'bold'} color={'white'}>
-                    {threadID?.users.full_name ? threadID?.users.full_name : 'null'}
+                    {repliesParent?.users.full_name ? repliesParent?.users.full_name : 'null'}
                     </Text>
                     <Text>
-                    {threadID?.users.username ? threadID?.users.username : 'null'}
+                    {repliesParent?.users.username ? repliesParent?.users.username : 'null'}
                     </Text>
                 </Flex>
                 <Box marginBottom={'0.5rem'}>
                     <Text marginBottom={'0.33rem'}>
-                    {threadID?.content}
+                    {repliesParent?.content}
                     </Text>
-                    {threadID?.image ? (f.imageMessage(threadID?.image)) : <></>}
+                    {repliesParent?.image ? (f.imageMessage(repliesParent?.image)) : <></>}
                 </Box>
                 <HStack fontSize={'0.75rem'} color={'circle.grey'} mt={'0.33rem'} mb={'0.5rem'}>
                 <Text>
-                    { threadID && f.timeString(threadID.update_at)}
+                    { repliesParent && f.timeString(repliesParent.updated_at)}
                 </Text>
                 <BsDot></BsDot>
                 <Text>
-                    { threadID && f.dateString(threadID.update_at)}
+                    { repliesParent && f.dateString(repliesParent.updated_at)}
                 </Text>
                 </HStack>
 
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {likedStates ? 
-                    <Link onClick={() => handleUnlikeThreads(threadID?.id)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLikeThreads(threadID?.id)}> <BsHeart /> </Link>}
-                <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{threadID?.likes.length}</Text>
+                    <Link onClick={() => handleUnlikeThreads(repliesParent?.id)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLikeThreads(repliesParent?.id)}> <BsHeart /> </Link>}
+                <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{repliesParent?.likesreplies.length}</Text>
                 <LinkBox>
-                <LinkOverlay href={`/threads/${id}`}><Box>{threadID?.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                <LinkOverlay href={`/replies/${id}`}><Box>{repliesParent?.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
                 </LinkBox>
-                <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{threadID?.number_of_replies} Replies</Text>
+                <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{repliesParent?.repliesCount} Replies</Text>
                 </Flex>
             </Flex>
         </Flex>
 
 
-    const repliedList = replies?.map((item, index) => {
+    const repliedList = repliesChildren?.map((item, index) => {
         
         // const likeIcon = <Link onClick={() => {repliesLikeHandle(index);}}> {repliesLiked[index] ? <BsHeartFill/> : <BsHeart/>} </Link>
         if(item.users == null)
@@ -280,7 +275,7 @@ export default function Replies(){
         }
 
         let isAuthor = false;
-        if(item.created_by === threadID?.created_by) isAuthor = true;
+        if(item.created_by === repliesParent?.created_by) isAuthor = true;
         return (
         <Flex alignItems={'start'} justifyContent={'space-between'} color={'white'} marginTop={'1rem'} key={index}>
             <Flex alignItems={'start'}>
@@ -360,10 +355,10 @@ export default function Replies(){
                     }}>
             <HStack color={'white'} mt={'2rem'}>
             <IconButton variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} onClick={() => {navigate(-1)}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
-                <Text fontSize={'1.33rem'}>Status</Text>
+                <Text fontSize={'1.33rem'}>Status Reply</Text>
             </HStack>
         {replied}
-        <RepliesForm />
+        <RepliesFormChild />
         {repliedList}
         </Flex>
         </Flex>

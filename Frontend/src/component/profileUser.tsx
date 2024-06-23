@@ -68,8 +68,87 @@ export default function profileUser(){
                     <Flex flexDirection={'column'}>
                         <Box width={'100%'} marginX={'auto'} height={'60%'} mb={'0.5rem'}>
                         <Image src={photoPreview && photoPreview} width={'720px'} height={'120px'} objectFit={'cover'} borderRadius={'12px'}/>
-                        <Image borderRadius={'50%'} width={'72px'} height={'72px'} objectFit={'cover'} src={ photoPreview && photoPreview} zIndex={4} position={'relative'} top={'-2rem'} left={'1rem'} border={`4px solid ${'circle.greyCard'}`}/>
-                        <Text color={"error.primary"}>{errors.photo_profile && errors.photo_profile.message}</Text>
+                        <Box sx={{
+                        '.container': {
+                            position: 'relative',
+                            width: '72px',
+                            height: '72px',
+                            top: '-2rem',
+                            left: '1rem',
+                            zIndex:'4',
+                        },
+                        '.image': {
+                            width: '100%',
+                            height: '100%',
+                            objectFit:'cover',
+                            border: `4px solid #262626`,
+                            borderRadius:'50%'
+                        },
+                            '.overlay': {
+                            position: 'absolute',
+                            top: '1',
+                            bottom: '0',
+                            left: '1',
+                            right: '0',
+                            height: '90%',
+                            width: '90%',
+                            opacity: '0',
+                            transition: '.3s ease',
+                            backgroundColor: 'rgba(255, 255, 255, 0.33)',
+                            borderRadius:'50%'
+                            },
+                        '.container:hover .overlay': {
+                            opacity: '1',
+                        },
+
+                        '.icon': {
+                        color: 'green',
+                        fontSize: '2rem',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        msTransform: 'translate(-50%, -50%)',
+                        textAlign: 'center',
+                        },
+                        '.icon-image:hover': {
+                            color: 'rgb(124, 195, 124)'
+                        } 
+                        }}>
+                            <Box className="container">
+                            <Image src={photoPreview && photoPreview} alt="Avatar" className="image"/>
+                            <Input
+                                type="file"
+                                id="photo-input"
+                                opacity="0"
+                                position="absolute"
+                                left="0"
+                                top="0"
+                                height="100%"
+                                width="100%"
+                                aria-hidden="true"
+                                {...register('photo_profile')}
+                                
+                                onChange={changePhoto}
+                            />
+                            <Box className="overlay">
+                            <IconButton
+                                as="label"
+                                htmlFor="photo-input"
+                                colorScheme="white"
+                                aria-label="Add Picture"
+                                size="sm"
+                                variant="ghost"
+                                fontSize="1.33rem"
+                                icon={<BsImage className="icon-image"/>}
+                                marginEnd="0.5rem"
+                                cursor="pointer"
+                                className="icon"
+                            />
+                            </Box>
+                            </Box>
+                        </Box>                        
+                            <Text color={"error.primary"}>{errors.photo_profile && errors.photo_profile.message}</Text>
                         </Box>
                         <FormControl display={'flex'} width={'100%'} flexDirection={'column'} alignItems={'start'} marginBottom={'0.33rem'} color={'white'}>
                             <Box mb={'1rem'} width={'100%'} border={`1px solid grey`} p={'0.33rem'} borderRadius={'12px'}>
@@ -88,7 +167,7 @@ export default function profileUser(){
                     </Flex>
                     </ModalBody>
                     <ModalFooter>
-                    <Box position="relative" display="inline-block">
+                    {/* <Box position="relative" display="inline-block">
                             <Input
                                 type="file"
                                 id="photo-input"
@@ -115,7 +194,7 @@ export default function profileUser(){
                                 marginEnd="0.5rem"
                                 cursor="pointer"
                             />
-                            </Box>
+                            </Box> */}
                     <Button isDisabled={!!(errors.full_name?.message || errors.username?.message || errors.photo_profile?.message || isSubmitting)} colorScheme="green" size={'md'} type="submit" borderRadius={'20px'} width={'72px'}>{isSubmitting ? <Spinner/> : "Save"}</Button>
                     </ModalFooter>
                     </ModalContent>

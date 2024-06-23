@@ -33,11 +33,9 @@ export const usePasswordForm = () => {
               duration: 3000,
               isClosable: true,
             });
-            } catch (error) {
-            // handle error
-            console.log(error);
+            } catch (error : any) {
             toast({
-              title: "Request reset failed, please try again!",
+              title: error.response.data,
               status: "error",
               duration: 3000,
               isClosable: true,

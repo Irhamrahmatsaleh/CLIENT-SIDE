@@ -8,13 +8,14 @@ import { BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
 import { api } from "../libs/api";
 import f from './function';
 import { deleteThread } from "./threads";
+import { useParams } from "react-router-dom";
 
-export async function fetchThreadsProfile(){
+export async function fetchThreadsProfile(id : string | undefined){
     try {
         const token = localStorage.getItem('token');
         const response = await Axios({
             method: "get",
-            url: `${api}/threadProfile`,
+            url: `${api}/otherthread${id}`,
             headers: { 
                 "Content-Type": "multipart/form-data",
                 'Authorization': `Bearer ${token}`
@@ -26,13 +27,13 @@ export async function fetchThreadsProfile(){
     }
 }
 
-export default function Threads(){
-    const { data: threadsProfile, refetch } = useQuery<thread[]>({
-        queryKey: ["threadsProfile"],
-        queryFn: fetchThreadsProfile,
+export default function otherThreads(){
+    const {id} = useParams();
+    const { data: otherThreadsProfile, refetch } = useQuery<thread[]>({
+        queryKey: ["otherThreadsProfile"],
+        queryFn: () => fetchThreadsProfile(id),
         });
     const toast = useToast();
-    const [, setThread] = useState<thread[]>([]);
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
 
     useEffect(  () => {
@@ -41,13 +42,12 @@ export default function Threads(){
                 const token = localStorage.getItem('token');
                 const response = await Axios({
                     method: "get",
-                    url: `${api}/threadProfile`,
+                    url: `${api}/otherthread${id}`,
                     headers: { 
                         "Content-Type": "multipart/form-data",
                         'Authorization': `Bearer ${token}`
                      },
                 })
-                setThread(response.data);
                 setIsLiked(response.data.map((data : any) => {
                     return data["isliked"];
                 }))
@@ -128,7 +128,7 @@ export default function Threads(){
         if(isLiked) refetch();
     }, [isLiked])
 
-    const data = threadsProfile?.map((item, index) => {
+    const data = otherThreadsProfile?.map((item, index) => {
             if(item.users == null)
                 {
                     return;
@@ -136,7 +136,7 @@ export default function Threads(){
             return (
             <Flex alignItems={'start'} justifyContent={'space-between'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
             <Flex alignItems={'start'}>
-            <Box as='a' href={"/profile"} className="picture" >
+            <Box as='a' href={"/otherprofile/" + item.users.id} className="picture" >
             {f.imageCircle(item.users.photo_profile, '32px')}
             </Box>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
@@ -193,7 +193,7 @@ export default function Threads(){
             )
         })
     
-    const tabImage = threadsProfile?.map((item, index) => {
+    const tabImage = otherThreadsProfile?.map((item, index) => {
         return (
             <Image src={item.image} my={'0.33rem'} height={'auto'} key={index}/>
         )
