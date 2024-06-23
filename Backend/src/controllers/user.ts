@@ -190,7 +190,7 @@ class userController {
 
             const token = jwt.sign({id: userData.id}, process.env.JWT_SECRET, {expiresIn: '1h'})
 
-            const fullUrl = req.protocol + "://" + req.hostname + ":" + process.env.FRONTEND_PORT;
+            const fullUrl = process.env.FRONTEND_URL;
 
             const info = await transporter.sendMail({
             from: `Circle <${process.env.EMAIL_ADDRESS}>`, // sender address
