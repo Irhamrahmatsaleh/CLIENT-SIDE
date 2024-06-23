@@ -3,7 +3,7 @@ import { ChakraProvider, useToast } from "@chakra-ui/react";
 import Axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import Replies from "./component/replies";
 import RepliesChildren from "./component/repliesChildren";
 import { SET_USER } from "./features/auth/authSlice";
