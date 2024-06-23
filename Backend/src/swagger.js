@@ -30,6 +30,12 @@ const doc = {
       threadSchema: {
         $content: 'This is some threads content',
       },
+      requestPasswordSchema : {
+        $email: 'Email to be changed password'
+      },
+      resetPasswordSchema : {
+        $password: 'This is your new password'
+      }
     },
     securitySchemes: {
       bearerAuth: {

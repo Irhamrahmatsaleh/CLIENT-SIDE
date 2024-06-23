@@ -4,6 +4,7 @@ import { editProfileSchema, editProfileValidate, loginSchema, loginValidate, reg
 import {v2 as cloudinary} from 'cloudinary';
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
+import user from "../controllers/user";
 
 
  class userService {
@@ -39,6 +40,46 @@ import 'dotenv/config'
         }
         if(!fetchedData) throw new Error ("User not found");
          return data;
+      } catch(err) {
+        throw new Error(err);
+      }
+    }
+
+    async FindOtherUser(userID : number, currentUserID : number){
+      try {
+        const fetchedData = await this.prisma.users.findUnique({
+          where: {id: userID},
+          select: {
+            id: true,
+            photo_profile: true,
+            full_name: true,
+            username: true,
+            bio: true,
+            follower: true,
+            following : true,
+          }
+        })
+
+        const data = {
+          id : fetchedData.id,
+          photo_profile: fetchedData.photo_profile,
+          full_name: fetchedData.full_name,
+          username: fetchedData.username,
+          bio: fetchedData.bio,
+          follower: fetchedData.follower.length,
+          following : fetchedData.following.length,
+        }
+        if(!fetchedData) throw new Error ("User not found");
+
+        const followed = await this.prisma.following.findMany({
+          where: {
+              follower_id: currentUserID,
+          },
+        });
+
+        const followedUserIds = new Set(followed.map(f => f.followed_id));
+        const isFollowed = followedUserIds.has(userID);
+         return {...data, isFollowed};
       } catch(err) {
         throw new Error(err);
       }

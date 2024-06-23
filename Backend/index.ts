@@ -32,7 +32,7 @@ const swaggerOption = {
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 2000, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+    limit: 5000, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
     standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
     store: new RedisStore({
@@ -58,6 +58,7 @@ router.post("/register", upload.none(), userController.registerUser);
 router.post("/login", upload.none(), userController.loginUser);
 router.get("/check",authenticateToken, upload.none(), userController.check);
 router.get("/user",authenticateToken, upload.none(), userController.findUser);
+router.get("/user:id",authenticateToken, upload.none(), userController.findUserID)
 router.get("/verify-email", userController.verifyEmail);
 router.post("/request-password",upload.none(), userController.requestPassword);
 router.post("/reset-password/:token",upload.none(), userController.resetPassword);
@@ -73,8 +74,8 @@ router.get("/thread",authenticateToken,
 //     next();
 // },
 upload.none(), threadController.findAllThread)
-
 router.get("/threadProfile",authenticateToken, upload.none(), threadController.findUserThread)
+router.get("/otherThread:id",authenticateToken, upload.none(), threadController.findOtherUserThread)
 router.get("/thread:id",authenticateToken, upload.none(), threadController.findIDThread)
 router.post("/threadPost",authenticateToken,upload.single('image'), threadController.postThread)
 router.patch("/thread:id",authenticateToken, upload.none(), threadController.updateThread)
@@ -83,8 +84,15 @@ router.get("/image",authenticateToken, upload.none(), threadController.findImage
 
 router.get("/like:id",authenticateToken, upload.none(), threadController.setLikedID)
 router.get("/unlike:id",authenticateToken, upload.none(), threadController.setUnlikedID)
+router.get("/lreplies:id",authenticateToken, upload.none(), threadController.setLikedReplies)
+router.get("/ulreplies:id",authenticateToken, upload.none(), threadController.setUnlikedReplies)
+
 router.get("/replies:id",authenticateToken, upload.none(), threadController.findRepliesID)
+router.get("/singlereplies:id",authenticateToken, upload.none(), threadController.findSingleRepliesID)
+router.get("/childrenreplies:id",authenticateToken, upload.none(), threadController.findChildrenRepliesID)
 router.post("/replies:id",authenticateToken,upload.single('image'), threadController.postReplies)
+router.post("/childrenreplies:id",authenticateToken,upload.single('image'), threadController.postRepliesChildren)
+router.delete("/replies:id",authenticateToken, threadController.deleteReply)
 
 router.get("/search",authenticateToken, upload.none(), followController.fetchSearchedUser)
 router.get("/following", authenticateToken, upload.none(), followController.fetchFollowing)

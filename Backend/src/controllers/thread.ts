@@ -22,13 +22,29 @@ class threadController {
         } */
     {
         try {
-            const threadData = await threadService.FindThreadID(parseInt(req.params.id));
+            const user = res.locals.verifyingUser;
+            const threadData = await threadService.FindThreadID(parseInt(req.params.id), user.id);
             if(!threadData) throw new Error("Thread not found");
             res.send(threadData);
         } catch (err) {
             res.status(404).json({ error: 'Thread not found' });;
         }
     }
+
+    async findOtherUserThread(req : Request, res : Response)
+    /*  #swagger.parameters['otherid'] = {
+        description: 'id for other user (int)'
+    } */
+{
+    try {
+        const user = res.locals.verifyingUser;
+        const threadData = await threadService.FindOtherThread(parseInt(req.params.id), user.id);
+        if(!threadData) throw new Error("Thread not found");
+        res.send(threadData);
+    } catch (err) {
+        res.status(404).json({ error: 'Thread not found' });;
+    }
+}
 
     async findAllThread(req : Request, res : Response)
     {
@@ -58,18 +74,40 @@ class threadController {
     }
 
     async findRepliesID(req : Request, res : Response)
-        /*  #swagger.parameters['repliesid'] = {
-            description: 'id for replies (int)'
-        } */
     {
         try {
-            const userData = await threadService.FindRepliesID(parseInt(req.params.id));
+            const userLocals = res.locals.verifyingUser;
+            const userData = await threadService.FindRepliesID(parseInt(req.params.id), userLocals.id);
             if(!userData) throw new Error("Thread not found");
             res.send(userData);
         } catch (err) {
             res.status(404).json({ error: 'Thread not found' });;
         }
     }
+
+    async findSingleRepliesID(req : Request, res : Response)
+    {
+        try {
+            const userLocals = res.locals.verifyingUser;
+            const userData = await threadService.FindSingleRepliesID(parseInt(req.params.id), userLocals.id);
+            if(!userData) throw new Error("Thread not found");
+            res.send(userData);
+        } catch (err) {
+            res.status(404).json({ error: 'Thread not found' });;
+        }
+    }
+
+    async findChildrenRepliesID(req : Request, res : Response)
+{
+    try {
+        const userLocals = res.locals.verifyingUser;
+        const userData = await threadService.FindChildrenRepliesID(parseInt(req.params.id), userLocals.id);
+        if(!userData) throw new Error("Thread not found");
+        res.send(userData);
+    } catch (err) {
+        res.status(404).json({ error: 'Thread not found' });;
+    }
+}
 
     async postReplies(req : Request, res: Response){
         /*  #swagger.parameters['repliesid'] = {
@@ -117,6 +155,54 @@ class threadController {
                 );
             }
     }
+
+    async postRepliesChildren(req : Request, res: Response){
+        /*  #swagger.parameters['repliesid'] = {
+            description: 'id for repliedParent (int)'
+        } */
+         /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/threadSchema"
+                        }  
+                    }
+                }
+            } 
+        */
+       /*
+        #swagger.consumes = ['multipart/form-data']  
+        #swagger.parameters['singleFile'] = {
+            in: 'formData',
+            type: 'file',
+            required: 'true',
+            description: 'Some description...',
+        } */
+        try {
+            const body = {
+                ...req.body,
+                image: (req.file ? req.file.path : null),
+              }
+              
+            const user = res.locals.verifyingUser;
+            
+            const dataCreated : dataContent_thread = await threadService.PostRepliesChildren(body, user, parseInt(req.params.id))
+              
+            res.status(201).json({
+                stats: "replies created",
+                value: dataCreated
+            });
+            } catch (err)
+            { 
+                res.status(400).json({
+                    message: 'replies has not been saved',
+                    err: err.message
+                }
+                );
+            }
+    }
+
 
     async postThread(req : Request, res: Response){
          /*  #swagger.requestBody = {
@@ -207,6 +293,22 @@ class threadController {
         }
     }
 
+    async deleteReply(req : Request, res : Response){
+        /*  #swagger.parameters['replyid'] = {
+            description: 'id for reply (int)'
+        } */
+        try {
+            const userData = await threadService.DeleteReply(parseInt(req.params.id));
+            redisClient.del("ALL_THREADS_DATA")
+            res.status(201).json({
+                stats: "data deleted",
+                content: userData.content
+            }).send;
+        } catch (err) {
+            res.sendStatus(400);
+        }
+    }
+
     async setLikedID(req : Request, res : Response)
         /*  #swagger.parameters['likeid'] = {
             description: 'id for replies (int)'
@@ -240,6 +342,42 @@ class threadController {
         });
     } catch (err) {
         res.status(404).json({ error: 'unlike Error', err: err });;
+    }
+}
+
+async setLikedReplies(req : Request, res : Response)
+        /*  #swagger.parameters['likerepliesid'] = {
+            description: 'id for likedreplies (int)'
+        } */
+    {
+        try {
+            const user = res.locals.verifyingUser;
+            const likedData = await threadService.setLikedReplies(parseInt(req.params.id), user.id);
+            if(!likedData) throw new Error("Like Replies Error");
+            res.json({
+                thread_id: parseInt(req.params.id),
+                stats: "replies liked"
+            });
+        } catch (err) {
+            res.status(404).json({ error: 'Like Replies Error', err: err });;
+        }
+    }
+
+    async setUnlikedReplies(req : Request, res : Response)
+    /*  #swagger.parameters['unlikerepliesid'] = {
+        description: 'id for unlikedreplies (int)'
+    } */
+{
+    try {
+        const user = res.locals.verifyingUser;
+        const likedData = await threadService.setUnlikedReplies(parseInt(req.params.id), user.id);
+        if(!likedData) throw new Error("unlike replies Error");
+        res.json({
+            thread_id: parseInt(req.params.id),
+            stats: "thread unliked"
+        });
+    } catch (err) {
+        res.status(404).json({ error: 'unlike replies Error', err: err });;
     }
 }
 

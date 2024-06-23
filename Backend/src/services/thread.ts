@@ -19,10 +19,14 @@ class threadServices {
     async FindThread(idUser : number){
       try{  
         const fetchedData = await this.prisma.threads.findMany({
+          orderBy: [{
+            update_at : 'desc'
+          }],
           where: {created_by: idUser},
           include : {
             users: {
               select: {
+                id: true,
                 username: true,
                 full_name: true,
                 photo_profile: true
@@ -59,13 +63,14 @@ class threadServices {
       }
     }
 
-    async FindThreadID(idThread : number){
+    async FindThreadID(idThread : number, idUser : number){
       try{  
-        const fetchedData = await this.prisma.threads.findFirst({
+        const fetchedData = await this.prisma.threads.findUnique({
           where: {id: idThread},
           include : {
             users: {
               select: {
+                id: true,
                 username: true,
                 full_name: true,
                 photo_profile: true
@@ -86,8 +91,8 @@ class threadServices {
         if (fetchedData){
           const likesID = new Set(fetchedData.likes.map(l => l.user_id))
           const replyID = new Set(fetchedData.replies.map(r => r.user_id))
-          const isliked = likesID.has(idThread);
-          const isReplied = replyID.has(idThread);
+          const isliked = likesID.has(idUser);
+          const isReplied = replyID.has(idUser);
           fetchedData.number_of_replies = fetchedData.replies.length;
 
           const threadData =  {
@@ -103,12 +108,64 @@ class threadServices {
       }
     }
 
-    async FindAllThread(idCurrentUser : number){
-      try{
+    async FindOtherThread(idOther : number, idCurrentUser : number){
+      try{  
         const fetchedData = await this.prisma.threads.findMany({
+          orderBy: [{
+            update_at : 'desc'
+          }],
+          where: {created_by: idOther},
           include : {
             users: {
               select: {
+                id: true,
+                username: true,
+                full_name: true,
+                photo_profile: true
+              }
+            },
+            likes:{
+              select: {
+                user_id : true
+              }
+            },
+            replies:{
+              select: {
+                user_id : true
+              }
+            },
+          },
+        })
+        if (fetchedData){
+          const threadData = fetchedData.map(data => {
+          const likesID = new Set(data.likes.map(l => l.user_id))
+          const replyID = new Set(data.replies.map(r => r.user_id))
+          const isliked = likesID.has(idCurrentUser);
+          const isReplied = replyID.has(idCurrentUser);
+          data.number_of_replies = data.replies.length;
+
+          return {...data, isliked, isReplied}
+        })
+          
+          return threadData;
+        } else {
+          throw new Error("All Thread Empty");
+        }
+      } catch (error){
+        throw new Error(error);
+      }
+    }
+
+    async FindAllThread(idCurrentUser : number){
+      try{
+        const fetchedData = await this.prisma.threads.findMany({
+          orderBy: [{
+            update_at : 'desc'
+          }],
+          include : {
+            users: {
+              select: {
+                id: true,
                 username: true,
                 full_name: true,
                 photo_profile: true
@@ -135,7 +192,9 @@ class threadServices {
             const isReplied = replyID.has(idCurrentUser);
             data.number_of_replies = data.replies.length;
 
-            return {...data, isliked, isReplied}
+            let isUser = false;
+            if(data.created_by === idCurrentUser) isUser = true;
+            return {...data, isliked, isReplied, isUser}
           })
           return threadData;
         } else {
@@ -151,6 +210,9 @@ class threadServices {
     async FindAllImage(){
       try{
         const fetchedData = await this.prisma.threads.findMany({
+          orderBy: [{
+            update_at : 'desc'
+          }],
           include : {
             users: {
               select: {
@@ -174,22 +236,40 @@ class threadServices {
       }
     }
 
-    async FindRepliesID(idThread : number){
+    async FindRepliesID(idThread : number, idCurrentUser : number){
       try{  
         const fetchedData = await this.prisma.replies.findMany({
+          orderBy: [{
+            updated_at : 'desc'
+          }],
           where: {thread_id: idThread},
           include : {
             users : {
               select : {
+                id: true,
                 photo_profile : true,
                 username : true,
                 full_name : true
               }
-            }
+            },
+            likesreplies : true,
+            childReplies : true
           }
         })
         if (fetchedData){
-          return fetchedData;
+          const threadData = fetchedData.map(data => {
+            const likesID = new Set(data.likesreplies.map(l => l.user_id))
+            const replyID = new Set(data.childReplies.map(r => r.user_id))
+            const isLiked = likesID.has(idCurrentUser);
+            const isReplied = replyID.has(idCurrentUser);
+            let isUser = false;
+            if(data.created_by === idCurrentUser) isUser = true;
+            const likesCount = data.likesreplies.length;
+            const repliesCount = data.childReplies.length;
+            return {...data, isUser,likesCount,repliesCount,isLiked,isReplied}
+          })
+
+          return threadData;
         } else {
           throw new Error("All Thread Empty");
         }
@@ -197,6 +277,84 @@ class threadServices {
         throw new Error(error);
       }
     }
+
+    async FindSingleRepliesID(idReply : number, idCurrentUser : number){
+      try{  
+        const fetchedData = await this.prisma.replies.findUnique({
+          where: {id: idReply},
+          include : {
+            users : {
+              select : {
+                id: true,
+                photo_profile : true,
+                username : true,
+                full_name : true
+              }
+            },
+            likesreplies : true,
+            childReplies : true
+          }
+        })
+        if (fetchedData){
+            const likesID = new Set(fetchedData.likesreplies.map(l => l.user_id))
+            const replyID = new Set(fetchedData.childReplies.map(r => r.user_id))
+            const isLiked = likesID.has(idCurrentUser);
+            const isReplied = replyID.has(idCurrentUser);
+            let isUser = false;
+            if(fetchedData.created_by === idCurrentUser) isUser = true;
+            const likesCount = fetchedData.likesreplies.length;
+            const repliesCount = fetchedData.childReplies.length;
+            return {...fetchedData, isUser,likesCount,repliesCount,isLiked,isReplied};
+        } else {
+          throw new Error("All Thread Empty");
+        }
+      } catch (error){
+        throw new Error(error);
+      }
+    }
+
+    async FindChildrenRepliesID(idParent : number, idCurrentUser : number){
+      try{  
+        const fetchedData = await this.prisma.replies.findMany({
+          orderBy: [{
+            updated_at : 'desc'
+          }],
+          where: {parent_id: idParent},
+          include : {
+            users : {
+              select : {
+                id: true,
+                photo_profile : true,
+                username : true,
+                full_name : true
+              }
+            },
+            likesreplies : true,
+            childReplies : true
+          }
+        })
+        if (fetchedData){
+          const threadData = fetchedData.map(data => {
+            const likesID = new Set(data.likesreplies.map(l => l.user_id))
+            const replyID = new Set(data.childReplies.map(r => r.user_id))
+            const isLiked = likesID.has(idCurrentUser);
+            const isReplied = replyID.has(idCurrentUser);
+            let isUser = false;
+            if(data.created_by === idCurrentUser) isUser = true;
+            const likesCount = data.likesreplies.length;
+            const repliesCount = data.childReplies.length;
+            return {...data, isUser,likesCount,repliesCount,isLiked,isReplied}
+          })
+
+          return threadData;
+        } else {
+          throw new Error("All Thread Empty");
+        }
+      } catch (error){
+        throw new Error(error);
+      }
+    }
+
 
     async PostReplies(dto : dataContent_thread, user : users, idThread : number)
     {
@@ -221,6 +379,45 @@ class threadServices {
                 data: {
                     user_id: user.id,
                     thread_id: idThread,
+                    content: dto.content,
+                    image: imageUrl,
+                    created_by: user.id,
+                    updated_by: user.id,
+                }
+            });
+
+            if(!createdData) throw new Error("error create data");
+            return createdData;
+        } catch (err)
+        {
+          console.error(err);
+            throw new Error(err);
+        }
+    }
+
+    async PostRepliesChildren(dto : dataContent_thread, user : users, idParent : number)
+    {
+      
+        try {
+            const validate = threadValidate.validate(dto);
+        
+            if (validate.error) {
+              throw new Error('validate error');
+            }
+
+           // Upload image if provided
+          let imageUrl = null;
+          if (dto.image) {
+            const upload = await cloudinary.uploader.upload(dto.image, {
+                upload_preset: "threads"
+            });
+            imageUrl = upload.secure_url;
+        }
+            
+            const createdData = await this.prisma.replies.create({ 
+                data: {
+                    user_id: user.id,
+                    parent_id: idParent,
                     content: dto.content,
                     image: imageUrl,
                     created_by: user.id,
@@ -303,12 +500,29 @@ class threadServices {
         throw new Error(err);
     }
     }
+
     async DeleteThread(idThread : number)
     {
         try {
             const deletedData = await this.prisma.threads.delete({
                 where: {
                     id : idThread
+                }
+            })
+            
+            return deletedData;
+        } catch (err)
+        {
+            throw new Error(err);
+        }
+    }
+
+    async DeleteReply(idReply : number)
+    {
+        try {
+            const deletedData = await this.prisma.replies.delete({
+                where: {
+                    id : idReply
                 }
             })
             
@@ -340,6 +554,35 @@ class threadServices {
         const unlikedData = await this.prisma.likes.deleteMany({ where: {
           user_id : idUser,
           thread_id: idThread
+        }})
+        return unlikedData;
+      } catch(err){
+        throw new Error(err);
+      }
+    }
+
+    async setLikedReplies(idReply : number, idUser : number){
+
+      try {
+        const likedData = await this.prisma.likesreplies.create({
+          data : {
+            user_id: idUser,
+            reply_id: idReply,
+            created_by: idUser,
+            updated_by: idUser
+          }
+        })
+        return likedData;
+      } catch(err){
+        throw new Error(err);
+      }
+    }
+
+    async setUnlikedReplies(idReply : number, idUser : number){
+      try {
+        const unlikedData = await this.prisma.likesreplies.deleteMany({ where: {
+          user_id : idUser,
+          reply_id: idReply
         }})
         return unlikedData;
       } catch(err){

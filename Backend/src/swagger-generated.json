@@ -93,28 +93,26 @@
           "500": {
             "description": "Internal Server Error"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
-    "/api/v1/{userid}": {
+    "/api/v1/user": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
       "patch": {
         "description": "",
-        "parameters": [
-          {
-            "name": "userid",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "id for user (int)"
-          }
-        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -129,11 +127,6 @@
             "description": "Internal Server Error"
           }
         },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -142,6 +135,32 @@
                 "$ref": "#/components/schemas/registerSchema"
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/{userid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       },
@@ -168,12 +187,82 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
+        }
+      }
+    },
+    "/api/v1/verify-email": {
+      "get": {
+        "description": "",
+        "parameters": [
           {
-            "bearerAuth": []
+            "name": "token",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
-        ]
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/request-password": {
+      "post": {
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/requestPasswordSchema"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reset-password/{token}": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/resetPasswordSchema"
+              }
+            }
+          }
+        }
       }
     },
     "/api/v1/thread": {
@@ -189,12 +278,7 @@
           "404": {
             "description": "Not Found"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/threadProfile": {
@@ -210,12 +294,35 @@
           "404": {
             "description": "Not Found"
           }
-        },
-        "security": [
+        }
+      }
+    },
+    "/api/v1/{otherThreadid}": {
+      "get": {
+        "description": "",
+        "parameters": [
           {
-            "bearerAuth": []
+            "name": "otherThreadid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "otherid",
+            "description": "id for other user (int)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
-        ]
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
       }
     },
     "/api/v1/{threadid}": {
@@ -236,12 +343,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "patch": {
         "description": "",
@@ -267,11 +369,6 @@
             "description": "Unauthorized"
           }
         },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -306,12 +403,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/threadPost": {
@@ -339,11 +431,6 @@
             "description": "Unauthorized"
           }
         },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -369,12 +456,7 @@
           "404": {
             "description": "Not Found"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/{likeid}": {
@@ -395,12 +477,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/{unlikeid}": {
@@ -421,12 +498,63 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
+        }
+      }
+    },
+    "/api/v1/{lrepliesid}": {
+      "get": {
+        "description": "",
+        "parameters": [
           {
-            "bearerAuth": []
+            "name": "lrepliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "likerepliesid",
+            "description": "id for likedreplies (int)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
-        ]
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/{ulrepliesid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "ulrepliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "unlikerepliesid",
+            "description": "id for unlikedreplies (int)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
       }
     },
     "/api/v1/{repliesid}": {
@@ -439,20 +567,20 @@
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "id for replies (int)"
+            }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "description": "",
@@ -487,11 +615,141 @@
             "description": "Unauthorized"
           }
         },
-        "security": [
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/threadSchema"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
           {
-            "bearerAuth": []
+            "name": "repliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "replyid",
+            "description": "id for reply (int)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/{singlerepliesid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "singlerepliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/{childrenrepliesid}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "childrenrepliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "childrenrepliesid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "repliesid",
+            "description": "id for repliedParent (int)",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "singleFile",
+            "in": "formData",
+            "required": true,
+            "description": "Some description...",
+            "schema": {
+              "type": "file"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
         "requestBody": {
           "required": true,
           "content": {
@@ -527,12 +785,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/following": {
@@ -548,12 +801,7 @@
           "500": {
             "description": "Internal Server Error"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/follower": {
@@ -569,12 +817,7 @@
           "500": {
             "description": "Internal Server Error"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/suggested": {
@@ -590,12 +833,7 @@
           "500": {
             "description": "Internal Server Error"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/{followid}": {
@@ -616,12 +854,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     },
     "/api/v1/{unfollowid}": {
@@ -642,12 +875,7 @@
           "401": {
             "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
@@ -702,6 +930,30 @@
         },
         "required": [
           "content"
+        ]
+      },
+      "requestPasswordSchema": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "Email to be changed password"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "resetPasswordSchema": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "example": "This is your new password"
+          }
+        },
+        "required": [
+          "password"
         ]
       }
     },

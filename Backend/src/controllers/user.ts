@@ -16,6 +16,17 @@ class userController {
         }
     }
 
+    async findUserID(req : Request, res: Response){
+        try {
+            const userLocals = res.locals.verifyingUser
+            const userData = await user.FindOtherUser(parseInt(req.params.id), userLocals.id);
+            if(!userData) throw new Error("User not found");
+            res.send(userData);
+        } catch (err) {
+            res.status(404).json({ error: 'User not found' });;
+        }
+    }
+
     async registerUser(req : Request, res: Response){
          /*  #swagger.requestBody = {
                 required: true,
@@ -37,7 +48,15 @@ class userController {
             from: `Circle <${process.env.EMAIL_ADDRESS}>`, // sender address
             to: dataCreated.email, // list of receivers
             subject: "Verification Link", // Subject line
-            html: `<a href="${fullUrl}/api/v1/verify-email?token=${token}">Klik untuk verifikasi email kamu!</a>`, // html body
+            html: `
+            <div style="background-color: #252525; margin: auto; width: 50%; text-align: center; padding: 1rem; border-radius: 12px; font-family: Arial, Helvetica, sans-serif;">
+                <H1 style="color: lime; font-weight: bold;">Circle App</H1>
+                <p style="color: white; font-size: 0.8rem;">Welcome to Circle App!<br> Click the button below to verify your account</p>
+                <Button style="background-color: green; border: none; border-radius: 12px; height: 40px; margin: 1rem;"><a style="text-decoration: none; color: white; margin: 0.5rem; font-size: 1rem;" href="${fullUrl}/api/v1/verify-email?token=${token}">Verify</a></Button>
+                <p style="color: white; font-size: 0.8rem;">Please ignore this message if you feel that you are not registering to our services.</p>
+                <p style="color: white; font-size: 0.8rem; margin-top: 0.33rem;"> Thank you for using our services.</p>
+            </div>
+            `, // html body
             });
 
             await user.createVerification(token, "EMAIL");
@@ -128,11 +147,11 @@ class userController {
                     email: dataUpdated.email
                 });
             } catch(createErr) {
-                res.status(500).send({ error: 'Create User error', details: createErr.message});
+                res.status(500).send({ error: 'Create User error', details: createErr});
             }
         } catch (err)
         {  
-            res.status(400).send({ error: 'Create User error'});
+            res.status(400).send({ error: 'Create User error', message: err});
         }
     }
 
@@ -153,6 +172,17 @@ class userController {
         }
 
     async requestPassword(req: Request, res: Response){
+         /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/requestPasswordSchema"
+                        }  
+                    }
+                }
+            } 
+        */
         try {
             const email = req.body.email;
             const userData = await user.checkEmail(email);
@@ -166,20 +196,37 @@ class userController {
             from: `Circle <${process.env.EMAIL_ADDRESS}>`, // sender address
             to: email, // list of receivers
             subject: "Reset Password Link", // Subject line
-            html: `<a href="${fullUrl}/reset-password/${token}">Klik untuk verifikasi email kamu!</a>`, // html body
+            html: `<div style="background-color: #252525; margin: auto; width: 50%; text-align: center; padding: 1rem; border-radius: 12px; font-family: Arial, Helvetica, sans-serif;">
+                <H1 style="color: lime; font-weight: bold;">Circle App</H1>
+                <p style="color: white; font-size: 0.8rem;">Welcome to Circle App!<br> Click the button below to change your password</p>
+                <Button style="background-color: green; border: none; border-radius: 12px; height: 40px; margin: 1rem;"><a style="text-decoration: none; color: white; margin: 0.5rem; font-size: 1rem;" href="${fullUrl}/reset-password/${token}">Change Password</a></Button>
+                <p style="color: white; font-size: 0.8rem;">Please ignore this message if you feel that you are not registering to our services.</p>
+                <p style="color: white; font-size: 0.8rem; margin-top: 0.33rem;"> Thank you for using our services.</p>
+            </div>`, // html body
             });
 
             res.status(201).json({
                 stats: "reset password link sent to your email",
                 email: userData.email,
-                link: `<a href="${fullUrl}/reset-password/${token}">Klik untuk verifikasi email kamu!</a>`
+                link: `<a href="${fullUrl}/reset-password/${token}">Klik untuk reset password kamu!</a>`
             }).send;
         } catch(err) {
-            throw new Error(err)
+            res.sendStatus(400);
         }
     }
 
     async resetPassword(req: Request, res: Response) {
+        /*  #swagger.requestBody = {
+                required: true,
+                content: {
+                    "multipart/form-data": {
+                        schema: {
+                            $ref: "#/components/schemas/resetPasswordSchema"
+                        }  
+                    }
+                }
+            } 
+        */
         try {
           const token = req.params.token as string;
           const verify = await jwt.verify(token, process.env.JWT_SECRET);
