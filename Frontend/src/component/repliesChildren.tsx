@@ -354,7 +354,7 @@ export default function RepliesChildren(){
                         'scrollbar-width': 'none',
                     }}>
             <HStack color={'white'} mt={'2rem'}>
-            <IconButton as={Link} href={document.referrer} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} onClick={() => {navigate(-1)}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
+            <IconButton as={Link} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} onClick={() => {navigate(-1)}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
                 <Text fontSize={'1.33rem'}>Status Reply</Text>
             </HStack>
         {replied}

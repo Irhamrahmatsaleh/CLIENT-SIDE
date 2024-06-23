@@ -3,7 +3,7 @@ import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsDot, BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRepliesform } from "../features/hooks/authReplies";
 import { useRepliesThreadform } from "../features/hooks/authRepliesThread";
 import { api } from "../libs/api";
@@ -64,13 +64,13 @@ export async function deleteReply(id : number){
 }
 
 export default function Replies(){
+    const navigate = useNavigate();
     const toast = useToast();
     const {id} = useParams();
     const [likedStates, setLikedStates] = useState<boolean>(false);
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
     const {replies, refetchReplies} = useRepliesform();
     const {threadID, refetchThreads} = useRepliesThreadform();
-
 
     const handleLikeThreads = async (id : number | undefined) => {
         setLikedStates(true);
@@ -218,7 +218,6 @@ export default function Replies(){
 
         useEffect(() => {
             refetchReplies();
-            console.log("referrer", document.referrer)
         },[])
 
     const replied =
@@ -363,7 +362,7 @@ export default function Replies(){
                         'scrollbar-width': 'none',
                     }}>
             <HStack color={'white'} mt={'2rem'}>
-            <IconButton as={Link} href={document.referrer} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
+            <IconButton as={Link} onClick={() => {navigate(-1)}} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
                 <Text fontSize={'1.33rem'}>Status</Text>
             </HStack>
         {replied}
