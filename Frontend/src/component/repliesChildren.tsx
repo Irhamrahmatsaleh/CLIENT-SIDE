@@ -342,7 +342,7 @@ export default function RepliesChildren(){
                     />
                     <MenuList color={'black'}>
                         <MenuItem onClick={() => handleDelete(item.id)} icon={<BsTrash />}>
-                        Delete Threads
+                        Delete Replies
                         </MenuItem>
                     </MenuList>
                 </Menu>}
