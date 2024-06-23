@@ -232,6 +232,7 @@ export default function Threads(){
                 </Flex>
                 </Flex>
                 <Box>
+                {item.isUser && 
                 <Menu>
                     <MenuButton
                         as={IconButton}
@@ -245,7 +246,7 @@ export default function Threads(){
                         Delete Threads
                         </MenuItem>
                     </MenuList>
-                </Menu>
+                </Menu>}
                 </Box>
             </Flex>
             )
