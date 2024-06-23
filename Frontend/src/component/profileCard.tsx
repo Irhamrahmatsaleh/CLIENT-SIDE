@@ -379,7 +379,7 @@ const handleUnfollow = async (id : number, index : number) => {
         <Image src="/Red.svg"></Image>
         <Text fontSize={'0.7rem'} color={color.grey}>DumbWays Indonesia • </Text>
         </HStack>
-        <ChakraLink fontSize={'0.7rem'} color={color.grey}>#1 Coding Bootcamp</ChakraLink>
+        <ChakraLink fontSize={'0.7rem'} color={color.grey} href="https://dumbways.id/">#1 Coding Bootcamp</ChakraLink>
     </Flex>
     </Flex>
 
