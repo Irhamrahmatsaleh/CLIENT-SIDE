@@ -5,10 +5,10 @@ import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import { api } from "../libs/api";
 import f from './function';
 import { ThreadsUpload } from "./threadsform";
-import {Link} from "react-router-dom"
 
 export async function fetchThreads(){
     try {
@@ -221,8 +221,8 @@ export default function Threads(){
                     </Box>
 
                     <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
-                    {/* {isLiked[index] ? 
-                    <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>} */}
+                    {isLiked[index] ? 
+                    <Box as="a" onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Box> : <Box onClick={() => handleLike(item.id, index)}> <BsHeart /> </Box>}
                     <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes.length}</Text>
                     <LinkBox>
                     <LinkOverlay href={`/threads/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
