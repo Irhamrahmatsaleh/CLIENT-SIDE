@@ -10,16 +10,16 @@ import { SET_USER } from "./features/auth/authSlice";
 import { api } from "./libs/api";
 import theme from './libs/chakra-theme';
 import Follow from './pages/follow';
+import ForgotPassword from "./pages/forgotPassword";
 import Home from './pages/home';
 import Login from './pages/login';
+import OtherProfile from "./pages/otherProfile";
 import Profile from './pages/profile';
 import Register from './pages/register';
+import ResetPassword from "./pages/resetPassword";
 import Search from './pages/search';
 import Status from './pages/status';
-import ForgotPassword from "./pages/forgotPassword";
-import ResetPassword from "./pages/resetPassword";
 import { RootState } from "./redux/store";
-import OtherProfile from "./pages/otherProfile";
 
 
 export default function App() {
