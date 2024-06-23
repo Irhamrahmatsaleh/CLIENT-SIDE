@@ -24,7 +24,6 @@ import { RootState } from "./redux/store";
 
 export default function App() {
   const currentUser = useSelector((state: RootState) => state.auth.user);
-  let location = useLocation();
   const dispatch = useDispatch();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -75,10 +74,6 @@ export default function App() {
       PrivateRoute();
     }
   }, []);
-
-  useEffect(() => {
-    console.log("Location ", location.pathname)
-  }, [location])
 
   return (
     <ChakraProvider theme={theme}>
