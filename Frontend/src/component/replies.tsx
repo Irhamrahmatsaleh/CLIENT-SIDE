@@ -218,6 +218,7 @@ export default function Replies(){
 
         useEffect(() => {
             refetchReplies();
+            console.log("referrer", document.referrer)
         },[])
 
     const replied =
