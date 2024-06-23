@@ -1,5 +1,5 @@
 import { thread } from "@/libs/type";
-import { Box, Flex, IconButton, Image, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Image, Link as ChakraLink, LinkBox, Menu, MenuButton, MenuItem, MenuList, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
 import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import { BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
 import { api } from "../libs/api";
 import f from './function';
 import { deleteThread } from "./threads";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export async function fetchThreadsProfile(id : string | undefined){
     try {
@@ -164,10 +164,10 @@ export default function otherThreads(){
                 </Box>
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {isLiked[index] ? 
-                <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>}
+                <ChakraLink onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </ChakraLink> : <ChakraLink onClick={() => handleLike(item.id, index)}> <BsHeart /> </ChakraLink>}
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes.length}</Text>
                 <LinkBox>
-                <LinkOverlay href={`/threads/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                <Link to={`/threads/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></Link>
                 </LinkBox>
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
                 </Flex>

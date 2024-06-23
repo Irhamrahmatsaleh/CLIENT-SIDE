@@ -1,10 +1,11 @@
 import { thread } from "@/libs/type";
-import { Box, Flex, IconButton, Image, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
+import { Box, Link as ChakraLink, Flex, IconButton, Image, LinkBox, Menu, MenuButton, MenuItem, MenuList, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
 import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import { api } from "../libs/api";
 import f from './function';
 import { deleteThread } from "./threads";
@@ -136,9 +137,11 @@ export default function Threads(){
             return (
             <Flex alignItems={'start'} justifyContent={'space-between'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'} key={index}>
             <Flex alignItems={'start'}>
+            <Link to="/Profile">
             <Box as='a' href={"/profile"} className="picture" >
             {f.imageCircle(item.users.photo_profile, '32px')}
             </Box>
+            </Link>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                 <Flex 
                 fontSize={'small'}
@@ -164,10 +167,10 @@ export default function Threads(){
                 </Box>
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {isLiked[index] ? 
-                <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>}
+                <ChakraLink onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </ChakraLink> : <ChakraLink onClick={() => handleLike(item.id, index)}> <BsHeart /> </ChakraLink>}
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likes.length}</Text>
                 <LinkBox>
-                <LinkOverlay href={`/threads/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                <Link to={`/threads/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></Link>
                 </LinkBox>
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.number_of_replies} Replies</Text>
                 </Flex>

@@ -1,10 +1,10 @@
 
-import { Box, Flex, HStack, IconButton, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Text, useToast } from '@chakra-ui/react';
+import { Box, Link as ChakraLink, Flex, HStack, IconButton, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Text, useToast } from '@chakra-ui/react';
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsDot, BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useReplieChildrenform } from '../features/hooks/authRepliesChildrenForm';
 import { useRepliesParentform } from '../features/hooks/authRepliesParent';
 import { api } from "../libs/api";
@@ -212,11 +212,20 @@ export default function RepliesChildren(){
             setIsLiked(newLiked);
         }
 
+        let linkParent = "#";
+        if(repliesParent?.isUser) {
+            linkParent = "/profile"
+        } else {
+           linkParent = "/otherprofile/" + repliesParent?.users.id
+        }
+
     const replied =
             <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'}>
+            <Link to={linkParent}>
             <Box className="picture" >
             {f.imageCircle(repliesParent ? repliesParent?.users.photo_profile : "null", '32px')}
             </Box>
+            </Link>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                 <Flex 
                 fontSize={'small'}
@@ -249,7 +258,7 @@ export default function RepliesChildren(){
 
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {likedStates ? 
-                    <Link onClick={() => handleUnlikeThreads(repliesParent?.id)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLikeThreads(repliesParent?.id)}> <BsHeart /> </Link>}
+                    <ChakraLink onClick={() => handleUnlikeThreads(repliesParent?.id)}> <BsHeartFill /> </ChakraLink> : <ChakraLink onClick={() => handleLikeThreads(repliesParent?.id)}> <BsHeart /> </ChakraLink>}
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{repliesParent?.likesreplies.length}</Text>
                 <LinkBox>
                 <LinkOverlay href={`/replies/${id}`}><Box>{repliesParent?.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
@@ -279,9 +288,11 @@ export default function RepliesChildren(){
         return (
         <Flex alignItems={'start'} justifyContent={'space-between'} color={'white'} marginTop={'1rem'} key={index}>
             <Flex alignItems={'start'}>
+                <Link to={linkProfile}>
             <Box as='a' href={linkProfile} className="picture" >
             {f.imageCircle(item.users.photo_profile, '32px')}
             </Box>
+            </Link>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                 <Flex 
                 fontSize={'small'}
@@ -310,10 +321,10 @@ export default function RepliesChildren(){
                 </Box>
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {isLiked[index] ? 
-                    <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>}
+                    <ChakraLink onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </ChakraLink> : <ChakraLink onClick={() => handleLike(item.id, index)}> <BsHeart /> </ChakraLink>}
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likesCount}</Text>
                 <LinkBox>
-                <LinkOverlay href={`/replies/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                <Link to={`/replies/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></Link>
                 </LinkBox>
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.repliesCount} Replies</Text>
                 </Flex>
@@ -354,7 +365,7 @@ export default function RepliesChildren(){
                         'scrollbar-width': 'none',
                     }}>
             <HStack color={'white'} mt={'2rem'}>
-            <IconButton as={Link} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} onClick={() => {navigate(-1)}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
+            <IconButton as={ChakraLink} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} onClick={() => {navigate(-1)}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
                 <Text fontSize={'1.33rem'}>Status Reply</Text>
             </HStack>
         {replied}

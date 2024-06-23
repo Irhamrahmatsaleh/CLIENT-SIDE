@@ -1,9 +1,9 @@
-import { Box, Flex, HStack, IconButton, Link, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Text, useToast } from '@chakra-ui/react';
+import { Box, Link as ChakraLink, Flex, HStack, IconButton, LinkBox, LinkOverlay, Menu, MenuButton, MenuItem, MenuList, Text, useToast } from '@chakra-ui/react';
 import Axios from 'axios';
 import { useEffect, useState } from "react";
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsArrowLeft, BsDot, BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRepliesform } from "../features/hooks/authReplies";
 import { useRepliesThreadform } from "../features/hooks/authRepliesThread";
 import { api } from "../libs/api";
@@ -220,11 +220,20 @@ export default function Replies(){
             refetchReplies();
         },[])
 
+        let linkParent = "#";
+        if(threadID?.isUser) {
+            linkParent = "/profile"
+        } else {
+           linkParent = "/otherprofile/" + threadID?.users.id
+        }
+
     const replied =
             <Flex alignItems={'start'} color={'white'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'} marginTop={'1rem'}>
+            <Link to={linkParent}>
             <Box className="picture" >
             {f.imageCircle(threadID ? threadID?.users.photo_profile : "null", '32px')}
             </Box>
+            </Link>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                 <Flex 
                 fontSize={'small'}
@@ -257,7 +266,7 @@ export default function Replies(){
 
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {likedStates ? 
-                    <Link onClick={() => handleUnlikeThreads(threadID?.id)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLikeThreads(threadID?.id)}> <BsHeart /> </Link>}
+                    <ChakraLink onClick={() => handleUnlikeThreads(threadID?.id)}> <BsHeartFill /> </ChakraLink> : <ChakraLink onClick={() => handleLikeThreads(threadID?.id)}> <BsHeart /> </ChakraLink>}
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{threadID?.likes.length}</Text>
                 <LinkBox>
                 <LinkOverlay href={`/threads/${id}`}><Box>{threadID?.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
@@ -287,9 +296,11 @@ export default function Replies(){
         return (
         <Flex alignItems={'start'} justifyContent={'space-between'} color={'white'} marginTop={'1rem'} key={index}>
             <Flex alignItems={'start'}>
-            <Box as='a' href={linkProfile} className="picture" >
+            <Link to={linkProfile}>
+            <Box className="picture" >
             {f.imageCircle(item.users.photo_profile, '32px')}
             </Box>
+            </Link>
             <Flex marginX={'1rem'} flexDirection={'column'} justifyContent={'start'} marginBottom={'0.5rem'}>
                 <Flex 
                 fontSize={'small'}
@@ -318,10 +329,10 @@ export default function Replies(){
                 </Box>
                 <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
                 {isLiked[index] ? 
-                    <Link onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </Link> : <Link onClick={() => handleLike(item.id, index)}> <BsHeart /> </Link>}
+                    <ChakraLink onClick={() => handleUnlike(item.id, index)}> <BsHeartFill /> </ChakraLink> : <ChakraLink onClick={() => handleLike(item.id, index)}> <BsHeart /> </ChakraLink>}
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.likesCount}</Text>
                 <LinkBox>
-                <LinkOverlay href={`/replies/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></LinkOverlay>
+                <Link to={`/replies/${item.id}`}><Box>{item.isReplied ? <BiSolidMessage /> : <BiMessage />}</Box></Link>
                 </LinkBox>
                 <Text marginEnd={'0.5rem'} color={'rgb(160, 160, 160)'} fontSize={'small'}>{item.repliesCount} Replies</Text>
                 </Flex>
@@ -362,7 +373,7 @@ export default function Replies(){
                         'scrollbar-width': 'none',
                     }}>
             <HStack color={'white'} mt={'2rem'}>
-            <IconButton as={Link} onClick={() => {navigate(-1)}} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
+            <IconButton as={ChakraLink} onClick={() => {navigate(-1)}} variant={"none"} colorScheme="teal" color={'white'} _hover={{color: "green", fontSize: "1.5rem"}} aria-label='Back Navigate' fontSize={'1.33rem'} icon={<BsArrowLeft />} />
                 <Text fontSize={'1.33rem'}>Status</Text>
             </HStack>
         {replied}

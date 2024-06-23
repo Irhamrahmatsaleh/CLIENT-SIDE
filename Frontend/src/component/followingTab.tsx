@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { api } from "../libs/api";
 import f from './function';
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 interface FollowTabComponentProps {
     // Define any props if necessary
@@ -143,9 +144,11 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
             return (
                 <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
                 <Flex>
-                <Box as='a' href={"/otherprofile/" + item.follower.id}>
+                <Link to={"/otherprofile/" + item.follower.id}>
+                <Box>
                 {f.imageCircle(item && item.follower.photo_profile, '40px')}
                 </Box>
+                </Link>
                 <Flex flexDirection={'column'} ms={'1rem'}>
                 <Text color={'white'}>{item && item.follower.full_name}</Text>
                 <Text fontSize={'1rem'} color='color.grey'>{item && item.follower.username}</Text>
@@ -162,9 +165,11 @@ const FollowTabComponent: React.FC<FollowTabComponentProps> = () => {
             return (
                 <Flex alignItems={'center'} justifyContent={'space-between'} width={'90%'} mb={'1rem'} key={index}>
                 <Flex>
-                <Box as='a' href={"/otherprofile/" + item.followed.id}>
+                <Link to={"/otherprofile/" + item.followed.id}>
+                <Box>
                 {f.imageCircle(item && item.followed.photo_profile, '40px')}
                 </Box>
+                </Link>
                 <Flex flexDirection={'column'} ms={'1rem'}>
                 <Text color={'white'}>{item && item.followed.full_name}</Text>
                 <Text fontSize={'1rem'} color='color.grey'>{item && item.followed.username}</Text>

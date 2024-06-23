@@ -8,6 +8,7 @@ import Profile from "../component/profileCard";
 import Sidebar, { sideButton } from "../component/sidebar";
 import { api } from "../libs/api";
 import { users } from "../libs/type";
+import { Link } from "react-router-dom";
 
 export default function search() {
     const [searchedUsers, setSearchedUsers] = useState<users[]>([]);
@@ -159,9 +160,11 @@ function SearchedUsers({ user, index }: SearchedCardsProps) {
     return (
         <Flex alignItems={'center'} justifyContent={'space-between'} mb={'1rem'}>
             <Flex>
-                <Box as='a' href={"/otherprofile/" + user.id}>
+                <Link to={"/otherprofile/" + user.id}>
+                <Box>
                 {f.imageCircle(user.photo_profile, '40px')}
                 </Box>
+                </Link>
                 <Flex flexDirection={'column'} ms={'1rem'}>
                 <Text color={'white'} fontWeight={'bold'}>{user.full_name}</Text>
                 <Text fontSize={'1rem'} color={color.grey} mb={'0.2rem'}>{user.username}</Text>
