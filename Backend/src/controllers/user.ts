@@ -46,7 +46,7 @@ class userController {
 
             const info = await transporter.sendMail({
             from: `Circle <${process.env.EMAIL_ADDRESS}>`, // sender address
-            to: dataCreated.email, // list of receivers
+            to: req.body.email, // list of receivers
             subject: "Verification Link", // Subject line
             html: `
             <div style="background-color: #252525; margin: auto; width: 50%; text-align: center; padding: 1rem; border-radius: 12px; font-family: Arial, Helvetica, sans-serif;">
