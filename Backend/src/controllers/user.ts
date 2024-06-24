@@ -195,7 +195,7 @@ class userController {
 
             const info = await transporter.sendMail({
             from: `Circle <${process.env.EMAIL_ADDRESS}>`, // sender address
-            to: email, // list of receivers
+            to: req.body.email, // list of receivers
             subject: "Reset Password Link", // Subject line
             html: `<div style="background-color: #252525; margin: auto; width: 50%; text-align: center; padding: 1rem; border-radius: 12px; font-family: Arial, Helvetica, sans-serif;">
                 <H1 style="color: lime; font-weight: bold;">Circle App</H1>
@@ -207,9 +207,9 @@ class userController {
             });
 
             res.status(201).json({
-                stats: "reset password link sent to your email",
+                stats: "user created",
                 email: userData.email,
-                link: `<a href="${fullUrl}/reset-password/${token}">Klik untuk reset password kamu!</a>`
+                smtp: info
             }).send;
         } catch(err) {
             res.sendStatus(400);
