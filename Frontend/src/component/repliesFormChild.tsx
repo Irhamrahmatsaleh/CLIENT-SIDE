@@ -34,6 +34,9 @@ export const RepliesFormChild : React.FC= () => {
     const {
         register,
         handleSubmit,
+        unregister,
+        resetField,
+        getValues,
         formState : {errors,isSubmitting,isSubmitSuccessful},
         reset
       } = useForm<repliesForm>({
@@ -102,12 +105,12 @@ export const RepliesFormChild : React.FC= () => {
         }
     }
 
-    const clearFileInput = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current = null;
-            setImagePreview('')
-        }
-        };
+    // const clearFileInput = () => {
+    //     if (fileInputRef.current) {
+    //         fileInputRef.current = null;
+    //         setImagePreview('')
+    //     }
+    //     };
         
 
     return (
@@ -117,7 +120,8 @@ export const RepliesFormChild : React.FC= () => {
     <form onSubmit={handleSubmit(onSubmit)}>
     <FormControl display={'flex'} alignItems={'start'}>
         <VStack justifyContent={'start'} min-height={'60px'}>
-                <Textarea placeholder="Type your reply!" width={'400px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} defaultValue={textValue} ></Textarea>
+                <Textarea onClick={() => {
+                if(!getValues('image'))  resetField('image')}} placeholder="Type your reply!" width={'400px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} defaultValue={textValue} ></Textarea>
                 {imagePreview && 
                 
                 <Box position="relative" display="inline-block">
@@ -135,7 +139,7 @@ export const RepliesFormChild : React.FC= () => {
                     colorScheme="red"
                     variant={'solid'}
                     aria-label="close"
-                    onClick={clearFileInput}
+                    onClick={() => {unregister('image'); setImagePreview('')}}
                     >
                     </IconButton>
                 </Box>}
