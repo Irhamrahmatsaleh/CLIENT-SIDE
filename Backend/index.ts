@@ -59,7 +59,7 @@ router.post("/login", upload.none(), userController.loginUser);
 router.get("/check",authenticateToken, upload.none(), userController.check);
 router.get("/user",authenticateToken, upload.none(), userController.findUser);
 router.get("/user:id",authenticateToken, upload.none(), userController.findUserID)
-router.get("/verify-email", userController.verifyEmail);
+router.get("/verify-email/:token", userController.verifyEmail);
 router.post("/request-password",upload.none(), userController.requestPassword);
 router.post("/reset-password/:token",upload.none(), userController.resetPassword);
 

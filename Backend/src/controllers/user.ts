@@ -52,7 +52,7 @@ class userController {
             <div style="background-color: #252525; margin: auto; width: 50%; text-align: center; padding: 1rem; border-radius: 12px; font-family: Arial, Helvetica, sans-serif;">
                 <H1 style="color: lime; font-weight: bold;">Circle App</H1>
                 <p style="color: white; font-size: 0.8rem;">Welcome to Circle App!<br> Click the button below to verify your account</p>
-                <Button style="background-color: green; border: none; border-radius: 12px; height: 40px; margin: 1rem;"><a style="text-decoration: none; color: white; margin: 0.5rem; font-size: 1rem;" href="${fullUrl}/api/v1/verify-email?token=${token}">Verify</a></Button>
+                <Button style="background-color: green; border: none; border-radius: 12px; height: 40px; margin: 1rem;"><a style="text-decoration: none; color: white; margin: 0.5rem; font-size: 1rem;" href="${fullUrl}/api/v1/verify-email/${token}">Verify</a></Button>
                 <p style="color: white; font-size: 0.8rem;">Please ignore this message if you feel that you are not registering to our services.</p>
                 <p style="color: white; font-size: 0.8rem; margin-top: 0.33rem;"> Thank you for using our services.</p>
             </div>
@@ -99,7 +99,8 @@ class userController {
 
     async verifyEmail(req: Request, res: Response) {
         try {
-          const token = req.query.token as string;
+          const token = req.params.token
+          console.log(token)
           await user.verify(token);
           const frontendUrl = process.env.FRONTEND_URL;
           res.redirect(`${frontendUrl}/login`);
