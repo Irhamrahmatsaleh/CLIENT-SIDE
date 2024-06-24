@@ -47,6 +47,7 @@ export const RepliesForm : React.FC= () => {
         useEffect(() => {
             if(isSubmitSuccessful){
                 refetchReplies();
+                setImagePreview('')
                 toast({
                     title: "Replies submitted!",
                     status: "success",
