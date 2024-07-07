@@ -26,7 +26,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/bagushendrawan/b54-circleApp">
-    <img src="Frontend/public/vite.png" alt="Logo" width="80" height="80">
+    <img src="https://github.com/bagushendrawan/b54-circleApp/blob/main/Frontend/public/vite.svg" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">project_title</h3>
@@ -79,11 +79,11 @@
 ## About The Project
 
 ![Login Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/ae87cc27-1cba-48f4-9e0c-11e4425b90fc)
-[![Home Screen][home-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
-[![Create Thread][create-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/86abb88b-5d2c-432b-a254-86dcc9b9a6be)
-[![Reply Threads][reply-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bbeeb77f-1a54-4ab1-856a-66bbcadd3e43)
-[![Followers/Following][follow-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/9c377bd2-181b-4207-9d77-6afeda1d6c4a)
-[![Search Users][search-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bced0cfe-0376-4c40-8283-276702dccbe0)
+![Home Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
+![Create Thread](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/86abb88b-5d2c-432b-a254-86dcc9b9a6be)
+![Reply Threads](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bbeeb77f-1a54-4ab1-856a-66bbcadd3e43)
+![Followers/Following](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/9c377bd2-181b-4207-9d77-6afeda1d6c4a)
+![Search Users](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bced0cfe-0376-4c40-8283-276702dccbe0)
 
 Welcome to CircleApp!
 In this X-Like app you could do amazing things such as :
@@ -113,13 +113,13 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- USAGE EXAMPLES -->
 ## Usage
 <ul>
-![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/0e39acc5-96f6-45ac-89c6-315a3f84d2b3)
+![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/4588e1bc-d3bd-46bc-8dba-bcd2d646e9bd)
   <li>Register Your Account</li>
 
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/62fdf462-a607-4878-a5b4-7de35cf23d5c)
 <li>Verify Your Account</li>
 
-[![Home Screen][product-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
+![Home Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
 <li>Hello World!</li>
 
 </ul>
