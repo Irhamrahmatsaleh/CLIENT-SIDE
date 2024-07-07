@@ -18,7 +18,7 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
-[![LinkedIn][linkedin-shield]][www.linkedin.com/in/bagus-hendrawan]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
 
 
@@ -78,12 +78,12 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Login Screen][product-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/ae87cc27-1cba-48f4-9e0c-11e4425b90fc)
-[![Home Screen][product-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
-[![Create Thread][product-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/86abb88b-5d2c-432b-a254-86dcc9b9a6be)
-[![Reply Threads][product-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bbeeb77f-1a54-4ab1-856a-66bbcadd3e43)
-[![Followers/Following][product-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/9c377bd2-181b-4207-9d77-6afeda1d6c4a)
-[![Search Users][product-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bced0cfe-0376-4c40-8283-276702dccbe0)
+[![Login Screen][login-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/ae87cc27-1cba-48f4-9e0c-11e4425b90fc)
+[![Home Screen][home-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
+[![Create Thread][create-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/86abb88b-5d2c-432b-a254-86dcc9b9a6be)
+[![Reply Threads][reply-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bbeeb77f-1a54-4ab1-856a-66bbcadd3e43)
+[![Followers/Following][follow-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/9c377bd2-181b-4207-9d77-6afeda1d6c4a)
+[![Search Users][search-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bced0cfe-0376-4c40-8283-276702dccbe0)
 
 Welcome to CircleApp!
 In this X-Like app you could do amazing things such as :
@@ -180,6 +180,7 @@ Project Link: [https://github.com/bagushendrawan/b54-circleApp](https://github.c
 [Svelte-url]: https://svelte.dev/
 [Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [Laravel-url]: https://laravel.com
+[linkedin-url]: www.linkedin.com/in/bagus-hendrawan
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
