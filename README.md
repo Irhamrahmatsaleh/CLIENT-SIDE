@@ -37,7 +37,7 @@
     <a href="https://github.com/bagushendrawan/b54-circleApp"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/bagushendrawan/b54-circleApp">View Demo</a>
+    <a href="https://b54-circle-app.vercel.app/login">View Demo</a>
     ·
     <a href="https://github.com/bagushendrawan/b54-circleApp/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -58,7 +58,8 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
