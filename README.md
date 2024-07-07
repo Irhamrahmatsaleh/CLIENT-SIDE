@@ -94,10 +94,10 @@ In this X-Like app you could do amazing things such as :
 
 ### Built With
 
-* [![React.js]][[React-url]]
-* [![Vite]][[Vite-url]]
-* [![Node-ts]][[Typescript-url]]
-* [![Chakra]][[Chakra-url]]
+* [[![React][React.js]][React-url]
+* [[![Vite][Vite]][Vite-url]
+* [[![Typescript][Typescript-bg]][Typescript-url]
+* [[![Chakra][Chakra-ui]][Chakra-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -181,7 +181,7 @@ Project Link: [https://github.com/bagushendrawan/b54-circleApp](https://github.c
 [Express-url]: https://expressjs.com/
 [Vite]: https://img.shields.io/badge/Vite-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [Vite-url]: https://vitejs.dev/
-[Typescript]: https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square
+[Typescript-bg]: https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square
 [Typescript-url]: https://www.typescriptlang.org/
 [Chakra-ui]: https://shields.io/badge/chakra--ui-black?logo=chakraui&style=for-the-badge
 [Chakra-url]: https://v2.chakra-ui.com/
