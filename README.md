@@ -75,8 +75,8 @@ In this X-Like app you could do amazing things such as :
   <li>See all amazing threads</li>
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/3320611d-c631-4d5f-9733-d6ec84d33f8c)
 
-  <li>Post funny threads</li>
-![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/66adcb83-3207-4138-abed-41113edec9f0)
+  <li>![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/66adcb83-3207-4138-abed-41113edec9f0)<br>Post funny threads</li>
+
 
   <li>Reply to all interesting threads & replies</li>
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/14dcdc66-d858-44d3-81e2-0e40f135a99d)
