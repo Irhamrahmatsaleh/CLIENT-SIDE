@@ -80,23 +80,24 @@
 Welcome to CircleApp!
 In this X-Like app you could do amazing things such as :
 <ol>
-  <li>Login/Register</li>
   ![Login Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/ae87cc27-1cba-48f4-9e0c-11e4425b90fc)
+  <li>Login/Register</li>
   
-  <li>See all amazing threads</li>
   ![Home Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
-  
-  <li>Post funny threads</li>
+  <li>See all amazing threads</li>
+
   ![Create Thread](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/86abb88b-5d2c-432b-a254-86dcc9b9a6be)
-  
-  <li>Reply to all interesting threads & replies</li>
+  <li>Post funny threads</li>
+
   ![Reply Threads](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bbeeb77f-1a54-4ab1-856a-66bbcadd3e43)
-  
-  <li>Followed & following other user</li>
+  <li>Reply to all interesting threads & replies</li>
+
   ![Followers/Following](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/9c377bd2-181b-4207-9d77-6afeda1d6c4a)
+  <li>Followed & following other user</li>
   
-  <li>Search numerous interesting user</li>
   ![Search Users](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bced0cfe-0376-4c40-8283-276702dccbe0)
+  <li>Search numerous interesting user</li>
+
 </ol>
 Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
 
