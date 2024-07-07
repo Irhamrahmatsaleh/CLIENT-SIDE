@@ -70,20 +70,24 @@ Welcome to CircleApp!
 In this X-Like app you could do amazing things such as :
 <ol>
 <li>Login/Register</li>
-<a>![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/3a39dd69-ac36-46f0-b778-6f09ce4d063c)</a>
+  
+![login](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/3a39dd69-ac36-46f0-b778-6f09ce4d063c)
 <li>See all amazing threads</li>
+  
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/3320611d-c631-4d5f-9733-d6ec84d33f8c)
 <li>Post funny threads</li>
+
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/66adcb83-3207-4138-abed-41113edec9f0)
 <li>Reply to all interesting threads & replies</li>
+
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/14dcdc66-d858-44d3-81e2-0e40f135a99d)
 <li>Followed & following other user</li>
+
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/5151457d-4c70-4961-bf08-144da1a16d71)
 <li>Search numerous interesting user</li>
+
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bf06f2f0-2d88-4c7f-a416-b8d2a72f2ae2)
 </ol>
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -94,14 +98,16 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 * [![React][React.js]][[React-url]]
 * [![Vite][Vite]][[Vite-url]]
 * [![Typescript][Node-ts]][[Typescript-url]]
+* [![Chakra-ui][Chakra]][[Chakra-url]]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 <ul>
+  
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/4588e1bc-d3bd-46bc-8dba-bcd2d646e9bd)
-  <li>Register Your Account</li>
+<li>Register Your Account</li>
 
 ![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/62fdf462-a607-4878-a5b4-7de35cf23d5c)
 <li>Verify Your Account</li>
@@ -172,6 +178,11 @@ Project Link: [https://github.com/bagushendrawan/b54-circleApp](https://github.c
 [Bootstrap-url]: https://getbootstrap.com
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
 [JQuery-url]: https://jquery.com 
+[Express]: https://img.shields.io/badge/Express-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [Express-url]: https://expressjs.com/
+[Vite]: https://img.shields.io/badge/Vite-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [Vite-url]: https://vitejs.dev/
+[Typescript]: https://img.shields.io/badge/Typescript-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
 [Typescript-url]: https://www.typescriptlang.org/
+[Chakra-ui]: https://img.shields.io/badge/Chakra-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
+[Chakra-url]: https://v2.chakra-ui.com/
