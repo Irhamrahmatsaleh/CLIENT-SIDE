@@ -78,7 +78,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Login Screen][login-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/ae87cc27-1cba-48f4-9e0c-11e4425b90fc)
+![Login Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/ae87cc27-1cba-48f4-9e0c-11e4425b90fc)
 [![Home Screen][home-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
 [![Create Thread][create-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/86abb88b-5d2c-432b-a254-86dcc9b9a6be)
 [![Reply Threads][reply-screenshot]](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/bbeeb77f-1a54-4ab1-856a-66bbcadd3e43)
