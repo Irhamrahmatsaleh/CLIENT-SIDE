@@ -104,18 +104,19 @@ In this X-Like app you could do amazing things such as :
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-<ul>
-  
-![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/4588e1bc-d3bd-46bc-8dba-bcd2d646e9bd)
+<ol>
 <li>Register Your Account</li>
 
-![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/62fdf462-a607-4878-a5b4-7de35cf23d5c)
+![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/4588e1bc-d3bd-46bc-8dba-bcd2d646e9bd)
+
 <li>Verify Your Account</li>
 
-![Home Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
+![image](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/62fdf462-a607-4878-a5b4-7de35cf23d5c)
+
 <li>Hello World!</li>
 
-</ul>
+![Home Screen](https://github.com/bagushendrawan/b54-circleApp/assets/125522708/2d99b14c-837e-4f5e-860b-2bcb55266cc5)
+</ol>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
