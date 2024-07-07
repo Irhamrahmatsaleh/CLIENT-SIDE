@@ -94,10 +94,10 @@ In this X-Like app you could do amazing things such as :
 
 ### Built With
 
-* [[![React][React.js]][React-url]
-* [[![Vite][Vite]][Vite-url]
-* [[![Typescript][Typescript-bg]][Typescript-url]
-* [[![Chakra][Chakra-ui]][Chakra-url]
+* [![React][React.js]][React-url]
+* [![Vite][Vite]][Vite-url]
+* [![Typescript][Typescript-bg]][Typescript-url]
+* [![Chakra][Chakra-ui]][Chakra-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
