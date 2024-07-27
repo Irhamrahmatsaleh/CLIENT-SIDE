@@ -26,7 +26,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/bagushendrawan/b54-circleApp">
-    <img src="https://github.com/bagushendrawan/b54-circleApp/blob/main/Frontend/public/vite.svg" alt="Logo" width="80" height="80">
+    <img src="https://github.com/bagushendrawan/b54-circleApp/blob/main/Frontend/public/Screenshot_2024-07-27_114845-removebg-preview.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Circle App</h3>
