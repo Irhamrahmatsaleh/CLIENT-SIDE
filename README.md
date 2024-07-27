@@ -99,7 +99,7 @@ In this X-Like app you could do amazing things such as :
 * [![Vite][Vite]][Vite-url]
 * [![Typescript][Typescript-bg]][Typescript-url]
 * [![Chakra][Chakra-ui]][Chakra-url]
-* [![Postgres][Postgres-ui]][Postgres-url]
+* [![Postgres][Postgres-ui]]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
