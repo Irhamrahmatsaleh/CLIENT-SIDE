@@ -29,12 +29,12 @@ export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const PrivateRoute = () => {
-      if(!isLoading) {
+    if (!isLoading) {
 
-        if (currentUser.email) return <Outlet />;
+      if (currentUser.email) return <Outlet />;
 
-        return <Navigate to={"/login"} />;
-      }
+      return <Navigate to={"/login"} />;
+    }
   };
 
   async function authCheck() {
@@ -43,11 +43,11 @@ export default function App() {
       const response = await Axios({
         method: "get",
         url: `${api}/check`,
-        headers: { 
-            "Content-Type": "multipart/form-data",
-            'Authorization': `Bearer ${token}`
-         },
-    })
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${token}`
+        },
+      })
 
       dispatch(SET_USER(response.data));
       setIsLoading(false);
@@ -67,7 +67,7 @@ export default function App() {
 
   useEffect(() => {
     const token = localStorage.token;
-    
+
     if (token) authCheck();
     else {
       setIsLoading(false);
@@ -77,22 +77,23 @@ export default function App() {
 
   return (
     <ChakraProvider theme={theme}>
-        <Routes>
-          <Route path="/register" element={<Register key={'registerPage'}/>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:tokenReset" element={<ResetPassword />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/follow" element={<Follow />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/otherprofile/:id" element={<OtherProfile />} />
-            <Route path="/threadsProfile" element={<Status/>} />
-            <Route path="/threads/:id" element={<Replies/>} />
-            <Route path="/replies/:id" element={<RepliesChildren/>} />
-          </Route>
-        </Routes>
+      <Routes>
+        <Route path="/register" element={<Register key={'registerPage'} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:tokenReset" element={<ResetPassword />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/follow" element={<Follow />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/otherprofile/:id" element={<OtherProfile />} />
+          <Route path="/threadsProfile" element={<Status />} />
+          <Route path="/threads/:id" element={<Replies />} />
+          <Route path="/replies/:id" element={<RepliesChildren />} />
+
+        </Route>
+      </Routes>
     </ChakraProvider>
   )
 }

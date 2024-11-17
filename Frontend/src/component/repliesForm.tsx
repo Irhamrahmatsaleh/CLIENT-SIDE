@@ -15,118 +15,119 @@ import f from './function';
 import { fetchProfile } from "./profileCard";
 
 
-export const RepliesForm : React.FC= () => {
-    const toast = useToast();
-    const {id} = useParams();
-    const textareaRef = useRef<string>() ;
-    const fileInputRef = useRef<File | null>(null) ;
-    const [imagePreview, setImagePreview] = useState<string>("");
-    const [textValue, setTextValue] = useState<string>();
+export const RepliesForm: React.FC = () => {
+  const toast = useToast();
+  const { id } = useParams();
+  const textareaRef = useRef<string>();
+  const fileInputRef = useRef<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [textValue, setTextValue] = useState<string>();
 
-    const {refetchReplies} = useRepliesform();
-    const {refetchThreads} = useRepliesThreadform();
+  const { refetchReplies } = useRepliesform();
+  const { refetchThreads } = useRepliesThreadform();
 
-    const { data: profileData  } = useQuery<editProfileForm>({
-        queryKey: ["profile"],
-        queryFn: fetchProfile,
-        });
+  const { data: profileData } = useQuery<editProfileForm>({
+    queryKey: ["profile"],
+    queryFn: fetchProfile,
+  });
 
-    const {
-        register,
-        handleSubmit,
-        getValues,
-        resetField,
-        unregister,
-        formState : {errors,isSubmitting,isSubmitSuccessful},
-        reset
-      } = useForm<repliesForm>({
-        mode: "onSubmit",
-        resolver: zodResolver(createThreadSchema),
-        });
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    resetField,
+    unregister,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+    reset
+  } = useForm<repliesForm>({
+    mode: "onSubmit",
+    resolver: zodResolver(createThreadSchema),
+  });
 
-        useEffect(() => {
-            if(isSubmitSuccessful){
-                refetchReplies();
-                setImagePreview('')
-                toast({
-                    title: "Replies submitted!",
-                    status: "success",
-                    duration: 3000,
-                    isClosable: true,
-                  });
-                reset();
-                refetchThreads();
-            }
-           
-          }, [isSubmitSuccessful])
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      refetchReplies();
+      setImagePreview('')
+      toast({
+        title: "Replies submitted!",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      reset();
+      refetchThreads();
+    }
 
-    const { mutateAsync } = useMutation<
+  }, [isSubmitSuccessful])
+
+  const { mutateAsync } = useMutation<
     thread,
     AxiosError,
     threadsForm
-    >({
-        mutationFn: async(data: { content: any; image: any; }) => {
-            console.log("mutate mutation");
-            const formData =  new FormData();
-            formData.append('content', data.content);
-            if (data.image && data.image[0]) {
-                formData.append('image', data.image[0]);
-                } else {
-                formData.append('image', 'none');
-                }
-            
-            const token = localStorage.getItem('token');
-            return await Axios({
-            method: "post",
-            url: `${api}/replies${id}`,
-            data: formData,
-            headers: { 
-                "Content-Type": "multipart/form-data",
-                'Authorization': `Bearer ${token}`
-                },
-            })
+  >({
+    mutationFn: async (data: { content: any; image: any; }) => {
+      console.log("mutate mutation");
+      const formData = new FormData();
+      formData.append('content', data.content);
+      if (data.image && data.image[0]) {
+        formData.append('image', data.image[0]);
+      } else {
+        formData.append('image', 'none');
+      }
+
+      const token = localStorage.getItem('token');
+      return await Axios({
+        method: "post",
+        url: `${api}/replies${id}`,
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${token}`
         },
-    });
+      })
+    },
+  });
 
-    
-    const onSubmit: SubmitHandler<threadsForm> = async (data : { content: any; image: any ; }) => {
-        if(!imagePreview || imagePreview === '') data.image = null;
-        textareaRef.current = "";
-        setTextValue('')
-        await mutateAsync(data);
-        refetchReplies();
+
+  const onSubmit: SubmitHandler<threadsForm> = async (data: { content: any; image: any; }) => {
+    if (!imagePreview || imagePreview === '') data.image = null;
+    textareaRef.current = "";
+    setTextValue('')
+    await mutateAsync(data);
+    refetchReplies();
+  }
+
+  const changeImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files && event.target.files[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+      fileInputRef.current = file;
     }
+  }
 
-    const changeImage = (event : React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-        if(file){
-            setImagePreview(URL.createObjectURL(file));
-            fileInputRef.current = file;
-        }
-    }
+  // const clearFileInput = () => {
+  //     if (fileInputRef.current) {
+  //         fileInputRef.current = null;
+  //         setImagePreview('')
+  //     }
+  //     };
 
-    // const clearFileInput = () => {
-    //     if (fileInputRef.current) {
-    //         fileInputRef.current = null;
-    //         setImagePreview('')
-    //     }
-    //     };
-        
 
-    return (
+  return (
     <Flex flexDirection={'column'} justifyContent={'start'} alignItems={'start'} gap={'1rem'} margin={'0rem 0 0.5rem'} pt={'1rem'} borderBottom={'1px solid rgb(110, 110, 110, 0.333)'}>
-    <HStack alignItems={'start'}>
-    {f.imageCircle(profileData?.photo_profile ? profileData?.photo_profile : "null", '32px', '0.2rem')}
-    <form onSubmit={handleSubmit(onSubmit)}>
-    <FormControl display={'flex'} alignItems={'start'}>
-        <VStack justifyContent={'start'} min-height={'60px'}>
-                <Textarea onClick={() => {
-                if(!getValues('image'))  resetField('image')}} placeholder="Type your reply!" width={'400px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} defaultValue={textValue} ></Textarea>
-                {imagePreview && 
-                
+      <HStack alignItems={'start'}>
+        {f.imageCircle(profileData?.photo_profile ? profileData?.photo_profile : "null", '32px', '0.2rem')}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl display={'flex'} alignItems={'start'}>
+            <VStack justifyContent={'start'} min-height={'60px'}>
+              <Textarea onClick={() => {
+                if (!getValues('image')) resetField('image')
+              }} placeholder="Type your reply!" width={'400px'} minHeight={'60px'} border={'none'} color={'rgba(255, 255, 255, 0.496)'} resize={'none'} textDecoration={'none'} marginEnd={'1rem'} {...register("content")} defaultValue={textValue} ></Textarea>
+              {imagePreview &&
+
                 <Box position="relative" display="inline-block">
-                    <Image src={imagePreview} height="200px" />
-                    <IconButton
+                  <Image src={imagePreview} height="200px" />
+                  <IconButton
                     position="absolute"
                     top="15%"
                     right="3%"
@@ -139,45 +140,45 @@ export const RepliesForm : React.FC= () => {
                     colorScheme="red"
                     variant={'solid'}
                     aria-label="close"
-                    onClick={() => {unregister('image'); setImagePreview('')}}
-                    >
-                    </IconButton>
+                    onClick={() => { unregister('image'); setImagePreview('') }}
+                  >
+                  </IconButton>
                 </Box>}
-                </VStack>
-                <Box position="relative" display="inline-block">
-                    <Input
-                        type="file"
-                        id="file-input"
-                        opacity="0"
-                        position="absolute"
-                        left="0"
-                        top="0"
-                        height="100%"
-                        width="100%"
-                        aria-hidden="true"
-                        {...register('image')}
-                        
-                        onChange={changeImage}
-                        ///useref errorr
-                    />
-                    <IconButton
-                        as="label"
-                        htmlFor="file-input"
-                        colorScheme="green"
-                        aria-label="Add Picture"
-                        size="sm"
-                        variant="ghost"
-                        fontSize="1.33rem"
-                        icon={<BsImage />}
-                        marginEnd="0.5rem"
-                        cursor="pointer"
-                    />
-                    </Box>
-                <Button isDisabled={!!(errors.image?.message || isSubmitting)} colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>{isSubmitting ? <Spinner/> : "Reply"}</Button>
-            </FormControl>
-            </form>
-            </HStack>
-            <Text alignSelf={'center'}  pb={'0.33rem'} color={"error.primary"}>{errors.image && errors.image.message}</Text>
-            </Flex>
-    )
+            </VStack>
+            <Box position="relative" display="inline-block">
+              <Input
+                type="file"
+                id="file-input"
+                opacity="0"
+                position="absolute"
+                left="0"
+                top="0"
+                height="100%"
+                width="100%"
+                aria-hidden="true"
+                {...register('image')}
+
+                onChange={changeImage}
+              ///useref errorr
+              />
+              <IconButton
+                as="label"
+                htmlFor="file-input"
+                colorScheme="green"
+                aria-label="Add Picture"
+                size="sm"
+                variant="ghost"
+                fontSize="1.33rem"
+                icon={<BsImage />}
+                marginEnd="0.5rem"
+                cursor="pointer"
+              />
+            </Box>
+            <Button isDisabled={!!(errors.image?.message || isSubmitting)} colorScheme="green" size={'sm'} type="submit" borderRadius={'20px'} width={'72px'}>{isSubmitting ? <Spinner /> : "Reply"}</Button>
+          </FormControl>
+        </form>
+      </HStack>
+      <Text alignSelf={'center'} pb={'0.33rem'} color={"error.primary"}>{errors.image && errors.image.message}</Text>
+    </Flex>
+  )
 }
