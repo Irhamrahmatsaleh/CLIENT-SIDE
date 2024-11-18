@@ -121,7 +121,7 @@ export const ThreadsUpload: React.FC = () => {
                                 top="0"
                                 height="100%"
                                 width="100%"
-                                aria-hidden="true"
+                                // aria-hidden="true"
                                 {...register('image')}
                                 onChange={changeImage}
                             ///useref errorr
