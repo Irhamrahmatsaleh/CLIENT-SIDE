@@ -1,8 +1,9 @@
 import { thread } from "@/libs/type";
-import { Box, Link as ChakraLink, Flex, Heading, IconButton, Image, LinkBox, Menu, MenuButton, MenuItem, MenuList, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
+import { Box, Link as ChakraLink, Flex, Heading, IconButton, Image, LinkBox, Menu, MenuButton, MenuItem, MenuList, Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, TabPanel, TabPanels, Tabs, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { useEffect, useState } from "react";
+import { AiOutlineClose } from 'react-icons/ai';
 import { BiMessage, BiSolidMessage } from "react-icons/bi";
 import { BsHeart, BsHeartFill, BsThreeDots, BsTrash } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -84,6 +85,9 @@ export default function Threads() {
         queryKey: ["threads"],
         queryFn: fetchThreads
     });
+
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);  // State untuk gambar yang dipilih
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
     const handleLike = async (id: number, index: number) => {
@@ -216,18 +220,17 @@ export default function Threads() {
                             <Text marginBottom={'0.33rem'}>
                                 {item.content}
                             </Text>
-                            {item.image ? (f.imageMessage(item.image)) : <></>}
+                            <Link to={""}
+
+                                onClick={() => {
+                                    setSelectedImage(item.image);  // Set gambar yang dipilih
+                                    onOpen();  // Buka modal
+                                }}
+                            >
+                                {item.image ? (f.imageMessage(item.image)) : <></>}
+                            </Link>
+
                         </Box>
-                        {/* <Box marginBottom={'0.5rem'}>
-                            <Text marginBottom={'0.33rem'}>
-                                {item.content}
-                            </Text>
-                            {item.image ? (
-                                <Link to={`/thread/${item.id}`}>
-                                    {f.imageMessage(item.image)}
-                                </Link>
-                            ) : <></>}
-                        </Box> */}
 
 
                         <Flex gap={'0.33rem'} marginBottom={'0.5rem'} alignItems={'center'}>
@@ -264,18 +267,45 @@ export default function Threads() {
 
     const tabImage = threads?.map((item, index) => {
         return (
-            <Image src={item.image} my={'0.33rem'} height={'auto'} key={index} />
+            <Image
+                src={item.image}
+                my={'0.33rem'}
+                height={'auto'}
+                key={index}
+                cursor="pointer"
+            />
         )
     })
+
+    // return (
+    //     <Box>
+    //         <Heading as={'h3'} fontSize={'1.5rem'} mt={'2rem'} mb={'1rem'} color={'whitesmoke'}>Home</Heading>
+    //         <Tabs isFitted colorScheme="green">
+    //             <ThreadsUpload />
+    //             <Flex flexDirection={'column'} justifyContent={'start'} height={'480px'} overflowY="scroll" overflowX="hidden" css={{
+    //                 '::-webkit-scrollbar': {
+    //                     display: 'none',
+    //                 },
+    //                 '-ms-overflow-style': 'none',
+    //                 'scrollbar-width': 'none',
+    //             }}>
+    //                 <TabPanels>
+    //                     <TabPanel>
+    //                         {tabThreads}
+    //                     </TabPanel>
+    //                     <TabPanel>
+    //                         {tabImage}
+    //                     </TabPanel>
+    //                 </TabPanels>
+    //             </Flex>
+    //         </Tabs>
+    //     </Box>
+    // )
 
     return (
         <Box>
             <Heading as={'h3'} fontSize={'1.5rem'} mt={'2rem'} mb={'1rem'} color={'whitesmoke'}>Home</Heading>
             <Tabs isFitted colorScheme="green">
-                <TabList mb='1rem' color={'white'}>
-                    <Tab>Threads</Tab>
-                    <Tab>Media</Tab>
-                </TabList>
                 <ThreadsUpload />
                 <Flex flexDirection={'column'} justifyContent={'start'} height={'480px'} overflowY="scroll" overflowX="hidden" css={{
                     '::-webkit-scrollbar': {
@@ -294,6 +324,47 @@ export default function Threads() {
                     </TabPanels>
                 </Flex>
             </Tabs>
+
+            {/* Modal untuk gambar besar */}
+            {selectedImage && (
+                <Modal isOpen={isOpen} onClose={onClose} size="full">
+                    <ModalOverlay />
+                    <ModalContent maxW="100%" maxH="100%" margin="0">
+                        <ModalCloseButton
+                            position="absolute"
+                            top="10px"
+                            left="10px"
+                            zIndex="1000"
+                            color="green.500" // Warna hijau
+                            fontSize="5rem" // Ukuran lebih besar
+                            as={AiOutlineClose} // Menggunakan icon "X" dari react-icons
+                            cursor="pointer"
+                        />
+                        <ModalBody display="flex" justifyContent="center" alignItems="center" padding={0}>
+                            <Flex width="100%" height="100%" justifyContent="space-between">
+                                <Box width="70%" height="100%" display="flex" justifyContent="center" alignItems="center">
+                                    <Image
+                                        src={selectedImage}
+                                        alt="Selected Image"
+                                        objectFit="contain"
+                                        maxW="100%"
+                                        maxH="100%"
+                                    />
+                                </Box>
+                                {/* Bagian kanan: Komentar */}
+                                <Box width="30%" height="100%" overflowY="scroll" padding="1rem" borderLeft="1px solid #ccc">
+                                    <Heading>Life is a choice, so choose goodness</Heading>
+                                    <Text mt="1rem">
+                                        "Every step we take defines the path ahead. It's not about where you come from, but about where you're heading.
+                                        Make every decision with purpose and aim to create a positive impact."
+                                        - Irham Rahmat Saleh
+                                    </Text>
+                                </Box>
+                            </Flex>
+                        </ModalBody>
+                    </ModalContent>
+                </Modal>
+            )}
         </Box>
-    )
+    );
 }
