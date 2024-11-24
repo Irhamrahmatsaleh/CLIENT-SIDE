@@ -9,7 +9,6 @@ import { ImCross } from "react-icons/im";
 import { Link, useParams } from "react-router-dom";
 import { api } from "../libs/api";
 import f from './function';
-import { deleteThread } from "./threads";
 
 export async function fetchThreadsProfile(id: string | undefined) {
     try {
@@ -100,26 +99,26 @@ export default function otherThreads() {
         }
     };
 
-    const handleDelete = async (idThread: number) => {
-        try {
-            await deleteThread(idThread);
-            toast({
-                title: "Delete thread success!",
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-            });
-        } catch (error) {
-            console.error('Error unliking the item', error);
-            toast({
-                title: "Delete thread failed!",
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-            });
-        }
-        refetch();
-    };
+    // const handleDelete = async (idThread: number) => {
+    //     try {
+    //         await deleteThread(idThread);
+    //         toast({
+    //             title: "Delete thread success!",
+    //             status: "success",
+    //             duration: 3000,
+    //             isClosable: true,
+    //         });
+    //     } catch (error) {
+    //         console.error('Error unliking the item', error);
+    //         toast({
+    //             title: "Delete thread failed!",
+    //             status: "error",
+    //             duration: 3000,
+    //             isClosable: true,
+    //         });
+    //     }
+    //     refetch();
+    // };
 
     const likeHandle = (index: number, con: boolean) => {
         console.log(isLiked);
