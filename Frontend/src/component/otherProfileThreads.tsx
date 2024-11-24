@@ -1,5 +1,5 @@
 import { thread } from "@/libs/type";
-import { Box, Link as ChakraLink, Flex, IconButton, Image, LinkBox, Menu, MenuButton, MenuItem, MenuList, Modal, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text, useToast } from '@chakra-ui/react';
+import { Box, Link as ChakraLink, Flex, IconButton, Image, LinkBox, Menu, MenuButton, MenuItem, MenuList, Modal, ModalCloseButton, ModalContent, ModalOverlay, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
 import { useQuery } from "@tanstack/react-query";
 import Axios from 'axios';
 import { SetStateAction, useEffect, useState } from "react";
@@ -33,7 +33,7 @@ export default function otherThreads() {
         queryKey: ["otherThreadsProfile"],
         queryFn: () => fetchThreadsProfile(id),
     });
-    const toast = useToast();
+    // const toast = useToast();
     const [isLiked, setIsLiked] = useState<boolean[]>([]);
 
     const [isOpen, setIsOpen] = useState(false);
