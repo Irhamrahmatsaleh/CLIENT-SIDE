@@ -5,7 +5,8 @@ import Axios from 'axios';
 import React, { useEffect, useRef, useState } from "react";
 import { SubmitHandler } from 'react-hook-form';
 import { IconType } from 'react-icons';
-import { BsDoorOpen, BsHeart, BsHouseDoor, BsImage, BsPerson, BsSearch, BsXCircle } from 'react-icons/bs';
+import { BsHeart, BsHouseDoor, BsImage, BsPerson, BsSearch, BsXCircle } from 'react-icons/bs';
+import { SlLogout } from "react-icons/sl";
 import { Link } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { useThreadsPostForm } from '../features/hooks/authThreads';
@@ -232,7 +233,7 @@ export default function Sidebar(side: sideButton) {
 
       </Flex>
       <Flex mt={'22rem'}>
-        {buttonSide(BsDoorOpen, 'Log Out', '/login')}
+        {buttonSide(SlLogout, 'Log Out', '/login')}
       </Flex>
     </Flex>
   )
