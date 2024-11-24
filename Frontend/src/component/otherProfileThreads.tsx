@@ -137,6 +137,7 @@ export default function otherThreads() {
         }
         function handleChange(id: number): void {
             throw new Error("Function not implemented.");
+            console.log(id); // Menggunakan variabel id
         }
 
         return (
