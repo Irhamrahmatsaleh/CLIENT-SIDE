@@ -140,7 +140,8 @@ export default function Sidebar(side: sideButton) {
   return (
     <Flex flexDirection={'column'} margin={'1.33rem 2rem'} width={'25%'} borderEnd={'1px solid rgb(110, 110, 110, 0.333)'} justifyContent={'start'}>
       <Flex flexDirection={'column'}>
-        <Heading as='a' href={api + "/api-docs"} size={'2xl'} _hover={{ color: "whitesmoke", cursor: "pointer" }} marginBottom={'2rem'} color={'lime'}>Circle</Heading>
+{/*         <Heading as='a' href={api + "/api-docs"} size={'2xl'} _hover={{ color: "whitesmoke", cursor: "pointer" }} marginBottom={'2rem'} color={'lime'}>Circle</Heading> */}
+        <Heading size={'2xl'} _hover={{ color: "whitesmoke", cursor: "pointer" }} marginBottom={'2rem'} color={'lime'}>Circle</Heading>
 
         {buttonHome()}
         {buttonFollow()}
