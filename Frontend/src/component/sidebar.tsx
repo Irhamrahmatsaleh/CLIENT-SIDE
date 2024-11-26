@@ -10,7 +10,6 @@ import { SlLogout } from "react-icons/sl";
 import { Link } from 'react-router-dom';
 import { useDebounce } from 'use-debounce';
 import { useThreadsPostForm } from '../features/hooks/authThreads';
-import { api } from '../libs/api';
 import { editProfileForm, thread, threadsForm } from "../libs/type";
 import f from './function';
 import { fetchProfile } from "./profileCard";
@@ -140,8 +139,9 @@ export default function Sidebar(side: sideButton) {
   return (
     <Flex flexDirection={'column'} margin={'1.33rem 2rem'} width={'25%'} borderEnd={'1px solid rgb(110, 110, 110, 0.333)'} justifyContent={'start'}>
       <Flex flexDirection={'column'}>
-        <Heading as='a' href={api + "/api-docs"} size={'2xl'} _hover={{ color: "whitesmoke", cursor: "pointer" }} marginBottom={'2rem'} color={'lime'}>Circle</Heading>
-        
+        {/* <Heading as='a' href={api + "/api-docs"} size={'2xl'} _hover={{ color: "whitesmoke", cursor: "pointer" }} marginBottom={'2rem'} color={'lime'}>Circle</Heading> */}
+        <Heading as='a' href="https://github.com/Irhamrahmatsaleh" target='_blank' size={'2xl'} _hover={{ color: "whitesmoke", cursor: "pointer" }} marginBottom={'2rem'} color={'lime'}>Circle</Heading>
+
 
         {buttonHome()}
         {buttonFollow()}
