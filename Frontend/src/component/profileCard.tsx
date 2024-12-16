@@ -366,10 +366,10 @@ export default function Profile() {
           <Text fontSize={'0.9rem'} color={color.grey}>•</Text>
         </Flex>
         <Flex gap={'0.5rem'}>
-          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://github.com/bagushendrawan" fontSize={'0.9rem'} color={color.grey}><BsGithub></BsGithub></ChakraLink>
-          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://www.linkedin.com/in/bagus-hendrawan/" fontSize={'0.9rem'} color={color.grey}><BsLinkedin></BsLinkedin></ChakraLink>
-          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://web.facebook.com/profile.php?id=100011604010888" fontSize={'0.9rem'} color={color.grey}><BsFacebook></BsFacebook></ChakraLink>
-          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://www.instagram.com/bag_user/" fontSize={'0.9rem'} color={color.grey}><BsInstagram></BsInstagram></ChakraLink>
+          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://github.com/Irhamrahmatsaleh" fontSize={'0.9rem'} color={color.grey}><BsGithub></BsGithub></ChakraLink>
+          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://www.linkedin.com/in/irham-rahmat-saleh-a03153169/" fontSize={'0.9rem'} color={color.grey}><BsLinkedin></BsLinkedin></ChakraLink>
+          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://web.facebook.com/Irham.s4leh" fontSize={'0.9rem'} color={color.grey}><BsFacebook></BsFacebook></ChakraLink>
+          <ChakraLink _hover={{ color: "whitesmoke" }} href="https://www.instagram.com/irhamsaleh904/" fontSize={'0.9rem'} color={color.grey}><BsInstagram></BsInstagram></ChakraLink>
         </Flex>
       </Flex>
       <Flex ms={'1.33rem'} alignItems={'center'}>
